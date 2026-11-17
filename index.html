@@ -247,6 +247,7 @@
       background: #f8fafc;
       cursor: pointer;
       transition: all 0.15s;
+      width: 100%;
     }
 
     .operator-pick-item:hover {
@@ -1385,6 +1386,67 @@
       overflow-y: auto;
     }
 
+    /* PZ BATCH LIST STYLING */
+    .pz-mode-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 5px;
+      border-radius: 11px;
+      margin-bottom: 14px;
+    }
+
+    .pz-mode-btn {
+      padding: 9px 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+
+    .pz-mode-btn.active {
+      background: #fff;
+      color: var(--pepco-indigo);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .pz-batch-list {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .pz-batch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fff;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .pz-batch-row.has-qty {
+      border-color: var(--pepco-indigo);
+      background: #eef2ff;
+    }
+
     .toast {
       position: fixed;
       bottom: 20px;
@@ -1477,10 +1539,10 @@
       <select id="activeOperatorSelect" class="operator-select" title="Zmień operatora kasy (wymaga podania kodu PIN)">
         <option value="">Kasjer: Niezalogowany</option>
       </select>
-      <div id="clockDisplay" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;"></div>
       <button type="button" id="btnLockPos" class="btn-lock-pos" title="Zablokuj stanowisko kasowe">
         <span class="m-icon sm">lock</span> Zablokuj
       </button>
+      <div id="clockDisplay" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; background: rgba(0, 0, 0, 0.22); padding: 6px 10px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.2);"></div>
     </div>
   </header>
 
@@ -1560,7 +1622,7 @@
             type="text" 
             id="searchInput" 
             class="scanner-input" 
-            placeholder="Zeskanuj kod QR / EAN lub wpisz nazwę towaru..." 
+            placeholder="Zeskanuj kod QR / EAN / SKU lub wpisz nazwę towaru..." 
             autocomplete="off"
           />
         </div>
@@ -1684,9 +1746,7 @@
       </div>
       <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">Kliknij zaprogramowany rabat, aby zastosować go do bieżącego paragonu.</p>
 
-      <div id="receiptDiscountOptionsList" style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; margin-bottom:14px;">
-        <!-- Lista generowana dynamicznie -->
-      </div>
+      <div id="receiptDiscountOptionsList" style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; margin-bottom:14px;"></div>
 
       <button type="button" id="btnRemoveReceiptDiscount" class="btn-danger-sm" style="width:100%; padding:10px; justify-content:center; font-size:13px;">
         <span class="m-icon sm">remove_circle</span> Usuń rabat z paragonu (Brak rabatu)
@@ -1722,7 +1782,7 @@
 
   <!-- MODAL: PŁYWAJĄCE OKNO DODAWANIA / EDYCJI REKORDU W ADMINISTRACJI -->
   <div class="modal-backdrop hidden" id="adminCrudModal">
-    <div class="modal-box">
+    <div class="modal-box" id="adminCrudModalBox">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <div>
           <span id="adminCrudSubtitle" style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--pepco-blue); letter-spacing:0.5px;">Administracja</span>
@@ -1741,6 +1801,26 @@
           <button type="submit" class="btn-primary"><span class="m-icon sm">save</span> Zapisz</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PŁYWAJĄCE OKNO WYBORU RABATU Z LISTY DLA TOWARU (W OKNIE DODAWANIA/EDYCJI TOWARU) -->
+  <div class="modal-backdrop hidden" id="productDiscountPickerModal" style="z-index: 260;">
+    <div class="modal-box" style="max-width: 420px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="m-icon" style="color:var(--pepco-magenta);">sell</span>
+          <h3 style="font-size:17px; font-weight:800;">Wybierz rabat dla towaru</h3>
+        </div>
+        <button type="button" id="btnCloseProdDiscPicker" style="background:#f3f4f6; border:none; width:30px; height:30px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Wybierz zaprogramowany rabat z bazy, aby przypisać jego wartość procentową do towaru.</p>
+      <div id="prodDiscPickerList" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; margin-bottom:12px;"></div>
+      <button type="button" id="btnClearProdDiscFromPicker" class="btn-danger-sm" style="width:100%; padding:9px; justify-content:center;">
+        <span class="m-icon sm">block</span> Wyzeruj rabat (0%)
+      </button>
     </div>
   </div>
 
@@ -2326,7 +2406,7 @@
           <div class="admin-card-header">
             <div>
               <h2>Baza towarów</h2>
-              <p class="desc">Wyszukuj produkty, filtruj po kategoriach, dodawaj nowe pozycje i edytuj istniejące.</p>
+              <p class="desc">Wyszukuj produkty, filtruj po kategoriach, nadawaj stałe rabaty na towary, dodawaj nowe pozycje i edytuj istniejące.</p>
             </div>
             <button type="button" class="btn-primary" onclick="openAdminCrudModal('products', null)">
               <span class="m-icon sm">add_box</span> Dodaj towar
@@ -2336,7 +2416,7 @@
           <div class="filter-toolbar">
             <div style="position:relative; flex:2; min-width:210px;">
               <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
-              <input type="text" id="adminProdSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj towaru po nazwie lub kodzie EAN / QR..." />
+              <input type="text" id="adminProdSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj towaru po nazwie lub kodzie EAN / SKU / PLU..." />
             </div>
             <div style="flex:1; min-width:180px;">
               <select id="adminProdCatFilter" class="form-control" style="width:100%;">
@@ -2348,11 +2428,12 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>EAN / QR</th>
+                <th>EAN / SKU / PLU</th>
                 <th>Nazwa towaru</th>
                 <th>Kategoria</th>
                 <th>VAT</th>
                 <th>Stan mag.</th>
+                <th>Rabat</th>
                 <th>Cena brutto</th>
                 <th style="width:170px;">Akcje</th>
               </tr>
@@ -2368,17 +2449,17 @@
           <div class="admin-card-header">
             <div>
               <h2>Stany magazynowe i Przyjęcie Zewnętrzne (PZ)</h2>
-              <p class="desc">Kontroluj dostępność produktów, filtruj asortyment oraz rejestruj dostawy towaru na magazyn.</p>
+              <p class="desc">Kontroluj dostępność produktów, filtruj asortyment oraz rejestruj dostawy towaru pojedynczo lub seryjnie.</p>
             </div>
             <button type="button" class="btn-primary" onclick="openAdminCrudModal('stock_delivery', null)">
-              <span class="m-icon sm">move_to_inbox</span> Przyjmij dostawę (PZ)
+              <span class="m-icon sm">move_to_inbox</span> Przyjmij dostawę na stan
             </button>
           </div>
 
           <div class="filter-toolbar">
             <div style="position:relative; flex:2; min-width:210px;">
               <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
-              <input type="text" id="adminStockSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj na magazynie po nazwie lub kodzie EAN / QR..." />
+              <input type="text" id="adminStockSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj na magazynie po nazwie lub kodzie EAN / SKU / PLU..." />
             </div>
             <div style="flex:1; min-width:180px;">
               <select id="adminStockCatFilter" class="form-control" style="width:100%;">
@@ -2388,7 +2469,7 @@
           </div>
 
           <table class="data-table">
-            <thead><tr><th>EAN</th><th>Nazwa towaru</th><th>Kategoria</th><th>Aktualny stan</th><th>Status</th><th>Korekta ręczna</th></tr></thead>
+            <thead><tr><th>EAN / SKU</th><th>Nazwa towaru</th><th>Kategoria</th><th>Aktualny stan</th><th>Status</th><th>Korekta ręczna</th></tr></thead>
             <tbody id="adminStockTable"></tbody>
           </table>
         </div>
@@ -2419,7 +2500,7 @@
           <div class="admin-card-header">
             <div>
               <h2>Progi rabatowe</h2>
-              <p class="desc">Definiuj rabaty procentowe możliwe do zastosowania na cały paragon.</p>
+              <p class="desc">Definiuj rabaty procentowe możliwe do zastosowania na cały paragon oraz przypisania do towarów.</p>
             </div>
             <button type="button" class="btn-primary" onclick="openAdminCrudModal('discounts', null)">
               <span class="m-icon sm">add</span> Dodaj rabat
@@ -2569,7 +2650,9 @@
       adminProdSearch: "",
       adminProdCat: "Wszystkie",
       adminStockSearch: "",
-      adminStockCat: "Wszystkie"
+      adminStockCat: "Wszystkie",
+      pzModalMode: "single",
+      pzBatchQuantities: {}
     };
 
     const formatMoney = (val) => `${Number(val || 0).toFixed(2).replace(".", ",")} ${state.store.activeCurrencySymbol || "zł"}`;
@@ -2587,7 +2670,6 @@
       return `${y}-${m}`;
     }
 
-    // Domyślne daty w formularzach raportów
     document.getElementById("repDailyDateInput").value = getLocalYMD();
     document.getElementById("repMonthlyInput").value = getLocalYM();
     const firstDayOfMonth = `${getLocalYM()}-01`;
@@ -2611,11 +2693,13 @@
       window._toastTimer = setTimeout(() => toast.classList.add("hidden"), 3200);
     }
 
-    setInterval(() => {
+    function updateClock() {
       document.getElementById("clockDisplay").textContent = new Date().toLocaleTimeString("pl-PL", {
         hour: "2-digit", minute: "2-digit", second: "2-digit"
       });
-    }, 1000);
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
 
     // ==========================================
     // EKRAN BLOKADY, WYBÓR OPERATORA I KOD PIN
@@ -2844,7 +2928,7 @@
       const cleanCode = String(rawCode || "").trim();
       if (!cleanCode) return false;
 
-      const extracted = cleanCode.replace(/^(EAN|QR|SKU):/i, "").trim();
+      const extracted = cleanCode.replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
       const match = state.products.find(p =>
         String(p.ean).toLowerCase() === extracted.toLowerCase() ||
         String(p.ean).toLowerCase() === cleanCode.toLowerCase()
@@ -3079,6 +3163,65 @@
         });
       });
     }
+
+    // ==========================================
+    // PŁYWAJĄCE OKNO WYBORU RABATU Z LISTY DLA TOWARU
+    // ==========================================
+    const prodDiscPickerModal = document.getElementById("productDiscountPickerModal");
+
+    document.getElementById("btnCloseProdDiscPicker").addEventListener("click", () => {
+      prodDiscPickerModal.classList.add("hidden");
+    });
+
+    document.getElementById("btnClearProdDiscFromPicker").addEventListener("click", () => {
+      const inp = document.getElementById("crudProdDiscount");
+      if (inp) inp.value = 0;
+      prodDiscPickerModal.classList.add("hidden");
+      showToast("Wyzerowano rabat na towar (0%)", "info");
+    });
+
+    window.openProductDiscountPickerModal = () => {
+      const listContainer = document.getElementById("prodDiscPickerList");
+      const currentVal = Number(document.getElementById("crudProdDiscount")?.value || 0);
+
+      if (state.discounts.length === 0) {
+        listContainer.innerHTML = `
+          <div style="padding:14px; text-align:center; color:var(--text-muted); font-size:12.5px; background:#f8fafc; border-radius:10px;">
+            Brak zdefiniowanych rabatów w słowniku. Dodaj je w <strong>Administracja -> Rabaty</strong> lub wpisz wartość ręcznie w polu obok.
+          </div>
+        `;
+      } else {
+        listContainer.innerHTML = state.discounts.map(d => {
+          const isMatch = Number(d.percent) === currentVal && currentVal > 0;
+          return `
+            <button type="button" class="operator-pick-item" data-pct="${d.percent}" style="border-color:${isMatch ? 'var(--pepco-magenta)' : 'var(--border-color)'}; background:${isMatch ? '#fdf2f8' : '#f8fafc'};">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:9px; background:#fce7f3; color:var(--pepco-magenta); display:flex; align-items:center; justify-content:center;">
+                  <span class="m-icon sm">sell</span>
+                </div>
+                <div style="text-align:left;">
+                  <div style="font-weight:700; font-size:13px; color:var(--text-main);">${d.name}</div>
+                  <div style="font-size:11.5px; color:var(--pepco-magenta); font-weight:700;">Rabat: -${d.percent}%</div>
+                </div>
+              </div>
+              <span class="m-icon sm" style="color:var(--pepco-indigo);">check_circle</span>
+            </button>
+          `;
+        }).join("");
+
+        listContainer.querySelectorAll(".operator-pick-item").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const pct = btn.dataset.pct;
+            const inp = document.getElementById("crudProdDiscount");
+            if (inp) inp.value = pct;
+            prodDiscPickerModal.classList.add("hidden");
+            showToast(`Wybrano rabat: -${pct}%`, "sell");
+          });
+        });
+      }
+
+      prodDiscPickerModal.classList.remove("hidden");
+    };
 
     // ==========================================
     // MODUŁ RAPORTÓW (DOBOWY, MIESIĘCZNY, OKRESOWY)
@@ -3354,12 +3497,156 @@ ${opLines}
     }
 
     // ==========================================
-    // PŁYWAJĄCE OKNO DODAWANIA I EDYCJI W ADMINISTRACJI
+    // PŁYWAJĄCE OKNO DODAWANIA I EDYCJI W ADMINISTRACJI + PZ (POJEDYNCZO / SERYJNIE)
     // ==========================================
     const adminCrudModal = document.getElementById("adminCrudModal");
+    const adminCrudModalBox = document.getElementById("adminCrudModalBox");
     const adminCrudFieldsContainer = document.getElementById("adminCrudFieldsContainer");
     let currentCrudEntity = null;
     let currentCrudEditId = null;
+
+    function buildPzModalContent() {
+      const catFilterOpts = `<option value="Wszystkie">Wszystkie kategorie</option>` +
+        state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
+
+      adminCrudFieldsContainer.innerHTML = `
+        <div class="pz-mode-switch">
+          <button type="button" class="pz-mode-btn ${state.pzModalMode === 'single' ? 'active' : ''}" id="btnPzModeSingle">
+            <span class="m-icon sm">inventory</span> Pojedynczy towar z bazy
+          </button>
+          <button type="button" class="pz-mode-btn ${state.pzModalMode === 'batch' ? 'active' : ''}" id="btnPzModeBatch">
+            <span class="m-icon sm">playlist_add_check</span> Seryjnie (wiele towarów)
+          </button>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid var(--border-color); padding:10px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:11.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Filtrowanie i wyszukiwanie asortymentu</div>
+          <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:8px;">
+            <div style="position:relative;">
+              <span class="m-icon sm" style="position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
+              <input type="text" id="pzFilterSearchInput" class="form-control" style="width:100%; padding-left:32px;" placeholder="Nazwa towaru lub EAN / SKU / PLU..." />
+            </div>
+            <select id="pzFilterCatSelect" class="form-control">${catFilterOpts}</select>
+          </div>
+        </div>
+
+        <div id="pzSingleSection" class="${state.pzModalMode === 'single' ? '' : 'hidden'}" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="form-group">
+            <label>Wybierz towar z przefiltrowanej bazy *</label>
+            <select id="crudPzProduct" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Ilość przyjmowana na magazyn (+) *</label>
+            <input type="number" min="1" step="1" id="crudPzQty" class="form-control" value="10" />
+          </div>
+        </div>
+
+        <div id="pzBatchSection" class="${state.pzModalMode === 'batch' ? '' : 'hidden'}" style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:700; color:var(--text-main);">Wpisz przyjmowane ilości przy wybranych towarach:</span>
+            <span id="pzBatchSummaryBadge" class="badge-pay">Wybrano: 0 poz. (0 szt.)</span>
+          </div>
+          <div class="pz-batch-list" id="pzBatchItemsList"></div>
+        </div>
+      `;
+
+      document.getElementById("btnPzModeSingle").addEventListener("click", () => {
+        state.pzModalMode = "single";
+        buildPzModalContent();
+      });
+
+      document.getElementById("btnPzModeBatch").addEventListener("click", () => {
+        state.pzModalMode = "batch";
+        buildPzModalContent();
+      });
+
+      const pzSearchInp = document.getElementById("pzFilterSearchInput");
+      const pzCatSel = document.getElementById("pzFilterCatSelect");
+
+      pzSearchInp.addEventListener("input", refreshPzFilteredViews);
+      pzCatSel.addEventListener("change", refreshPzFilteredViews);
+
+      refreshPzFilteredViews();
+    }
+
+    function refreshPzFilteredViews() {
+      const searchInp = document.getElementById("pzFilterSearchInput");
+      const catSel = document.getElementById("pzFilterCatSelect");
+      if (!searchInp || !catSel) return;
+
+      const q = searchInp.value.toLowerCase().trim();
+      const cat = catSel.value;
+
+      const filteredProds = state.products.filter(p => {
+        const matchCat = cat === "Wszystkie" || p.category === cat;
+        const matchQ = !q ||
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.ean && String(p.ean).toLowerCase().includes(q));
+        return matchCat && matchQ;
+      });
+
+      // 1. Aktualizacja listy rozwijanej dla trybu pojedynczego
+      const singleSelect = document.getElementById("crudPzProduct");
+      if (singleSelect) {
+        if (filteredProds.length === 0) {
+          singleSelect.innerHTML = `<option value="">Brak towarów spełniających kryteria filtrowania</option>`;
+        } else {
+          singleSelect.innerHTML = filteredProds.map(p =>
+            `<option value="${p.id}">[${p.ean}] ${p.name} • Kat: ${p.category} (stan: ${p.stock ?? 0} ${p.unit || "szt."})</option>`
+          ).join("");
+        }
+      }
+
+      // 2. Aktualizacja listy dla trybu seryjnego
+      const batchList = document.getElementById("pzBatchItemsList");
+      if (batchList) {
+        if (filteredProds.length === 0) {
+          batchList.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-muted); font-size:12.5px;">Brak towarów pasujących do wyszukiwania lub wybranej kategorii.</div>`;
+        } else {
+          batchList.innerHTML = filteredProds.map(p => {
+            const savedQty = Number(state.pzBatchQuantities[p.id] || 0);
+            return `
+              <div class="pz-batch-row ${savedQty > 0 ? 'has-qty' : ''}" data-row-id="${p.id}">
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:12.5px; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+                  <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">${p.ean} • ${p.category} • Stan: <strong>${p.stock ?? 0}</strong></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                  <span style="font-size:11px; color:var(--text-muted); font-weight:600;">+</span>
+                  <input type="number" min="0" step="1" class="form-control pz-batch-qty-inp" data-prod-id="${p.id}" value="${savedQty > 0 ? savedQty : ''}" placeholder="0" style="width:76px; text-align:center; font-weight:700; padding:6px 8px;" />
+                  <span style="font-size:11px; color:var(--text-muted); min-width:26px;">${p.unit || "szt."}</span>
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          batchList.querySelectorAll(".pz-batch-qty-inp").forEach(inp => {
+            inp.addEventListener("input", () => {
+              const pid = inp.dataset.prodId;
+              const val = Math.max(0, parseInt(inp.value) || 0);
+              if (val > 0) {
+                state.pzBatchQuantities[pid] = val;
+              } else {
+                delete state.pzBatchQuantities[pid];
+              }
+              const row = inp.closest(".pz-batch-row");
+              if (row) row.classList.toggle("has-qty", val > 0);
+              updatePzBatchSummaryBadge();
+            });
+          });
+        }
+        updatePzBatchSummaryBadge();
+      }
+    }
+
+    function updatePzBatchSummaryBadge() {
+      const badge = document.getElementById("pzBatchSummaryBadge");
+      if (!badge) return;
+      const entries = Object.entries(state.pzBatchQuantities).filter(([, qty]) => qty > 0);
+      const totalItems = entries.length;
+      const totalUnits = entries.reduce((sum, [, qty]) => sum + Number(qty), 0);
+      badge.textContent = `Wybrano: ${totalItems} poz. (${totalUnits} szt.)`;
+    }
 
     window.openAdminCrudModal = (entity, editId = null) => {
       currentCrudEntity = entity;
@@ -3368,6 +3655,8 @@ ${opLines}
       const titleEl = document.getElementById("adminCrudTitle");
       const subEl = document.getElementById("adminCrudSubtitle");
       const isEdit = Boolean(editId);
+
+      adminCrudModalBox.style.maxWidth = entity === "stock_delivery" ? "640px" : "520px";
 
       if (entity === "operators") {
         const item = isEdit ? state.operators.find(o => o.id === editId) : null;
@@ -3440,7 +3729,7 @@ ${opLines}
         titleEl.textContent = isEdit ? "Edytuj towar" : "Dodaj towar do bazy";
         adminCrudFieldsContainer.innerHTML = `
           <div class="form-group">
-            <label>Kod kreskowy EAN / QR / SKU *</label>
+            <label>Kod kreskowy EAN / QR / SKU / PLU *</label>
             <input type="text" id="crudProdEan" class="form-control" value="${item ? item.ean : ""}" placeholder="np. 5901234567890" required />
           </div>
           <div class="form-group">
@@ -3455,6 +3744,15 @@ ${opLines}
             <div class="form-group">
               <label>Stan magazynowy *</label>
               <input type="number" step="1" min="0" id="crudProdStock" class="form-control" value="${item ? (item.stock ?? 0) : 10}" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Rabat na towar (%) — wpisz ręcznie lub wybierz z listy</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="number" step="0.1" min="0" max="100" id="crudProdDiscount" class="form-control" style="flex:1; font-weight:700;" value="${item && item.discountPercent ? item.discountPercent : 0}" placeholder="0" />
+              <button type="button" class="btn-secondary-sm" style="padding:9px 12px; white-space:nowrap;" onclick="openProductDiscountPickerModal()">
+                <span class="m-icon sm">sell</span> Z listy
+              </button>
             </div>
           </div>
           <div class="form-group">
@@ -3473,21 +3771,11 @@ ${opLines}
           </div>
         `;
       } else if (entity === "stock_delivery") {
-        const prodOpts = state.products.length
-          ? state.products.map(p => `<option value="${p.id}">[${p.ean}] ${p.name} (obecnie: ${p.stock ?? 0} ${p.unit || "szt."})</option>`).join("")
-          : `<option value="">Brak towarów w bazie</option>`;
+        state.pzModalMode = "single";
+        state.pzBatchQuantities = {};
         subEl.textContent = "Magazyn (PZ)";
-        titleEl.textContent = "Przyjmij dostawę towaru na stan";
-        adminCrudFieldsContainer.innerHTML = `
-          <div class="form-group">
-            <label>Wybierz towar z bazy *</label>
-            <select id="crudPzProduct" class="form-control" required>${prodOpts}</select>
-          </div>
-          <div class="form-group">
-            <label>Ilość przyjmowana na magazyn (+) *</label>
-            <input type="number" min="1" step="1" id="crudPzQty" class="form-control" value="10" required />
-          </div>
-        `;
+        titleEl.textContent = "Przyjmij dostawę na stan";
+        buildPzModalContent();
       } else if (entity === "categories") {
         const item = isEdit ? state.categories.find(c => c.id === editId) : null;
         subEl.textContent = "Kategorie";
@@ -3610,11 +3898,15 @@ ${opLines}
         } else if (currentCrudEntity === "products") {
           const taxSel = document.getElementById("crudProdTax");
           const opt = taxSel.options[taxSel.selectedIndex];
+          const rawDisc = Number(document.getElementById("crudProdDiscount").value) || 0;
+          const clampedDisc = Math.min(100, Math.max(0, rawDisc));
+
           const payload = {
             ean: document.getElementById("crudProdEan").value.trim(),
             name: document.getElementById("crudProdName").value.trim(),
             price: Number(document.getElementById("crudProdPrice").value),
             stock: Number(document.getElementById("crudProdStock").value) || 0,
+            discountPercent: clampedDisc,
             category: document.getElementById("crudProdCategory").value,
             taxName: opt ? opt.dataset.name : "VAT 23%",
             taxRate: opt ? Number(opt.value) : 23,
@@ -3628,11 +3920,27 @@ ${opLines}
             showToast("Dodano towar do bazy", "check_circle");
           }
         } else if (currentCrudEntity === "stock_delivery") {
-          const prodId = document.getElementById("crudPzProduct").value;
-          const qty = Number(document.getElementById("crudPzQty").value);
-          if (!prodId || qty <= 0) return;
-          await updateDoc(doc(db, "products", prodId), { stock: increment(qty) });
-          showToast(`Przyjęto +${qty} szt. na magazyn!`, "move_to_inbox");
+          if (state.pzModalMode === "single") {
+            const prodId = document.getElementById("crudPzProduct").value;
+            const qty = Number(document.getElementById("crudPzQty").value);
+            if (!prodId) return showToast("Wybierz towar z listy!", "warning");
+            if (qty <= 0) return showToast("Podaj poprawną ilość większą od 0!", "warning");
+            await updateDoc(doc(db, "products", prodId), { stock: increment(qty) });
+            showToast(`Przyjęto +${qty} szt. na magazyn!`, "move_to_inbox");
+          } else {
+            const entries = Object.entries(state.pzBatchQuantities).filter(([, qty]) => Number(qty) > 0);
+            if (entries.length === 0) {
+              return showToast("Wpisz ilość przyjęcia dla co najmniej jednego towaru!", "warning");
+            }
+            let totalUnits = 0;
+            for (const [prodId, qty] of entries) {
+              const numQty = Number(qty);
+              totalUnits += numQty;
+              await updateDoc(doc(db, "products", prodId), { stock: increment(numQty) });
+            }
+            state.pzBatchQuantities = {};
+            showToast(`Przyjęto seryjnie ${entries.length} poz. (łącznie +${totalUnits} szt.) na magazyn!`, "move_to_inbox");
+          }
         } else if (currentCrudEntity === "categories") {
           const payload = { name: document.getElementById("crudCatName").value.trim() };
           if (currentCrudEditId) {
@@ -3905,18 +4213,25 @@ ${opLines}
       });
 
       document.getElementById("adminProductsTable").innerHTML = filtered.length
-        ? filtered.map(p => `<tr>
+        ? filtered.map(p => {
+          const discPct = Number(p.discountPercent || 0);
+          const discBadge = discPct > 0
+            ? `<span class="badge-ret" style="background:#fdf2f8; color:var(--pepco-magenta); border:1px solid #fbcfe8;">-${discPct}%</span>`
+            : `<span style="color:var(--text-muted); font-size:12px;">0%</span>`;
+          return `<tr>
           <td style="font-family:'JetBrains Mono', monospace;">${p.ean}</td>
           <td><strong>${p.name}</strong></td>
           <td>${p.category}</td>
           <td>${p.taxName || (p.taxRate + '%')}</td>
           <td><strong>${p.stock ?? 0} ${p.unit || 'szt.'}</strong></td>
+          <td>${discBadge}</td>
           <td style="font-weight:700; color:var(--pepco-indigo);">${formatMoney(p.price)}</td>
           <td style="display:flex; gap:6px;">
             <button class="btn-secondary-sm" onclick="openAdminCrudModal('products', '${p.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
             <button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="7" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
+          </td></tr>`;
+        }).join("")
+        : `<tr><td colspan="8" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
     }
 
     function renderAdminStock() {
@@ -3988,6 +4303,7 @@ ${opLines}
       grid.innerHTML = filtered.map(p => {
         const st = Number(p.stock ?? 0);
         const stockClass = st === 0 ? "stock-zero" : (st <= 5 ? "stock-low" : "stock-ok");
+        const prodDisc = Number(p.discountPercent || 0);
         return `
           <div class="product-card ${st === 0 ? 'out-of-stock' : ''}" data-id="${p.id}">
             <div>
@@ -3996,7 +4312,7 @@ ${opLines}
                 <span class="prod-stock-badge ${stockClass}">Stan: ${st} ${p.unit || "szt."}</span>
               </div>
               <div class="prod-name">${p.name}</div>
-              <div class="prod-cat">${p.category} • VAT ${p.taxRate ?? 23}%</div>
+              <div class="prod-cat">${p.category} • VAT ${p.taxRate ?? 23}% ${prodDisc > 0 ? `<span style="color:var(--pepco-magenta); font-weight:700;">• -${prodDisc}%</span>` : ''}</div>
             </div>
             <div class="prod-price">${formatMoney(p.price)} <span class="prod-unit">/ ${p.unit || "szt."}</span></div>
           </div>
@@ -4023,11 +4339,12 @@ ${opLines}
       if (existing) {
         existing.qty += 1;
       } else {
+        const defaultProdDisc = Number(prod.discountPercent || 0);
         state.cart.push({
           ...prod,
           qty: 1,
           itemDiscountType: "percent",
-          itemDiscountValue: 0
+          itemDiscountValue: defaultProdDisc
         });
       }
       renderCart();
@@ -4260,7 +4577,6 @@ ${opLines}
       document.getElementById("discountAmount").textContent = "-" + formatMoney(discountVal);
       document.getElementById("totalAmount").textContent = formatMoney(total);
 
-      // Aktualizacja wyglądu przycisku rabatu w nagłówku w zależności czy wybrano rabat
       const btnDiscTrigger = document.getElementById("btnOpenReceiptDiscount");
       if (discPercent > 0) {
         btnDiscTrigger.innerHTML = `<span class="m-icon sm">sell</span> Rabat: ${discName} (-${discPercent}%)`;
@@ -4346,7 +4662,7 @@ ${opLines}
 
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && state.searchQuery.trim() !== "") {
-        const clean = state.searchQuery.trim().replace(/^(EAN|QR|SKU):/i, "");
+        const clean = state.searchQuery.trim().replace(/^(EAN|QR|SKU|PLU):/i, "");
         const match = state.products.find(p => p.ean === clean);
         if (match) {
           addToCart(match.id);
@@ -4878,49 +5194,52 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
     function recalcReturnTotal() {
       if (!foundReceiptForReturn) return;
       const sym = foundReceiptForReturn.currencySymbol || "zł";
-      let totalRefund = 0;
+      let totalRef = 0;
 
       document.querySelectorAll(".return-qty-input").forEach(inp => {
         const idx = inp.dataset.idx;
         const max = Number(inp.max);
-        let val = Number(inp.value) || 0;
-        if (val > max) { val = max; inp.value = max; }
-        if (val < 0) { val = 0; inp.value = 0; }
+        let q = Number(inp.value) || 0;
+        if (q > max) { q = max; inp.value = max; }
+        if (q < 0) { q = 0; inp.value = 0; }
 
-        const lineSum = val * Number(inp.dataset.unitPrice);
-        totalRefund += lineSum;
-        document.querySelector(`.return-line-val[data-idx="${idx}"]`).textContent = `${lineSum.toFixed(2).replace(".", ",")} ${sym}`;
+        const lineVal = q * Number(inp.dataset.unitPrice);
+        totalRef += lineVal;
+        const cell = document.querySelector(`.return-line-val[data-idx="${idx}"]`);
+        if (cell) cell.textContent = `${lineVal.toFixed(2).replace(".", ",")} ${sym}`;
       });
 
-      document.getElementById("totalRefundDisplay").textContent = `${totalRefund.toFixed(2).replace(".", ",")} ${sym}`;
+      document.getElementById("totalRefundDisplay").textContent = `${totalRef.toFixed(2).replace(".", ",")} ${sym}`;
     }
 
     document.getElementById("btnConfirmReturn").addEventListener("click", async () => {
       if (!foundReceiptForReturn) return;
       const returnedItems = [];
       let totalRefund = 0;
-      const updatedReceiptItems = JSON.parse(JSON.stringify(foundReceiptForReturn.items));
+      const updatedTransactionItems = JSON.parse(JSON.stringify(foundReceiptForReturn.items));
 
       document.querySelectorAll(".return-qty-input").forEach(inp => {
         const idx = Number(inp.dataset.idx);
-        const qtyToReturn = Number(inp.value) || 0;
-        if (qtyToReturn > 0) {
-          const item = updatedReceiptItems[idx];
+        const q = Number(inp.value) || 0;
+        if (q > 0) {
+          const itemObj = updatedTransactionItems[idx];
           const unitPrice = Number(inp.dataset.unitPrice);
+          const lineTotal = q * unitPrice;
+          totalRefund += lineTotal;
+
+          updatedTransactionItems[idx].returnedQty = Number(itemObj.returnedQty || 0) + q;
           returnedItems.push({
-            productId: item.productId,
-            ean: item.ean,
-            name: item.name,
-            qty: qtyToReturn,
-            unit: item.unit || "szt.",
-            refundAmount: Number((qtyToReturn * unitPrice).toFixed(2))
+            productId: itemObj.productId,
+            ean: itemObj.ean,
+            name: itemObj.name,
+            qty: q,
+            unitPrice: Number(unitPrice.toFixed(2)),
+            refundValue: Number(lineTotal.toFixed(2))
           });
-          totalRefund += qtyToReturn * unitPrice;
-          updatedReceiptItems[idx].returnedQty = Number(item.returnedQty || 0) + qtyToReturn;
         }
       });
 
-      if (returnedItems.length === 0) return showToast("Wybierz ilość zwracanych produktów!", "warning");
+      if (returnedItems.length === 0) return showToast("Wpisz ilość zwracanego towaru!", "warning");
 
       const returnNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(10000 + Math.random() * 90000)}`;
 
@@ -4930,25 +5249,27 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
             await updateDoc(doc(db, "products", rItem.productId), { stock: increment(rItem.qty) });
           }
         }
-        await updateDoc(doc(db, "transactions", foundReceiptForReturn.id), { items: updatedReceiptItems });
+
+        await updateDoc(doc(db, "transactions", foundReceiptForReturn.id), { items: updatedTransactionItems });
+
         await addDoc(collection(db, "returns"), {
           returnNumber,
           receiptNumber: foundReceiptForReturn.receiptNumber,
-          items: returnedItems,
+          operator: state.activeOperator,
           reason: document.getElementById("returnReason").value,
           refundMethod: document.getElementById("returnRefundMethod").value,
+          items: returnedItems,
           totalRefund: Number(totalRefund.toFixed(2)),
           currencySymbol: foundReceiptForReturn.currencySymbol || "zł",
-          operator: state.activeOperator,
           createdAt: serverTimestamp(),
           localTimestamp: new Date().toISOString()
         });
 
-        showToast(`Zwrot ${returnNumber} zatwierdzony! Stan magazynowy przywrócony.`, "check_circle");
+        showToast(`Zwrot ${returnNumber} zatwierdzony! Towar wrócił na stan.`, "assignment_return");
         document.getElementById("returnProcessBox").classList.add("hidden");
         document.getElementById("searchReceiptForReturn").value = "";
         foundReceiptForReturn = null;
-      } catch (err) { showToast("Błąd realizacji zwrotu: " + err.message, "error"); }
+      } catch (err) { showToast("Błąd zapisu zwrotu: " + err.message, "error"); }
     });
 
     function renderReturnsHistory() {
@@ -4957,71 +5278,62 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Brak zarejestrowanych zwrotów.</td></tr>`;
         return;
       }
-
       tbody.innerHTML = state.returns.map(r => {
         const dateStr = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
-        const itemsStr = (r.items || []).map(i => `${i.name} (${i.qty} ${i.unit})`).join(", ");
+        const itemsSummary = (r.items || []).map(i => `${i.name} (${i.qty} szt.)`).join(", ");
         return `<tr>
           <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
           <td>#${r.receiptNumber}</td>
           <td>${dateStr}</td>
-          <td>${itemsStr}</td>
-          <td>${r.reason}</td>
+          <td>${itemsSummary}</td>
+          <td><span class="badge-ret">${r.reason}</span></td>
           <td style="font-weight:700; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
         </tr>`;
       }).join("");
     }
 
     // ==========================================
-    // NAVIGATION TABS
+    // VIEW SWITCHING
     // ==========================================
-    const views = {
-      pos: document.getElementById("posView"),
-      docs: document.getElementById("docsView"),
-      admin: document.getElementById("adminView")
-    };
-    const navBtns = {
-      pos: document.getElementById("btnTabPos"),
-      docs: document.getElementById("btnTabDocs"),
-      admin: document.getElementById("btnTabAdmin")
-    };
+    const posView = document.getElementById("posView");
+    const docsView = document.getElementById("docsView");
+    const adminView = document.getElementById("adminView");
 
-    function switchMainView(target) {
-      Object.keys(views).forEach(k => {
-        views[k].classList.toggle("hidden", k !== target);
-        navBtns[k].classList.toggle("active", k === target);
-      });
+    const btnTabPos = document.getElementById("btnTabPos");
+    const btnTabDocs = document.getElementById("btnTabDocs");
+    const btnTabAdmin = document.getElementById("btnTabAdmin");
+
+    function switchMainView(viewName) {
+      posView.classList.toggle("hidden", viewName !== "pos");
+      docsView.classList.toggle("hidden", viewName !== "docs");
+      adminView.classList.toggle("hidden", viewName !== "admin");
+
+      btnTabPos.classList.toggle("active", viewName === "pos");
+      btnTabDocs.classList.toggle("active", viewName === "docs");
+      btnTabAdmin.classList.toggle("active", viewName === "admin");
     }
 
-    navBtns.pos.addEventListener("click", () => switchMainView("pos"));
-    navBtns.docs.addEventListener("click", () => switchMainView("docs"));
-    navBtns.admin.addEventListener("click", () => switchMainView("admin"));
-
-    document.querySelectorAll(".admin-tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const targetId = btn.dataset.adminTab;
-        document.querySelectorAll(".admin-panel-section").forEach(sec => {
-          sec.classList.toggle("hidden", sec.id !== targetId);
-        });
-      });
-    });
+    btnTabPos.addEventListener("click", () => switchMainView("pos"));
+    btnTabDocs.addEventListener("click", () => switchMainView("docs"));
+    btnTabAdmin.addEventListener("click", () => switchMainView("admin"));
 
     document.querySelectorAll("[data-doc-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("[data-doc-tab]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        const targetId = btn.dataset.docTab;
-        document.querySelectorAll(".doc-panel-section").forEach(sec => {
-          sec.classList.toggle("hidden", sec.id !== targetId);
-        });
+        const target = btn.dataset.docTab;
+        document.querySelectorAll(".doc-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
       });
     });
 
-    // Uruchomienie od ekranu blokady przy starcie aplikacji
-    showLockStep("locked");
-    renderFloatingPaymentTiles();
+    document.querySelectorAll("[data-admin-tab]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-admin-tab]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.dataset.adminTab;
+        document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
+      });
+    });
   </script>
 </body>
 </html>
