@@ -2,11 +2,13 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pepco POS — System Kasowy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Android 17 / Material 3 Expressive Rounded Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,1,0" />
   
   <style>
     :root {
@@ -24,7 +26,7 @@
       --danger: #ef4444;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
       --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
-      --radius: 12px;
+      --radius: 14px;
     }
 
     * {
@@ -33,38 +35,65 @@
       padding: 0;
     }
 
-    body {
+    html, body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-app);
       color: var(--text-main);
-      height: 100vh;
+      width: 100%;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
+    /* MATERIAL SYMBOLS (ANDROID 17 STYLE) */
+    .m-icon {
+      font-family: 'Material Symbols Rounded';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      vertical-align: middle;
+    }
+
+    .m-icon.sm { font-size: 16px; }
+    .m-icon.lg { font-size: 26px; }
+    .m-icon.xl { font-size: 40px; }
+
     /* TOP BAR */
     .topbar {
       background: var(--pepco-gradient);
       color: #fff;
-      height: 66px;
-      padding: 0 24px;
+      min-height: 64px;
+      padding: 8px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       box-shadow: 0 2px 10px rgba(46, 21, 232, 0.25);
       z-index: 10;
       flex-shrink: 0;
+      flex-wrap: wrap;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .pepco-svg-logo {
-      height: 36px;
+      height: 34px;
       width: auto;
       display: block;
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.12));
@@ -74,7 +103,7 @@
       background: rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(6px);
       padding: 5px 11px;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.5px;
@@ -91,14 +120,14 @@
       border: 1px solid rgba(255, 255, 255, 0.25);
       color: #fff;
       padding: 8px 14px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
       font-size: 13px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .nav-btn:hover {
@@ -114,16 +143,16 @@
     .topbar-status {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-size: 12px;
     }
 
     .operator-select {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.28);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.25);
-      padding: 5px 10px;
-      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.28);
+      padding: 7px 11px;
+      border-radius: 9px;
       font-size: 12px;
       font-weight: 600;
       outline: none;
@@ -135,40 +164,150 @@
       background: #fff;
     }
 
-    .firebase-pill {
-      display: flex;
+    .btn-lock-pos {
+      background: rgba(239, 68, 68, 0.88);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.25);
-      padding: 5px 11px;
-      border-radius: 20px;
-      font-weight: 500;
+      gap: 5px;
+      transition: 0.15s;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--warning);
-    }
-
-    .status-dot.online {
-      background: #34d399;
-      box-shadow: 0 0 8px #34d399;
+    .btn-lock-pos:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
     }
 
     .hidden {
       display: none !important;
     }
 
+    /* FLOATING LOCK & AUTH OVERLAY */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 16px;
+      animation: fadeInOverlay 0.2s ease-out;
+    }
+
+    .lock-card {
+      background: #ffffff;
+      border-radius: 22px;
+      width: 100%;
+      max-width: 460px;
+      padding: 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      text-align: center;
+    }
+
+    .lock-icon-badge {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 14px auto;
+      border-radius: 20px;
+      background: var(--pepco-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(46, 21, 232, 0.28);
+    }
+
+    .operator-pick-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 290px;
+      overflow-y: auto;
+      margin: 16px 0;
+      text-align: left;
+    }
+
+    .operator-pick-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .operator-pick-item:hover {
+      border-color: var(--pepco-indigo);
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    .pin-dots-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      letter-spacing: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid var(--border-color);
+      background: #f8fafc;
+      margin: 14px 0;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--pepco-indigo);
+      font-weight: 800;
+    }
+
+    .pin-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pin-key {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: #f9fafb;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: 0.12s;
+    }
+
+    .pin-key:hover {
+      background: #eef2ff;
+      border-color: var(--pepco-blue);
+    }
+
+    .pin-key:active {
+      transform: scale(0.96);
+    }
+
     /* MAIN POS LAYOUT */
     .main-container {
       flex: 1;
       display: grid;
-      grid-template-columns: 1fr 460px;
-      gap: 16px;
-      padding: 16px;
-      height: calc(100vh - 66px);
+      grid-template-columns: minmax(0, 1fr) clamp(360px, 34vw, 470px);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
       overflow: hidden;
     }
 
@@ -176,27 +315,30 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      min-height: 0;
       overflow: hidden;
     }
 
     .scanner-bar {
       background: var(--bg-card);
-      padding: 12px 14px;
+      padding: 10px 12px;
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .scanner-input-wrap {
       position: relative;
       flex: 1;
+      min-width: 0;
     }
 
     .scanner-input {
       width: 100%;
-      padding: 11px 16px 11px 40px;
+      padding: 10px 14px 10px 40px;
       border: 2px solid var(--border-color);
       border-radius: 10px;
       font-size: 14px;
@@ -211,11 +353,51 @@
 
     .scanner-icon {
       position: absolute;
-      left: 13px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 16px;
+    }
+
+    .toolbar-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 13px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-color);
+      background: #f8fafc;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .toolbar-action-btn:hover {
+      border-color: var(--pepco-blue);
+      background: #eff6ff;
+      color: var(--pepco-indigo);
+    }
+
+    .toolbar-action-btn.qr-btn {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: var(--pepco-indigo);
+    }
+
+    .toolbar-action-btn.qr-btn:hover {
+      background: var(--pepco-indigo);
+      color: #fff;
+      border-color: var(--pepco-indigo);
+    }
+
+    .toolbar-action-btn.fs-active {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
     }
 
     .categories-bar {
@@ -254,7 +436,7 @@
       flex: 1;
       overflow-y: auto;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
       padding-right: 4px;
       align-content: start;
@@ -345,6 +527,7 @@
       box-shadow: var(--shadow-md);
       display: flex;
       flex-direction: column;
+      min-height: 0;
       overflow: hidden;
       border: 1px solid var(--border-color);
     }
@@ -356,6 +539,9 @@
       justify-content: space-between;
       align-items: center;
       background: #fafbfc;
+      flex-shrink: 0;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .cart-title {
@@ -366,21 +552,51 @@
       gap: 6px;
     }
 
+    .cart-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .btn-clear {
       background: #fee2e2;
       color: var(--danger);
       border: none;
       padding: 5px 10px;
-      border-radius: 6px;
+      border-radius: 7px;
       font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-discount-trigger {
+      background: #eef2ff;
+      color: var(--pepco-indigo);
+      border: 1px solid #c7d2fe;
+      padding: 5px 10px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.15s;
+    }
+
+    .btn-discount-trigger:hover {
+      background: var(--pepco-indigo);
+      color: #fff;
     }
 
     .doc-type-bar {
       padding: 10px 14px;
       background: #f8fafc;
       border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
     }
 
     .doc-type-tabs {
@@ -400,6 +616,10 @@
       cursor: pointer;
       text-align: center;
       transition: 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
 
     .doc-type-btn.active {
@@ -436,6 +656,9 @@
       padding: 6px 8px;
       border-radius: 6px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .cart-items {
@@ -445,6 +668,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      min-height: 0;
     }
 
     .empty-cart {
@@ -452,12 +676,10 @@
       text-align: center;
       color: var(--text-muted);
       padding: 20px;
-    }
-
-    .empty-cart span {
-      font-size: 34px;
-      display: block;
-      margin-bottom: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
     }
 
     .cart-item {
@@ -470,7 +692,7 @@
       border: 1px solid var(--border-color);
       border-radius: 9px;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      transition: border-color 0.15s, background 0.15s;
     }
 
     .cart-item:hover {
@@ -516,14 +738,17 @@
     }
 
     .qty-btn {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border: none;
       background: transparent;
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
       border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .qty-btn:hover { background: #f3f4f6; }
@@ -544,25 +769,9 @@
 
     .cart-footer {
       border-top: 1px solid var(--border-color);
-      padding: 14px 16px;
+      padding: 12px 16px;
       background: #fafbfc;
-    }
-
-    .discount-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      font-size: 12.5px;
-    }
-
-    .discount-select {
-      padding: 4px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      max-width: 210px;
+      flex-shrink: 0;
     }
 
     .summary-line {
@@ -577,10 +786,10 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-top: 8px;
-      padding-top: 8px;
+      margin-top: 6px;
+      padding-top: 6px;
       border-top: 2px dashed var(--border-color);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .summary-total span:first-child {
@@ -589,7 +798,7 @@
     }
 
     .total-amount {
-      font-size: 26px;
+      font-size: 25px;
       font-weight: 800;
       color: var(--pepco-indigo);
     }
@@ -597,12 +806,12 @@
     /* PRZYCISK PODSUMA */
     .btn-podsuma {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       border: none;
       border-radius: 12px;
       background: var(--pepco-gradient);
       color: #fff;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       letter-spacing: 0.4px;
       cursor: pointer;
@@ -610,7 +819,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       transition: transform 0.12s, box-shadow 0.12s, opacity 0.2s;
     }
 
@@ -625,18 +834,63 @@
       cursor: not-allowed;
     }
 
-    /* FLOATING PAYMENT SCREEN (WYMAZUJĄCY / ROZMYWAJĄCY TŁO) */
+    /* QR SCANNER VIEWPORT */
+    .qr-camera-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #0f172a;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-camera-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .qr-reticle {
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border: 3px solid #34d399;
+      border-radius: 18px;
+      box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.45);
+      pointer-events: none;
+    }
+
+    .qr-scan-line {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399;
+      animation: scanMove 2s infinite ease-in-out;
+    }
+
+    @keyframes scanMove {
+      0%, 100% { top: 14px; }
+      50% { top: 190px; }
+    }
+
+    /* FLOATING PAYMENT SCREEN */
     .floating-payment-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 150;
-      padding: 20px;
+      padding: 16px;
       animation: fadeInOverlay 0.18s ease-out;
     }
 
@@ -650,18 +904,18 @@
       border-radius: 20px;
       width: 100%;
       max-width: 780px;
-      padding: 28px;
+      padding: 24px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.4);
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       gap: 24px;
-      max-height: 92vh;
+      max-height: 92dvh;
       overflow-y: auto;
     }
 
     .fp-left h2 {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
       margin-bottom: 4px;
     }
@@ -699,7 +953,7 @@
       border: 2px solid var(--border-color);
       background: #f8fafc;
       border-radius: 14px;
-      padding: 16px 14px;
+      padding: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -721,15 +975,16 @@
     }
 
     .payment-tile .tile-icon {
-      font-size: 26px;
       width: 44px;
       height: 44px;
       background: #fff;
-      border-radius: 10px;
+      color: var(--pepco-indigo);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
     }
 
     .payment-tile .tile-name {
@@ -799,7 +1054,7 @@
       white-space: pre-wrap;
       flex: 1;
       overflow-y: auto;
-      max-height: 360px;
+      max-height: 410px;
     }
 
     /* ITEM EDIT & DISCOUNT MODAL */
@@ -845,9 +1100,10 @@
 
     /* ADMINISTRATION & DOCUMENTS VIEW */
     .admin-view {
-      height: calc(100vh - 66px);
+      flex: 1;
+      min-height: 0;
       display: grid;
-      grid-template-columns: 255px 1fr;
+      grid-template-columns: 265px minmax(0, 1fr);
       overflow: hidden;
     }
 
@@ -857,7 +1113,7 @@
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       overflow-y: auto;
     }
 
@@ -867,12 +1123,12 @@
       text-transform: uppercase;
       color: var(--text-muted);
       letter-spacing: 0.6px;
-      margin: 8px 0 4px 10px;
+      margin: 10px 0 4px 10px;
     }
 
     .admin-tab-btn {
       text-align: left;
-      padding: 10px 14px;
+      padding: 9px 14px;
       border: none;
       background: transparent;
       border-radius: 9px;
@@ -889,8 +1145,13 @@
     .admin-tab-btn:hover { background: #f3f4f6; }
     .admin-tab-btn.active { background: #eef2ff; color: var(--pepco-indigo); }
 
+    .admin-subtab-btn {
+      padding-left: 26px;
+      font-size: 12.5px;
+    }
+
     .admin-content {
-      padding: 22px;
+      padding: 20px;
       overflow-y: auto;
     }
 
@@ -902,10 +1163,44 @@
       border: 1px solid var(--border-color);
       max-width: 1120px;
       margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .admin-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .admin-card h2 { font-size: 18px; margin-bottom: 4px; }
-    .admin-card p.desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .admin-card p.desc { font-size: 13px; color: var(--text-muted); }
+
+    .filter-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 14px;
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .report-generator-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: flex-end;
+    }
 
     .form-grid {
       display: grid;
@@ -942,10 +1237,39 @@
       color: #fff;
       border: none;
       padding: 10px 18px;
-      border-radius: 8px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--text-main);
+      border: 1.5px solid var(--border-color);
+      padding: 9px 16px;
+      border-radius: 9px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-outline:hover {
+      background: #f3f4f6;
     }
 
     .btn-danger-sm {
@@ -957,6 +1281,9 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-secondary-sm {
@@ -968,12 +1295,15 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 14px;
+      margin-top: 8px;
       font-size: 13px;
     }
 
@@ -999,6 +1329,16 @@
       display: inline-block;
     }
 
+    .badge-success {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: #dcfce7;
+      color: #166534;
+      display: inline-block;
+    }
+
     .badge-warn {
       padding: 3px 8px;
       border-radius: 6px;
@@ -1019,25 +1359,30 @@
       display: inline-block;
     }
 
+    /* FLOATING MODAL BACKDROP WITH SOFT BLUR */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(17, 24, 39, 0.65);
-      backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, 0.56);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 160;
+      z-index: 220;
       padding: 16px;
+      animation: fadeInOverlay 0.16s ease-out;
     }
 
     .modal-box {
       background: #fff;
-      border-radius: 16px;
+      border-radius: 18px;
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       padding: 24px;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.28);
+      box-shadow: 0 22px 45px rgba(0,0,0,0.3);
+      max-height: 92dvh;
+      overflow-y: auto;
     }
 
     .toast {
@@ -1048,17 +1393,65 @@
       background: #111827;
       color: #fff;
       padding: 10px 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
-      z-index: 250;
+      z-index: 400;
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      #reportPrintArea, #reportPrintArea * { visibility: visible !important; }
+      #reportPrintArea {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        color: #000;
+        border: none;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+      .floating-payment-card {
+        grid-template-columns: 1fr;
+      }
+      .fp-right {
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding-left: 0;
+        padding-top: 16px;
+      }
+      .admin-view {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+      .admin-sidebar {
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 10px;
+      }
+      .admin-sidebar-title { display: none; }
+      .admin-tab-btn { white-space: nowrap; }
+      .admin-subtab-btn { padding-left: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP HEADER WITH OFFICIAL PEPCO LOGO -->
+  <!-- TOP HEADER -->
   <header class="topbar">
     <div class="brand">
       <svg class="pepco-svg-logo" viewBox="0 0 330 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Pepco Logo">
@@ -1075,37 +1468,112 @@
     </div>
 
     <nav class="topbar-nav">
-      <button class="nav-btn active" id="btnTabPos">🛒 Kasa Sprzedaży</button>
-      <button class="nav-btn" id="btnTabDocs">🧾 Dokumenty i Zwroty</button>
-      <button class="nav-btn" id="btnTabAdmin">⚙️ Administracja</button>
+      <button class="nav-btn active" id="btnTabPos"><span class="m-icon sm">point_of_sale</span> Kasa Sprzedaży</button>
+      <button class="nav-btn" id="btnTabDocs"><span class="m-icon sm">receipt_long</span> Dokumenty i Zwroty</button>
+      <button class="nav-btn" id="btnTabAdmin"><span class="m-icon sm">tune</span> Administracja</button>
     </nav>
 
     <div class="topbar-status">
-      <select id="activeOperatorSelect" class="operator-select" title="Aktywny operator kasy">
-        <option value="Brak operatora">Kasjer: Nie wybrano</option>
+      <select id="activeOperatorSelect" class="operator-select" title="Zmień operatora kasy (wymaga podania kodu PIN)">
+        <option value="">Kasjer: Niezalogowany</option>
       </select>
-      <div class="firebase-pill">
-        <span class="status-dot" id="fbDot"></span>
-        <span id="fbStatusText">Łączenie...</span>
-      </div>
       <div id="clockDisplay" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;"></div>
+      <button type="button" id="btnLockPos" class="btn-lock-pos" title="Zablokuj stanowisko kasowe">
+        <span class="m-icon sm">lock</span> Zablokuj
+      </button>
     </div>
   </header>
+
+  <!-- FLOATING SCREEN: EKRAN BLOKADY / LOGOWANIE OPERATORA KODEM PIN -->
+  <div class="lock-overlay" id="lockAuthOverlay">
+    <div class="lock-card">
+      <div id="lockStepLocked">
+        <div class="lock-icon-badge">
+          <span class="m-icon xl">lock</span>
+        </div>
+        <h2 style="font-size:24px; font-weight:800; margin-bottom:6px;">Kasa zablokowana</h2>
+        <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:22px;">
+          Stanowisko kasowe wymaga autoryzacji operatora. Kliknij poniżej, aby wybrać kasjera i podać kod PIN.
+        </p>
+        <button type="button" id="btnLockStartLogin" class="btn-primary" style="width:100%; padding:14px; font-size:15px;">
+          <span class="m-icon">login</span> Zaloguj
+        </button>
+      </div>
+
+      <div id="lockStepOperatorList" class="hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <button type="button" id="btnOperatorListBack" class="btn-outline" style="padding:7px 12px;">
+            <span class="m-icon sm">arrow_back</span> Wstecz
+          </button>
+          <span style="font-size:12px; font-weight:700; color:var(--pepco-indigo); text-transform:uppercase;">Krok 1 z 2</span>
+        </div>
+        <h2 style="font-size:20px; font-weight:800; margin-top:6px;">Wybierz operatora kasy</h2>
+        <p style="font-size:12.5px; color:var(--text-muted);">Kliknij swoje konto kasjera, aby przejść do wprowadzania kodu PIN.</p>
+
+        <div class="operator-pick-list" id="lockOperatorPickList">
+          <div style="padding:20px; text-align:center; color:var(--text-muted); font-size:13px;">Ładowanie listy operatorów...</div>
+        </div>
+      </div>
+
+      <div id="lockStepPinEntry" class="hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <button type="button" id="btnPinEntryBack" class="btn-outline" style="padding:7px 12px;">
+            <span class="m-icon sm">arrow_back</span> Wstecz
+          </button>
+          <span style="font-size:12px; font-weight:700; color:var(--pepco-indigo); text-transform:uppercase;">Autoryzacja PIN</span>
+        </div>
+
+        <h2 style="font-size:20px; font-weight:800; margin-top:4px;">Wprowadź Kod PIN</h2>
+        <p id="pinSelectedOperatorLabel" style="font-size:13.5px; font-weight:700; color:var(--pepco-blue); margin-top:4px;">Operator: ---</p>
+
+        <div class="pin-dots-display" id="pinDotsDisplay">••••</div>
+
+        <div class="pin-keypad">
+          <button type="button" class="pin-key" data-digit="1">1</button>
+          <button type="button" class="pin-key" data-digit="2">2</button>
+          <button type="button" class="pin-key" data-digit="3">3</button>
+          <button type="button" class="pin-key" data-digit="4">4</button>
+          <button type="button" class="pin-key" data-digit="5">5</button>
+          <button type="button" class="pin-key" data-digit="6">6</button>
+          <button type="button" class="pin-key" data-digit="7">7</button>
+          <button type="button" class="pin-key" data-digit="8">8</button>
+          <button type="button" class="pin-key" data-digit="9">9</button>
+          <button type="button" class="pin-key" id="btnPinClear" style="color:var(--danger); font-size:14px;">WYCZYŚĆ</button>
+          <button type="button" class="pin-key" data-digit="0">0</button>
+          <button type="button" class="pin-key" id="btnPinBackspace"><span class="m-icon">backspace</span></button>
+        </div>
+
+        <button type="button" id="btnPinConfirm" class="btn-primary" style="width:100%; padding:13px; font-size:15px;">
+          <span class="m-icon sm">check_circle</span> Zatwierdź kod PIN
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- VIEW 1: POS REGISTER -->
   <main class="main-container" id="posView">
     <section class="catalog-panel">
       <div class="scanner-bar">
         <div class="scanner-input-wrap">
-          <span class="scanner-icon">🔍</span>
+          <span class="m-icon scanner-icon">search</span>
           <input 
             type="text" 
             id="searchInput" 
             class="scanner-input" 
-            placeholder="Zeskanuj kod EAN lub wpisz nazwę towaru..." 
+            placeholder="Zeskanuj kod QR / EAN lub wpisz nazwę towaru..." 
             autocomplete="off"
           />
         </div>
+
+        <button type="button" id="btnOpenQrScanner" class="toolbar-action-btn qr-btn" title="Skanuj kod QR lub kod kreskowy kamerą">
+          <span class="m-icon">qr_code_scanner</span>
+          <span>Skanuj QR</span>
+        </button>
+
+        <button type="button" id="btnToggleFullscreen" class="toolbar-action-btn" title="Przełącz tryb pełnoekranowy">
+          <span class="m-icon" id="fsIcon">fullscreen</span>
+          <span id="fsLabel">Pełny ekran</span>
+        </button>
       </div>
 
       <div class="categories-bar" id="categoryBar">
@@ -1114,30 +1582,46 @@
 
       <div class="products-grid" id="productsGrid">
         <div style="grid-column: 1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
-          Brak towarów w bazie. Przejdź do zakładki <strong>⚙️ Administracja -> Towary</strong>, aby dodać asortyment.
+          Brak towarów w bazie. Przejdź do zakładki <strong>Administracja -> Towary</strong>, aby dodać asortyment.
         </div>
       </div>
     </section>
 
-    <!-- RIGHT PANEL: RECEIPT & PODSUMA BUTTON -->
     <aside class="cart-panel">
       <div class="cart-header">
-        <div class="cart-title">🧾 Bieżący paragon <span id="cartCountBadge" style="font-size:11.5px; color:var(--text-muted);">(0 poz.)</span></div>
-        <button class="btn-clear" id="btnClearCart">Wyczyść</button>
+        <div class="cart-title">
+          <span class="m-icon sm" style="color:var(--pepco-indigo);">receipt</span>
+          Bieżący paragon <span id="cartCountBadge" style="font-size:11.5px; color:var(--text-muted);">(0 poz.)</span>
+        </div>
+        <div class="cart-header-actions">
+          <button type="button" class="btn-discount-trigger" id="btnOpenReceiptDiscount" title="Wybierz rabat na cały paragon z listy zaprogramowanych rabatów">
+            <span class="m-icon sm">sell</span> Rabat
+          </button>
+          <button class="btn-clear" id="btnClearCart"><span class="m-icon sm">delete_sweep</span> Wyczyść</button>
+        </div>
       </div>
 
-      <!-- RODZAJ DOKUMENTU SPRZEDAŻY -->
       <div class="doc-type-bar">
         <div class="doc-type-tabs">
-          <button type="button" class="doc-type-btn active" data-doc-type="receipt">🧾 Paragon</button>
-          <button type="button" class="doc-type-btn" data-doc-type="receipt_nip">🏢 Paragon z NIP<br><span style="font-weight:500; font-size:10px;">(do 450 PLN)</span></button>
-          <button type="button" class="doc-type-btn" data-doc-type="invoice">📄 Zwykła Faktura<br><span style="font-weight:500; font-size:10px;">(z NIP / bez NIP)</span></button>
+          <button type="button" class="doc-type-btn active" data-doc-type="receipt">
+            <span class="m-icon sm">receipt</span>
+            <span>Paragon</span>
+          </button>
+          <button type="button" class="doc-type-btn" data-doc-type="receipt_nip">
+            <span class="m-icon sm">domain</span>
+            <span>Paragon z NIP <small style="font-weight:500;">(do 450)</small></span>
+          </button>
+          <button type="button" class="doc-type-btn" data-doc-type="invoice">
+            <span class="m-icon sm">description</span>
+            <span>Zwykła Faktura</span>
+          </button>
         </div>
 
         <div id="receiptNipBox" class="buyer-fields hidden">
           <input type="text" id="receiptBuyerNip" class="buyer-input" placeholder="Wpisz NIP nabywcy (10 cyfr)..." maxlength="13" />
           <div id="limit450Alert" class="limit-warning hidden">
-            ⚠️ Kwota przekracza 450,00 PLN! Wybierz opcję <strong>Zwykła Faktura</strong>.
+            <span class="m-icon sm">warning</span>
+            <span>Kwota przekracza 450,00 PLN! Wybierz opcję <strong>Zwykła Faktura</strong>.</span>
           </div>
         </div>
 
@@ -1154,20 +1638,13 @@
 
       <div class="cart-items" id="cartItemsContainer">
         <div class="empty-cart">
-          <span>🛒</span>
+          <span class="m-icon xl" style="color:#cbd5e1;">shopping_basket</span>
           <strong>Paragon jest pusty</strong>
-          <p style="font-size: 12px; margin-top: 4px;">Wybierz towar z katalogu lub zeskanuj kod EAN</p>
+          <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod QR / EAN</p>
         </div>
       </div>
 
       <div class="cart-footer">
-        <div class="discount-row">
-          <span>Rabat na cały paragon:</span>
-          <select id="discountSelect" class="discount-select">
-            <option value="">Brak rabatu (0%)</option>
-          </select>
-        </div>
-
         <div class="summary-line">
           <span>Wartość netto:</span>
           <span id="netAmount">0,00 zł</span>
@@ -1186,15 +1663,120 @@
           <span class="total-amount" id="totalAmount">0,00 zł</span>
         </div>
 
-        <!-- PRZYCISK PODSUMA PRZENOSZĄCY DO EKRANU PŁYWAJĄCEGO -->
         <button class="btn-podsuma" id="btnPodsuma" disabled>
-          💳 PODSUMA
+          <span class="m-icon">payments</span> PODSUMA
         </button>
       </div>
     </aside>
   </main>
 
-  <!-- MODAL: EDYCJA POZYCJI PARAGONU (CENA, ILOŚĆ, RABAT % / KWOTOWY) -->
+  <!-- MODAL: PŁYWAJĄCE OKNO WYBORU RABATU NA CAŁY PARAGON -->
+  <div class="modal-backdrop hidden" id="receiptDiscountModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="m-icon" style="color:var(--pepco-indigo);">sell</span>
+          <h3 style="font-size:18px; font-weight:800;">Wybierz rabat na cały paragon</h3>
+        </div>
+        <button type="button" id="btnCloseReceiptDiscountModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+      <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">Kliknij zaprogramowany rabat, aby zastosować go do bieżącego paragonu.</p>
+
+      <div id="receiptDiscountOptionsList" style="display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; margin-bottom:14px;">
+        <!-- Lista generowana dynamicznie -->
+      </div>
+
+      <button type="button" id="btnRemoveReceiptDiscount" class="btn-danger-sm" style="width:100%; padding:10px; justify-content:center; font-size:13px;">
+        <span class="m-icon sm">remove_circle</span> Usuń rabat z paragonu (Brak rabatu)
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: PŁYWAJĄCE OKNO PODGLĄDU WYGENEROWANEGO / ZAPISANEGO RAPORTU -->
+  <div class="modal-backdrop hidden" id="reportPreviewModal">
+    <div class="modal-box" style="max-width:580px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div>
+          <span id="reportModalTypeBadge" class="badge-pay" style="margin-bottom:4px;">RAPORT FISKALNY</span>
+          <h3 id="reportModalTitle" style="font-size:18px; font-weight:800;">Podgląd raportu</h3>
+        </div>
+        <button type="button" id="btnCloseReportModal" style="background:#f3f4f6; border:none; width:34px; height:34px; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+
+      <div class="receipt-paper" id="reportPrintArea" style="max-height:460px; font-size:11.5px;"></div>
+
+      <div style="display:flex; justify-content:space-between; gap:10px; margin-top:14px;">
+        <button type="button" onclick="window.print()" class="btn-outline">
+          <span class="m-icon sm">print</span> Drukuj raport
+        </button>
+        <button type="button" id="btnOkReportModal" class="btn-primary">
+          <span class="m-icon sm">check</span> Zamknij podgląd
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PŁYWAJĄCE OKNO DODAWANIA / EDYCJI REKORDU W ADMINISTRACJI -->
+  <div class="modal-backdrop hidden" id="adminCrudModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div>
+          <span id="adminCrudSubtitle" style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--pepco-blue); letter-spacing:0.5px;">Administracja</span>
+          <h3 id="adminCrudTitle" style="font-size:18px; font-weight:800; margin-top:2px;">Dodaj pozycję</h3>
+        </div>
+        <button type="button" id="btnCloseAdminCrudModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+
+      <form id="adminCrudForm">
+        <div id="adminCrudFieldsContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid var(--border-color);">
+          <button type="button" id="btnCancelAdminCrud" class="btn-outline">Anuluj</button>
+          <button type="submit" class="btn-primary"><span class="m-icon sm">save</span> Zapisz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SKANER KODÓW QR / EAN -->
+  <div class="modal-backdrop hidden" id="qrScannerModal">
+    <div class="modal-box" style="max-width:460px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="m-icon" style="color:var(--pepco-indigo);">qr_code_scanner</span>
+          <h3 style="font-size:18px; font-weight:800;">Skaner kodów QR i EAN</h3>
+        </div>
+        <button type="button" id="btnCloseQrModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+      <p style="font-size:12.5px; color:var(--text-muted);">Skieruj kamerę na kod QR lub kod kreskowy produktu, aby automatycznie dodać go na paragon.</p>
+
+      <div class="qr-camera-frame">
+        <video id="qrVideoElement" playsinline muted></video>
+        <div class="qr-reticle">
+          <div class="qr-scan-line"></div>
+        </div>
+      </div>
+
+      <div id="qrStatusText" style="font-size:12px; font-weight:600; text-align:center; color:var(--pepco-indigo); margin-bottom:12px;">
+        Uruchamianie kamery...
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid var(--border-color); padding:10px; border-radius:10px; display:flex; gap:8px;">
+        <input type="text" id="manualQrInput" class="form-control" style="flex:1;" placeholder="Lub wpisz odczytany kod QR / EAN..." />
+        <button type="button" id="btnManualQrSubmit" class="btn-primary">Dodaj</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDYCJA POZYCJI PARAGONU -->
   <div class="modal-backdrop hidden" id="itemEditModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
@@ -1203,7 +1785,9 @@
           <h3 id="editModalProdName" style="font-size:18px; font-weight:800; margin-top:2px;">Nazwa produktu</h3>
           <p id="editModalProdMeta" style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">EAN: ---</p>
         </div>
-        <button type="button" id="btnCloseItemEditModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; font-weight:700; cursor:pointer;">✕</button>
+        <button type="button" id="btnCloseItemEditModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
       </div>
 
       <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:14px;">
@@ -1222,7 +1806,6 @@
         </div>
       </div>
 
-      <!-- 3. NALICZ RABAT NA POZYCJĘ -->
       <div style="background:#fdf2f8; border:1px solid #fbcfe8; padding:14px; border-radius:12px;">
         <label style="font-size:12.5px; font-weight:700; color:#9d174d; display:block; margin-bottom:6px;">
           3. Nalicz rabat na tę pozycję
@@ -1238,7 +1821,6 @@
           <span id="editItemDiscSuffix" style="font-size:18px; font-weight:800; color:#9d174d; min-width:34px;">%</span>
         </div>
 
-        <!-- Szybkie przyciski rabatowe dla procentów -->
         <div id="quickItemPercentBtns" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:6px; margin-top:8px;">
           <button type="button" data-qdisc="0" style="padding:5px; border:1px solid #f9a8d4; background:#fff; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">0%</button>
           <button type="button" data-qdisc="5" style="padding:5px; border:1px solid #f9a8d4; background:#fff; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">-5%</button>
@@ -1248,7 +1830,6 @@
         </div>
       </div>
 
-      <!-- Podsumowanie edytowanej pozycji -->
       <div class="item-edit-preview-box">
         <div style="display:flex; justify-content:space-between; color:var(--text-muted);">
           <span>Wartość bazowa (cena × ilość):</span>
@@ -1265,22 +1846,26 @@
       </div>
 
       <div style="display:flex; justify-content:space-between; gap:10px;">
-        <button type="button" id="btnRemoveItemFromModal" class="btn-danger-sm" style="padding:10px 14px;">🗑️ Usuń z paragonu</button>
+        <button type="button" id="btnRemoveItemFromModal" class="btn-danger-sm" style="padding:10px 14px;">
+          <span class="m-icon sm">delete</span> Usuń
+        </button>
         <div style="display:flex; gap:8px;">
-          <button type="button" id="btnCancelItemEdit" style="padding:10px 14px; border:1px solid var(--border-color); background:#fff; border-radius:8px; font-weight:600; cursor:pointer;">Anuluj</button>
-          <button type="button" id="btnSaveItemEdit" class="btn-primary">💾 Zapisz zmiany</button>
+          <button type="button" id="btnCancelItemEdit" class="btn-outline">Anuluj</button>
+          <button type="button" id="btnSaveItemEdit" class="btn-primary"><span class="m-icon sm">check</span> Zapisz zmiany</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FLOATING PAYMENT SCREEN (WYMAZUJĄCY / ROZMYWAJĄCY TŁO) -->
+  <!-- FLOATING PAYMENT SCREEN -->
   <div class="floating-payment-overlay hidden" id="floatingPaymentOverlay">
     <div class="floating-payment-card">
       <div class="fp-left">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>Wybór formy płatności</h2>
-          <button type="button" id="btnCloseFloatingOverlay" style="background:#f3f4f6; border:none; padding:6px 12px; border-radius:8px; font-weight:600; cursor:pointer; font-size:12px;">← Wróć do paragonu</button>
+          <button type="button" id="btnCloseFloatingOverlay" class="btn-outline" style="padding:6px 12px; font-size:12px;">
+            <span class="m-icon sm">arrow_back</span> Wróć do paragonu
+          </button>
         </div>
         <p style="font-size:13px; color:var(--text-muted); margin-top:2px;">Kliknij formę płatności, aby rozliczyć transakcję i wyczyścić ekran sprzedaży.</p>
 
@@ -1326,13 +1911,13 @@
   <section class="admin-view hidden" id="docsView">
     <aside class="admin-sidebar">
       <div class="admin-sidebar-title">Rejestry Sprzedaży</div>
-      <button class="admin-tab-btn active" data-doc-tab="subReceipts">🧾 Paragony fiskalne</button>
-      <button class="admin-tab-btn" data-doc-tab="subInvoices">📄 Rejestr Faktur VAT</button>
+      <button class="admin-tab-btn active" data-doc-tab="subReceipts"><span class="m-icon sm">receipt</span> Paragony fiskalne</button>
+      <button class="admin-tab-btn" data-doc-tab="subInvoices"><span class="m-icon sm">description</span> Rejestr Faktur VAT</button>
 
       <div class="admin-sidebar-title">Obsługa Posprzedażowa</div>
-      <button class="admin-tab-btn" data-doc-tab="subInvoiceToReceipt">🔄 Faktura do paragonu</button>
-      <button class="admin-tab-btn" data-doc-tab="subReturns">↩️ Zwrot towaru (Korekta)</button>
-      <button class="admin-tab-btn" data-doc-tab="subReturnsHistory">📋 Rejestr zwrotów</button>
+      <button class="admin-tab-btn" data-doc-tab="subInvoiceToReceipt"><span class="m-icon sm">sync_alt</span> Faktura do paragonu</button>
+      <button class="admin-tab-btn" data-doc-tab="subReturns"><span class="m-icon sm">assignment_return</span> Zwrot towaru (Korekta)</button>
+      <button class="admin-tab-btn" data-doc-tab="subReturnsHistory"><span class="m-icon sm">history</span> Rejestr zwrotów</button>
     </aside>
 
     <div class="admin-content">
@@ -1341,7 +1926,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
               <h2>Historia paragonów fiskalnych</h2>
-              <p class="desc" style="margin-bottom:0;">Wszystkie paragony detaliczne oraz paragony z NIP do 450 zł.</p>
+              <p class="desc">Wszystkie paragony detaliczne oraz paragony z NIP do 450 zł.</p>
             </div>
             <div style="text-align:right;">
               <span style="font-size:12px; color:var(--text-muted);">Utarg z paragonów:</span>
@@ -1392,7 +1977,7 @@
 
           <div style="display:flex; gap:10px; max-width:520px; margin-bottom:16px;">
             <input type="text" id="searchReceiptForInv" class="form-control" style="flex:1;" placeholder="Wpisz numer paragonu..." />
-            <button type="button" id="btnFindReceiptInv" class="btn-primary">🔍 Wyszukaj paragon</button>
+            <button type="button" id="btnFindReceiptInv" class="btn-primary"><span class="m-icon sm">search</span> Wyszukaj paragon</button>
           </div>
 
           <div id="invToReceiptFormBox" class="hidden" style="background:#f8fafc; padding:18px; border-radius:10px; border:1px solid var(--border-color);">
@@ -1419,7 +2004,7 @@
               </div>
             </div>
             <div id="f2pErrorAlert" class="limit-warning hidden" style="margin-bottom:12px;"></div>
-            <button type="button" id="btnIssueInvoiceToReceipt" class="btn-primary">📄 Wystaw i zapisz Fakturę VAT</button>
+            <button type="button" id="btnIssueInvoiceToReceipt" class="btn-primary"><span class="m-icon sm">description</span> Wystaw i zapisz Fakturę VAT</button>
           </div>
         </div>
       </div>
@@ -1431,7 +2016,7 @@
 
           <div style="display:flex; gap:10px; max-width:520px; margin-bottom:16px;">
             <input type="text" id="searchReceiptForReturn" class="form-control" style="flex:1;" placeholder="Wpisz numer paragonu do zwrotu..." />
-            <button type="button" id="btnFindReceiptReturn" class="btn-primary">🔍 Wczytaj paragon</button>
+            <button type="button" id="btnFindReceiptReturn" class="btn-primary"><span class="m-icon sm">search</span> Wczytaj paragon</button>
           </div>
 
           <div id="returnProcessBox" class="hidden" style="background:#f8fafc; padding:18px; border-radius:10px; border:1px solid var(--border-color);">
@@ -1473,7 +2058,9 @@
               <div style="font-size:16px; font-weight:700;">
                 Kwota do zwrotu klientowi: <span id="totalRefundDisplay" style="color:var(--danger); font-size:20px;">0,00 zł</span>
               </div>
-              <button type="button" id="btnConfirmReturn" class="btn-primary" style="background:var(--danger);">↩️ Zatwierdź zwrot i przywróć stan magazynowy</button>
+              <button type="button" id="btnConfirmReturn" class="btn-primary" style="background:var(--danger);">
+                <span class="m-icon sm">assignment_return</span> Zatwierdź zwrot i przywróć stan
+              </button>
             </div>
           </div>
         </div>
@@ -1504,29 +2091,152 @@
   <!-- VIEW 3: ADMINISTRATION PANEL -->
   <section class="admin-view hidden" id="adminView">
     <aside class="admin-sidebar">
+      <div class="admin-sidebar-title">Raporty</div>
+      <button class="admin-tab-btn admin-subtab-btn" data-admin-tab="tabReportDaily"><span class="m-icon sm">today</span> Raport dobowy</button>
+      <button class="admin-tab-btn admin-subtab-btn" data-admin-tab="tabReportMonthly"><span class="m-icon sm">calendar_month</span> Raport miesięczny</button>
+      <button class="admin-tab-btn admin-subtab-btn" data-admin-tab="tabReportPeriodic"><span class="m-icon sm">date_range</span> Raport okresowy</button>
+
       <div class="admin-sidebar-title">Konfiguracja Firmy</div>
-      <button class="admin-tab-btn active" data-admin-tab="tabStore">🏪 Dane sklepu i rejestry</button>
-      <button class="admin-tab-btn" data-admin-tab="tabOperators">👤 Operatorzy kasy</button>
-      <button class="admin-tab-btn" data-admin-tab="tabPaymentMethods">💳 Formy płatności</button>
+      <button class="admin-tab-btn active" data-admin-tab="tabStore"><span class="m-icon sm">storefront</span> Dane sklepu i rejestry</button>
+      <button class="admin-tab-btn" data-admin-tab="tabOperators"><span class="m-icon sm">badge</span> Operatorzy kasy</button>
+      <button class="admin-tab-btn" data-admin-tab="tabPaymentMethods"><span class="m-icon sm">credit_card</span> Formy płatności</button>
 
       <div class="admin-sidebar-title">Asortyment i Magazyn</div>
-      <button class="admin-tab-btn" data-admin-tab="tabProducts">📦 Towary</button>
-      <button class="admin-tab-btn" data-admin-tab="tabStock">🏭 Stany magazynowe (PZ)</button>
-      <button class="admin-tab-btn" data-admin-tab="tabCategories">🗂️ Kategorie</button>
-      <button class="admin-tab-btn" data-admin-tab="tabDiscounts">🏷️ Rabaty</button>
+      <button class="admin-tab-btn" data-admin-tab="tabProducts"><span class="m-icon sm">inventory_2</span> Towary</button>
+      <button class="admin-tab-btn" data-admin-tab="tabStock"><span class="m-icon sm">warehouse</span> Stany magazynowe (PZ)</button>
+      <button class="admin-tab-btn" data-admin-tab="tabCategories"><span class="m-icon sm">category</span> Kategorie</button>
+      <button class="admin-tab-btn" data-admin-tab="tabDiscounts"><span class="m-icon sm">sell</span> Rabaty</button>
 
       <div class="admin-sidebar-title">Słowniki i Podatki</div>
-      <button class="admin-tab-btn" data-admin-tab="tabTaxes">📊 Stawki podatkowe (VAT)</button>
-      <button class="admin-tab-btn" data-admin-tab="tabUnits">📏 Jednostki miary</button>
-      <button class="admin-tab-btn" data-admin-tab="tabCurrencies">💱 Waluty</button>
+      <button class="admin-tab-btn" data-admin-tab="tabTaxes"><span class="m-icon sm">percent</span> Stawki podatkowe (VAT)</button>
+      <button class="admin-tab-btn" data-admin-tab="tabUnits"><span class="m-icon sm">straighten</span> Jednostki miary</button>
+      <button class="admin-tab-btn" data-admin-tab="tabCurrencies"><span class="m-icon sm">currency_exchange</span> Waluty</button>
     </aside>
 
     <div class="admin-content">
+      <!-- RAPORTY -> PODKATEGORIA 1: RAPORT DOBOWY -->
+      <div class="admin-panel-section hidden" id="tabReportDaily">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>Raporty > Raport dobowy (Z)</h2>
+              <p class="desc">Wykonaj fiskalny raport dobowy za wybrany dzień, zapisz go w bazie danych i wyświetl w pływającym oknie.</p>
+            </div>
+          </div>
+
+          <div class="report-generator-box">
+            <div class="form-group" style="min-width:220px;">
+              <label>Wybierz dzień raportu dobowego *</label>
+              <input type="date" id="repDailyDateInput" class="form-control" />
+            </div>
+            <button type="button" id="btnGenerateDailyReport" class="btn-primary">
+              <span class="m-icon sm">summarize</span> Wykonaj i zapisz raport dobowy
+            </button>
+          </div>
+
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">Zapisane raporty dobowe w bazie</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nr raportu</th>
+                <th>Dzień raportu</th>
+                <th>Data wykonania</th>
+                <th>Kasjer</th>
+                <th>Dokumenty / Zwroty</th>
+                <th>Utarg brutto (po zwrotach)</th>
+                <th style="width:170px;">Akcje</th>
+              </tr>
+            </thead>
+            <tbody id="dailyReportsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RAPORTY -> PODKATEGORIA 2: RAPORT MIESIĘCZNY -->
+      <div class="admin-panel-section hidden" id="tabReportMonthly">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>Raporty > Raport miesięczny</h2>
+              <p class="desc">Wykonaj zbiorczy raport miesięczny, zapisz go w bazie i otwórz podgląd wydruku w pływającym oknie.</p>
+            </div>
+          </div>
+
+          <div class="report-generator-box">
+            <div class="form-group" style="min-width:220px;">
+              <label>Wybierz miesiąc i rok *</label>
+              <input type="month" id="repMonthlyInput" class="form-control" />
+            </div>
+            <button type="button" id="btnGenerateMonthlyReport" class="btn-primary">
+              <span class="m-icon sm">summarize</span> Wykonaj i zapisz raport miesięczny
+            </button>
+          </div>
+
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">Zapisane raporty miesięczne w bazie</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nr raportu</th>
+                <th>Miesiąc</th>
+                <th>Data wykonania</th>
+                <th>Kasjer</th>
+                <th>Dokumenty / Zwroty</th>
+                <th>Utarg brutto (po zwrotach)</th>
+                <th style="width:170px;">Akcje</th>
+              </tr>
+            </thead>
+            <tbody id="monthlyReportsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RAPORTY -> PODKATEGORIA 3: RAPORT OKRESOWY -->
+      <div class="admin-panel-section hidden" id="tabReportPeriodic">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>Raporty > Raport okresowy</h2>
+              <p class="desc">Wybierz dowolny przedział dat (od – do), wygeneruj raport okresowy, zapisz w bazie i wyświetl w pływającym oknie.</p>
+            </div>
+          </div>
+
+          <div class="report-generator-box">
+            <div class="form-group" style="min-width:190px;">
+              <label>Data początkowa (od) *</label>
+              <input type="date" id="repPeriodicFromInput" class="form-control" />
+            </div>
+            <div class="form-group" style="min-width:190px;">
+              <label>Data końcowa (do) *</label>
+              <input type="date" id="repPeriodicToInput" class="form-control" />
+            </div>
+            <button type="button" id="btnGeneratePeriodicReport" class="btn-primary">
+              <span class="m-icon sm">summarize</span> Wykonaj i zapisz raport okresowy
+            </button>
+          </div>
+
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">Zapisane raporty okresowe w bazie</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nr raportu</th>
+                <th>Zakres dat</th>
+                <th>Data wykonania</th>
+                <th>Kasjer</th>
+                <th>Dokumenty / Zwroty</th>
+                <th>Utarg brutto (po zwrotach)</th>
+                <th style="width:170px;">Akcje</th>
+              </tr>
+            </thead>
+            <tbody id="periodicReportsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- 1. DANE SKLEPU -->
       <div class="admin-panel-section" id="tabStore">
         <div class="admin-card">
           <h2>Dane sklepu i identyfikatory rejestrowe</h2>
-          <p class="desc">Informacje zapisywane w Firebase i drukowane na paragonach oraz fakturach VAT.</p>
+          <p class="desc" style="margin-bottom:16px;">Informacje drukowane na paragonach, raportach oraz fakturach VAT.</p>
           <form id="formStoreSettings">
             <div class="form-grid">
               <div class="form-group">
@@ -1558,7 +2268,7 @@
                 <input type="text" id="setStoreBdo" class="form-control" placeholder="np. 000012345" maxlength="9" />
               </div>
             </div>
-            <button type="submit" class="btn-primary">💾 Zapisz dane sklepu w Firebase</button>
+            <button type="submit" class="btn-primary"><span class="m-icon sm">save</span> Zapisz dane sklepu</button>
           </form>
         </div>
       </div>
@@ -1566,36 +2276,18 @@
       <!-- 2. OPERATORZY KASY -->
       <div class="admin-panel-section hidden" id="tabOperators">
         <div class="admin-card">
-          <h2>Konta operatorów kasy</h2>
-          <p class="desc">Dodaj kasjerów i kierowników uprawnionych do obsługi terminala POS.</p>
-          <form id="formAddOperator">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Imię i nazwisko *</label>
-                <input type="text" id="opName" class="form-control" placeholder="np. Anna Kowalska" required />
-              </div>
-              <div class="form-group">
-                <label>Identyfikator / Nr kasjera *</label>
-                <input type="text" id="opCode" class="form-control" placeholder="np. KAS-01" required />
-              </div>
-              <div class="form-group">
-                <label>Kod PIN *</label>
-                <input type="password" id="opPin" class="form-control" placeholder="****" maxlength="6" required />
-              </div>
-              <div class="form-group">
-                <label>Uprawnienia (Rola)</label>
-                <select id="opRole" class="form-control">
-                  <option value="Kasjer">Kasjer</option>
-                  <option value="Kierownik zmiany">Kierownik zmiany</option>
-                  <option value="Administrator">Administrator</option>
-                </select>
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Konta operatorów kasy</h2>
+              <p class="desc">Zarządzaj kasjerami, kodami PIN oraz rolami na terminalu POS.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj operatora</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('operators', null)">
+              <span class="m-icon sm">person_add</span> Dodaj operatora
+            </button>
+          </div>
 
           <table class="data-table">
-            <thead><tr><th>Nr kasjera</th><th>Imię i nazwisko</th><th>Rola</th><th>Akcje</th></tr></thead>
+            <thead><tr><th>Nr kasjera</th><th>Imię i nazwisko</th><th>Rola</th><th style="width:170px;">Akcje</th></tr></thead>
             <tbody id="adminOperatorsTable"></tbody>
           </table>
         </div>
@@ -1604,28 +2296,15 @@
       <!-- 3. FORMY PŁATNOŚCI -->
       <div class="admin-panel-section hidden" id="tabPaymentMethods">
         <div class="admin-card">
-          <h2>Formy płatności na terminalu POS</h2>
-          <p class="desc">Zarządzaj dostępnymi metodami płatności wyświetlanymi na pływającym ekranie po kliknięciu przycisku „Podsuma”.</p>
-          <form id="formAddPaymentMethod">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Nazwa formy płatności *</label>
-                <input type="text" id="pmName" class="form-control" placeholder="np. Karta płatnicza, Gotówka, BLIK, Karta Podarunkowa" required />
-              </div>
-              <div class="form-group">
-                <label>Ikona (emoji)</label>
-                <input type="text" id="pmIcon" class="form-control" placeholder="np. 💳 lub 💵 lub 📱" value="💳" maxlength="4" />
-              </div>
-              <div class="form-group">
-                <label>Typ rozliczenia</label>
-                <select id="pmIsCash" class="form-control">
-                  <option value="false">Bezgotówkowa (szybkie zatwierdzenie)</option>
-                  <option value="true">Gotówkowa (z kalkulatorem reszty)</option>
-                </select>
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Formy płatności na terminalu POS</h2>
+              <p class="desc">Zarządzaj metodami płatności wyświetlanymi po kliknięciu przycisku „Podsuma”.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj formę płatności</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('payment_methods', null)">
+              <span class="m-icon sm">add_card</span> Dodaj formę płatności
+            </button>
+          </div>
 
           <table class="data-table">
             <thead>
@@ -1633,7 +2312,7 @@
                 <th>Ikona</th>
                 <th>Nazwa formy płatności</th>
                 <th>Typ rozliczenia</th>
-                <th style="width:120px;">Akcje</th>
+                <th style="width:170px;">Akcje</th>
               </tr>
             </thead>
             <tbody id="adminPaymentMethodsTable"></tbody>
@@ -1644,52 +2323,38 @@
       <!-- 4. TOWARY -->
       <div class="admin-panel-section hidden" id="tabProducts">
         <div class="admin-card">
-          <h2>Baza towarów</h2>
-          <p class="desc">Dodawaj nowe produkty wraz z początkowym stanem magazynowym.</p>
-          <form id="formAddProduct">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Kod kreskowy EAN / SKU *</label>
-                <input type="text" id="prodEan" class="form-control" placeholder="np. 5901234567890" required />
-              </div>
-              <div class="form-group">
-                <label>Nazwa towaru *</label>
-                <input type="text" id="prodName" class="form-control" placeholder="np. Koc polarowy 150x200" required />
-              </div>
-              <div class="form-group">
-                <label>Cena sprzedaży brutto *</label>
-                <input type="number" step="0.01" min="0" id="prodPrice" class="form-control" placeholder="0.00" required />
-              </div>
-              <div class="form-group">
-                <label>Początkowy stan magazynowy *</label>
-                <input type="number" step="1" min="0" id="prodInitialStock" class="form-control" value="10" required />
-              </div>
-              <div class="form-group">
-                <label>Kategoria *</label>
-                <select id="prodCategory" class="form-control" required></select>
-              </div>
-              <div class="form-group">
-                <label>Stawka podatkowa VAT *</label>
-                <select id="prodTax" class="form-control" required></select>
-              </div>
-              <div class="form-group">
-                <label>Jednostka miary *</label>
-                <select id="prodUnit" class="form-control" required></select>
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Baza towarów</h2>
+              <p class="desc">Wyszukuj produkty, filtruj po kategoriach, dodawaj nowe pozycje i edytuj istniejące.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj towar do bazy</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('products', null)">
+              <span class="m-icon sm">add_box</span> Dodaj towar
+            </button>
+          </div>
+
+          <div class="filter-toolbar">
+            <div style="position:relative; flex:2; min-width:210px;">
+              <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
+              <input type="text" id="adminProdSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj towaru po nazwie lub kodzie EAN / QR..." />
+            </div>
+            <div style="flex:1; min-width:180px;">
+              <select id="adminProdCatFilter" class="form-control" style="width:100%;">
+                <option value="Wszystkie">Wszystkie kategorie</option>
+              </select>
+            </div>
+          </div>
 
           <table class="data-table">
             <thead>
               <tr>
-                <th>EAN</th>
+                <th>EAN / QR</th>
                 <th>Nazwa towaru</th>
                 <th>Kategoria</th>
                 <th>VAT</th>
                 <th>Stan mag.</th>
                 <th>Cena brutto</th>
-                <th>Akcje</th>
+                <th style="width:170px;">Akcje</th>
               </tr>
             </thead>
             <tbody id="adminProductsTable"></tbody>
@@ -1697,22 +2362,30 @@
         </div>
       </div>
 
-      <!-- 5. STANY MAGAZYNOWE -->
+      <!-- 5. STANY MAGAZYNOWE (PZ) -->
       <div class="admin-panel-section hidden" id="tabStock">
         <div class="admin-card">
-          <h2>Stany magazynowe i Przyjęcie Zewnętrzne (PZ)</h2>
-          <p class="desc">Kontroluj dostępność produktów oraz rejestruj dostawy towaru na magazyn.</p>
-          <form id="formStockDelivery" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:16px; background:#f8fafc; padding:14px; border-radius:10px; border:1px solid var(--border-color);">
-            <div class="form-group" style="flex:2; min-width:220px;">
-              <label>Wybierz towar z bazy *</label>
-              <select id="stockProductSelect" class="form-control" required></select>
+          <div class="admin-card-header">
+            <div>
+              <h2>Stany magazynowe i Przyjęcie Zewnętrzne (PZ)</h2>
+              <p class="desc">Kontroluj dostępność produktów, filtruj asortyment oraz rejestruj dostawy towaru na magazyn.</p>
             </div>
-            <div class="form-group" style="flex:1; min-width:130px;">
-              <label>Ilość przyjmowana (+) *</label>
-              <input type="number" min="1" step="1" id="stockAddQty" class="form-control" value="10" required />
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('stock_delivery', null)">
+              <span class="m-icon sm">move_to_inbox</span> Przyjmij dostawę (PZ)
+            </button>
+          </div>
+
+          <div class="filter-toolbar">
+            <div style="position:relative; flex:2; min-width:210px;">
+              <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
+              <input type="text" id="adminStockSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj na magazynie po nazwie lub kodzie EAN / QR..." />
             </div>
-            <button type="submit" class="btn-primary">📥 Przyjmij dostawę na stan</button>
-          </form>
+            <div style="flex:1; min-width:180px;">
+              <select id="adminStockCatFilter" class="form-control" style="width:100%;">
+                <option value="Wszystkie">Wszystkie kategorie</option>
+              </select>
+            </div>
+          </div>
 
           <table class="data-table">
             <thead><tr><th>EAN</th><th>Nazwa towaru</th><th>Kategoria</th><th>Aktualny stan</th><th>Status</th><th>Korekta ręczna</th></tr></thead>
@@ -1724,14 +2397,17 @@
       <!-- 6. KATEGORIE -->
       <div class="admin-panel-section hidden" id="tabCategories">
         <div class="admin-card">
-          <h2>Kategorie towarowe</h2>
-          <p class="desc">Zarządzaj zakładkami kategorii wyświetlanymi na ekranie głównym kasy.</p>
-          <form id="formAddCategory" style="display:flex; gap:10px; max-width:500px;">
-            <input type="text" id="catNameInput" class="form-control" style="flex:1;" placeholder="Nazwa nowej kategorii" required />
-            <button type="submit" class="btn-primary">+ Dodaj kategorię</button>
-          </form>
+          <div class="admin-card-header">
+            <div>
+              <h2>Kategorie towarowe</h2>
+              <p class="desc">Zarządzaj zakładkami kategorii wyświetlanymi na kasie oraz w filtrach.</p>
+            </div>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('categories', null)">
+              <span class="m-icon sm">add</span> Dodaj kategorię
+            </button>
+          </div>
           <table class="data-table">
-            <thead><tr><th>Nazwa kategorii</th><th style="width:120px;">Akcje</th></tr></thead>
+            <thead><tr><th>Nazwa kategorii</th><th style="width:170px;">Akcje</th></tr></thead>
             <tbody id="adminCategoriesTable"></tbody>
           </table>
         </div>
@@ -1740,23 +2416,17 @@
       <!-- 7. RABATY -->
       <div class="admin-panel-section hidden" id="tabDiscounts">
         <div class="admin-card">
-          <h2>Progi rabatowe</h2>
-          <p class="desc">Definiuj rabaty procentowe możliwe do zastosowania na cały paragon.</p>
-          <form id="formAddDiscount">
-            <div class="form-grid" style="max-width:650px;">
-              <div class="form-group">
-                <label>Nazwa rabatu *</label>
-                <input type="text" id="discName" class="form-control" placeholder="np. Rabat Pracowniczy" required />
-              </div>
-              <div class="form-group">
-                <label>Wartość rabatu (%) *</label>
-                <input type="number" step="0.1" min="0.1" max="100" id="discPercent" class="form-control" placeholder="np. 15" required />
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Progi rabatowe</h2>
+              <p class="desc">Definiuj rabaty procentowe możliwe do zastosowania na cały paragon.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj rabat</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('discounts', null)">
+              <span class="m-icon sm">add</span> Dodaj rabat
+            </button>
+          </div>
           <table class="data-table">
-            <thead><tr><th>Nazwa rabatu</th><th>Wartość (%)</th><th style="width:120px;">Akcje</th></tr></thead>
+            <thead><tr><th>Nazwa rabatu</th><th>Wartość (%)</th><th style="width:170px;">Akcje</th></tr></thead>
             <tbody id="adminDiscountsTable"></tbody>
           </table>
         </div>
@@ -1765,23 +2435,17 @@
       <!-- 8. STAWKI PODATKOWE -->
       <div class="admin-panel-section hidden" id="tabTaxes">
         <div class="admin-card">
-          <h2>Stawki podatkowe (VAT)</h2>
-          <p class="desc">Słownik stawek podatkowych przypisywanych do towarów.</p>
-          <form id="formAddTax">
-            <div class="form-grid" style="max-width:700px;">
-              <div class="form-group">
-                <label>Oznaczenie / Nazwa *</label>
-                <input type="text" id="taxName" class="form-control" placeholder="np. VAT 23% (A)" required />
-              </div>
-              <div class="form-group">
-                <label>Wartość procentowa (%) *</label>
-                <input type="number" step="0.01" min="0" max="100" id="taxRate" class="form-control" placeholder="23" required />
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Stawki podatkowe (VAT)</h2>
+              <p class="desc">Słownik stawek podatkowych przypisywanych do towarów.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj stawkę podatkową</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('taxes', null)">
+              <span class="m-icon sm">add</span> Dodaj stawkę VAT
+            </button>
+          </div>
           <table class="data-table">
-            <thead><tr><th>Nazwa stawki</th><th>Procent (%)</th><th style="width:120px;">Akcje</th></tr></thead>
+            <thead><tr><th>Nazwa stawki</th><th>Procent (%)</th><th style="width:170px;">Akcje</th></tr></thead>
             <tbody id="adminTaxesTable"></tbody>
           </table>
         </div>
@@ -1790,23 +2454,17 @@
       <!-- 9. JEDNOSTKI MIARY -->
       <div class="admin-panel-section hidden" id="tabUnits">
         <div class="admin-card">
-          <h2>Jednostki miary (J.m.)</h2>
-          <p class="desc">Definiuj jednostki miary dla asortymentu.</p>
-          <form id="formAddUnit">
-            <div class="form-grid" style="max-width:600px;">
-              <div class="form-group">
-                <label>Skrót jednostki *</label>
-                <input type="text" id="unitSymbol" class="form-control" placeholder="np. szt." required />
-              </div>
-              <div class="form-group">
-                <label>Pełna nazwa *</label>
-                <input type="text" id="unitFullName" class="form-control" placeholder="np. Sztuka" required />
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Jednostki miary (J.m.)</h2>
+              <p class="desc">Definiuj jednostki miary dla asortymentu.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj jednostkę miary</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('units', null)">
+              <span class="m-icon sm">add</span> Dodaj jednostkę miary
+            </button>
+          </div>
           <table class="data-table">
-            <thead><tr><th>Skrót</th><th>Pełna nazwa</th><th style="width:120px;">Akcje</th></tr></thead>
+            <thead><tr><th>Skrót</th><th>Pełna nazwa</th><th style="width:170px;">Akcje</th></tr></thead>
             <tbody id="adminUnitsTable"></tbody>
           </table>
         </div>
@@ -1815,27 +2473,17 @@
       <!-- 10. WALUTY -->
       <div class="admin-panel-section hidden" id="tabCurrencies">
         <div class="admin-card">
-          <h2>Waluty systemu POS</h2>
-          <p class="desc">Dodaj waluty oraz wybierz domyślną walutę wyświetlania cen na kasie.</p>
-          <form id="formAddCurrency">
-            <div class="form-grid" style="max-width:650px;">
-              <div class="form-group">
-                <label>Kod waluty ISO *</label>
-                <input type="text" id="currCode" class="form-control" placeholder="np. PLN" maxlength="5" required />
-              </div>
-              <div class="form-group">
-                <label>Symbol waluty *</label>
-                <input type="text" id="currSymbol" class="form-control" placeholder="np. zł" maxlength="6" required />
-              </div>
-              <div class="form-group">
-                <label>Nazwa waluty *</label>
-                <input type="text" id="currName" class="form-control" placeholder="np. Polski złoty" required />
-              </div>
+          <div class="admin-card-header">
+            <div>
+              <h2>Waluty systemu POS</h2>
+              <p class="desc">Dodaj waluty, edytuj je oraz zaznacz, która waluta jest domyślną walutą kasy.</p>
             </div>
-            <button type="submit" class="btn-primary">+ Dodaj walutę</button>
-          </form>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('currencies', null)">
+              <span class="m-icon sm">add</span> Dodaj walutę
+            </button>
+          </div>
           <table class="data-table">
-            <thead><tr><th>Kod</th><th>Symbol</th><th>Nazwa</th><th>Status</th><th>Akcje</th></tr></thead>
+            <thead><tr><th>Kod</th><th>Symbol</th><th>Nazwa</th><th>Domyślna waluta</th><th style="width:230px;">Akcje</th></tr></thead>
             <tbody id="adminCurrenciesTable"></tbody>
           </table>
         </div>
@@ -1910,19 +2558,54 @@
       transactions: [],
       invoices: [],
       returns: [],
+      reports: [],
       cart: [],
       selectedCategory: "Wszystkie",
       searchQuery: "",
       selectedDiscountId: "",
-      activeOperator: "Brak operatora",
-      docType: "receipt"
+      loggedOperator: null,
+      activeOperator: "Niezalogowany",
+      docType: "receipt",
+      adminProdSearch: "",
+      adminProdCat: "Wszystkie",
+      adminStockSearch: "",
+      adminStockCat: "Wszystkie"
     };
 
     const formatMoney = (val) => `${Number(val || 0).toFixed(2).replace(".", ",")} ${state.store.activeCurrencySymbol || "zł"}`;
 
-    function showToast(msg) {
+    function getLocalYMD(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function getLocalYM(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      return `${y}-${m}`;
+    }
+
+    // Domyślne daty w formularzach raportów
+    document.getElementById("repDailyDateInput").value = getLocalYMD();
+    document.getElementById("repMonthlyInput").value = getLocalYM();
+    const firstDayOfMonth = `${getLocalYM()}-01`;
+    document.getElementById("repPeriodicFromInput").value = firstDayOfMonth;
+    document.getElementById("repPeriodicToInput").value = getLocalYMD();
+
+    function resolveAndroidIcon(rawIcon, isCash = false) {
+      if (!rawIcon) return isCash ? "payments" : "credit_card";
+      if (/^[a-z0-9_]+$/.test(rawIcon)) return rawIcon;
+      if (rawIcon.includes("💵") || rawIcon.includes("💰") || isCash) return "payments";
+      if (rawIcon.includes("📱") || rawIcon.includes("📲")) return "qr_code_2";
+      if (rawIcon.includes("🎁")) return "redeem";
+      return "credit_card";
+    }
+
+    function showToast(msg, iconName = "info") {
       const toast = document.getElementById("toast");
-      toast.textContent = msg;
+      toast.innerHTML = `<span class="m-icon sm">${iconName}</span><span>${msg}</span>`;
       toast.classList.remove("hidden");
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => toast.classList.add("hidden"), 3200);
@@ -1935,15 +2618,318 @@
     }, 1000);
 
     // ==========================================
-    // FIRESTORE REAL-TIME LISTENERS
+    // EKRAN BLOKADY, WYBÓR OPERATORA I KOD PIN
     // ==========================================
-    function markConnected() {
-      document.getElementById("fbDot").classList.add("online");
-      document.getElementById("fbStatusText").textContent = "Firebase Połączono";
+    const lockOverlay = document.getElementById("lockAuthOverlay");
+    const stepLocked = document.getElementById("lockStepLocked");
+    const stepOperatorList = document.getElementById("lockStepOperatorList");
+    const stepPinEntry = document.getElementById("lockStepPinEntry");
+
+    let pendingOperatorObj = null;
+    let enteredPinBuffer = "";
+    let pinReturnMode = "operator_list";
+
+    function showLockStep(stepName) {
+      lockOverlay.classList.remove("hidden");
+      stepLocked.classList.toggle("hidden", stepName !== "locked");
+      stepOperatorList.classList.toggle("hidden", stepName !== "operator_list");
+      stepPinEntry.classList.toggle("hidden", stepName !== "pin_entry");
+
+      if (stepName === "operator_list") {
+        renderLockOperatorPickList();
+      } else if (stepName === "pin_entry") {
+        enteredPinBuffer = "";
+        updatePinDotsUI();
+      }
     }
 
+    function updatePinDotsUI() {
+      const display = document.getElementById("pinDotsDisplay");
+      if (enteredPinBuffer.length === 0) {
+        display.innerHTML = `<span style="color:#cbd5e1; font-size:16px; letter-spacing:1px; font-weight:600;">Wpisz PIN</span>`;
+      } else {
+        display.textContent = "•".repeat(enteredPinBuffer.length);
+      }
+    }
+
+    function renderLockOperatorPickList() {
+      const container = document.getElementById("lockOperatorPickList");
+      if (state.operators.length === 0) {
+        container.innerHTML = `
+          <div style="padding:16px; background:#fef3c7; border:1px solid #fde68a; border-radius:12px; font-size:13px; color:#92400e; text-align:center;">
+            <strong>Brak zdefiniowanych operatorów w bazie!</strong><br>
+            Zaloguj się tymczasowo jako Administrator, aby dodać konta kasjerów w zakładce Administracja.
+            <button type="button" id="btnBootstrapAdminLogin" class="btn-primary" style="margin-top:12px; width:100%;">
+              Wejdź jako Administrator (Konfiguracja)
+            </button>
+          </div>
+        `;
+        document.getElementById("btnBootstrapAdminLogin").addEventListener("click", () => {
+          state.loggedOperator = { id: "bootstrap", name: "Administrator", code: "ADM", role: "Administrator", pin: "" };
+          state.activeOperator = "Administrator (ADM)";
+          renderOperatorsSelect();
+          lockOverlay.classList.add("hidden");
+          switchMainView("admin");
+          showToast("Zalogowano tymczasowo — dodaj operatorów kasy", "admin_panel_settings");
+        });
+        return;
+      }
+
+      container.innerHTML = state.operators.map(op => `
+        <div class="operator-pick-item" data-op-id="${op.id}">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; border-radius:11px; background:#eef2ff; color:var(--pepco-indigo); display:flex; align-items:center; justify-content:center;">
+              <span class="m-icon">person</span>
+            </div>
+            <div>
+              <div style="font-weight:700; font-size:14px; color:var(--text-main);">${op.name}</div>
+              <div style="font-size:11.5px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">${op.code} • ${op.role}</div>
+            </div>
+          </div>
+          <span class="m-icon" style="color:var(--pepco-indigo);">chevron_right</span>
+        </div>
+      `).join("");
+
+      container.querySelectorAll(".operator-pick-item").forEach(item => {
+        item.addEventListener("click", () => {
+          const op = state.operators.find(o => o.id === item.dataset.opId);
+          if (!op) return;
+          pendingOperatorObj = op;
+          pinReturnMode = "operator_list";
+          document.getElementById("pinSelectedOperatorLabel").textContent = `${op.name} [${op.code}]`;
+          showLockStep("pin_entry");
+        });
+      });
+    }
+
+    document.getElementById("btnLockStartLogin").addEventListener("click", () => showLockStep("operator_list"));
+    document.getElementById("btnOperatorListBack").addEventListener("click", () => showLockStep("locked"));
+
+    document.getElementById("btnPinEntryBack").addEventListener("click", () => {
+      enteredPinBuffer = "";
+      if (pinReturnMode === "dismiss_to_current" && state.loggedOperator) {
+        lockOverlay.classList.add("hidden");
+        renderOperatorsSelect();
+      } else {
+        showLockStep("operator_list");
+      }
+    });
+
+    document.getElementById("btnLockPos").addEventListener("click", () => {
+      pendingOperatorObj = null;
+      enteredPinBuffer = "";
+      showLockStep("locked");
+    });
+
+    document.querySelectorAll(".pin-key[data-digit]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (enteredPinBuffer.length < 8) {
+          enteredPinBuffer += btn.dataset.digit;
+          updatePinDotsUI();
+        }
+      });
+    });
+
+    document.getElementById("btnPinClear").addEventListener("click", () => {
+      enteredPinBuffer = "";
+      updatePinDotsUI();
+    });
+
+    document.getElementById("btnPinBackspace").addEventListener("click", () => {
+      enteredPinBuffer = enteredPinBuffer.slice(0, -1);
+      updatePinDotsUI();
+    });
+
+    function verifyPinAndUnlock() {
+      if (!pendingOperatorObj) return;
+      if (String(enteredPinBuffer) === String(pendingOperatorObj.pin)) {
+        state.loggedOperator = pendingOperatorObj;
+        state.activeOperator = `${pendingOperatorObj.name} (${pendingOperatorObj.code})`;
+        renderOperatorsSelect();
+        lockOverlay.classList.add("hidden");
+        enteredPinBuffer = "";
+        showToast(`Zalogowano: ${pendingOperatorObj.name}`, "verified_user");
+      } else {
+        enteredPinBuffer = "";
+        updatePinDotsUI();
+        showToast("Nieprawidłowy kod PIN! Spróbuj ponownie.", "error");
+      }
+    }
+
+    document.getElementById("btnPinConfirm").addEventListener("click", verifyPinAndUnlock);
+
+    document.addEventListener("keydown", (e) => {
+      if (!lockOverlay.classList.contains("hidden") && !stepPinEntry.classList.contains("hidden")) {
+        if (/^[0-9]$/.test(e.key)) {
+          if (enteredPinBuffer.length < 8) {
+            enteredPinBuffer += e.key;
+            updatePinDotsUI();
+          }
+        } else if (e.key === "Backspace") {
+          enteredPinBuffer = enteredPinBuffer.slice(0, -1);
+          updatePinDotsUI();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          verifyPinAndUnlock();
+        }
+      }
+    });
+
+    document.getElementById("activeOperatorSelect").addEventListener("change", (e) => {
+      const selectedOpId = e.target.value;
+      if (!selectedOpId) return;
+      if (state.loggedOperator && state.loggedOperator.id === selectedOpId) return;
+
+      const targetOp = state.operators.find(o => o.id === selectedOpId);
+      if (!targetOp) return;
+
+      e.target.value = state.loggedOperator ? state.loggedOperator.id : "";
+
+      pendingOperatorObj = targetOp;
+      pinReturnMode = state.loggedOperator ? "dismiss_to_current" : "operator_list";
+      document.getElementById("pinSelectedOperatorLabel").textContent = `Zmiana kasjera na: ${targetOp.name} [${targetOp.code}]`;
+      showLockStep("pin_entry");
+    });
+
+    function renderOperatorsSelect() {
+      const sel = document.getElementById("activeOperatorSelect");
+      if (state.operators.length === 0) {
+        sel.innerHTML = `<option value="">Kasjer: ${state.activeOperator}</option>`;
+        return;
+      }
+      sel.innerHTML = state.operators.map(o => `<option value="${o.id}">${o.name} [${o.code}]</option>`).join("");
+      if (state.loggedOperator && state.operators.some(o => o.id === state.loggedOperator.id)) {
+        sel.value = state.loggedOperator.id;
+      }
+    }
+
+    // ==========================================
+    // TRYB PEŁNOEKRANOWY (FULLSCREEN API)
+    // ==========================================
+    const btnFullscreen = document.getElementById("btnToggleFullscreen");
+    const fsIcon = document.getElementById("fsIcon");
+    const fsLabel = document.getElementById("fsLabel");
+
+    function updateFullscreenButtonUI() {
+      const isFs = Boolean(document.fullscreenElement);
+      btnFullscreen.classList.toggle("fs-active", isFs);
+      fsIcon.textContent = isFs ? "fullscreen_exit" : "fullscreen";
+      fsLabel.textContent = isFs ? "Zamknij pełny ekran" : "Pełny ekran";
+    }
+
+    btnFullscreen.addEventListener("click", async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (err) {
+        showToast("Przeglądarka zablokowała tryb pełnoekranowy: " + err.message, "warning");
+      }
+    });
+
+    document.addEventListener("fullscreenchange", updateFullscreenButtonUI);
+
+    // ==========================================
+    // SKANER KODÓW QR I KODÓW KRESKOWYCH
+    // ==========================================
+    const qrModal = document.getElementById("qrScannerModal");
+    const qrVideo = document.getElementById("qrVideoElement");
+    const qrStatusText = document.getElementById("qrStatusText");
+    let qrMediaStream = null;
+    let qrScanInterval = null;
+
+    function processScannedCode(rawCode) {
+      const cleanCode = String(rawCode || "").trim();
+      if (!cleanCode) return false;
+
+      const extracted = cleanCode.replace(/^(EAN|QR|SKU):/i, "").trim();
+      const match = state.products.find(p =>
+        String(p.ean).toLowerCase() === extracted.toLowerCase() ||
+        String(p.ean).toLowerCase() === cleanCode.toLowerCase()
+      );
+
+      if (match) {
+        addToCart(match.id);
+        showToast(`Zeskanowano: ${match.name}`, "qr_code_scanner");
+        return true;
+      } else {
+        showToast(`Nie znaleziono w bazie produktu dla kodu: ${extracted}`, "search_off");
+        return false;
+      }
+    }
+
+    async function startQrScanner() {
+      qrModal.classList.remove("hidden");
+      qrStatusText.textContent = "Uruchamianie kamery...";
+      document.getElementById("manualQrInput").value = "";
+
+      try {
+        qrMediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+        qrVideo.srcObject = qrMediaStream;
+        await qrVideo.play();
+
+        if ("BarcodeDetector" in window) {
+          const detector = new window.BarcodeDetector({
+            formats: ["qr_code", "ean_13", "ean_8", "code_128", "upc_a"]
+          });
+          qrStatusText.textContent = "Skaner aktywny — nakieruj kod QR lub EAN na ramkę";
+
+          qrScanInterval = setInterval(async () => {
+            if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+              try {
+                const barcodes = await detector.detect(qrVideo);
+                if (barcodes && barcodes.length > 0) {
+                  const codeVal = barcodes[0].rawValue;
+                  stopQrScanner();
+                  processScannedCode(codeVal);
+                }
+              } catch (_) {}
+            }
+          }, 350);
+        } else {
+          qrStatusText.textContent = "Podgląd kamery aktywny — użyj pola poniżej lub skanera USB";
+        }
+      } catch (err) {
+        qrStatusText.textContent = "Brak dostępu do kamery — wpisz kod QR / EAN ręcznie poniżej.";
+      }
+    }
+
+    function stopQrScanner() {
+      clearInterval(qrScanInterval);
+      qrScanInterval = null;
+      if (qrMediaStream) {
+        qrMediaStream.getTracks().forEach(track => track.stop());
+        qrMediaStream = null;
+      }
+      qrVideo.srcObject = null;
+      qrModal.classList.add("hidden");
+    }
+
+    document.getElementById("btnOpenQrScanner").addEventListener("click", startQrScanner);
+    document.getElementById("btnCloseQrModal").addEventListener("click", stopQrScanner);
+
+    document.getElementById("btnManualQrSubmit").addEventListener("click", () => {
+      const val = document.getElementById("manualQrInput").value.trim();
+      if (!val) return;
+      if (processScannedCode(val)) stopQrScanner();
+    });
+
+    document.getElementById("manualQrInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("btnManualQrSubmit").click();
+      }
+    });
+
+    // ==========================================
+    // FIRESTORE REAL-TIME LISTENERS
+    // ==========================================
     onSnapshot(doc(db, "settings", "store_profile"), (snap) => {
-      markConnected();
       if (snap.exists()) {
         state.store = { ...state.store, ...snap.data() };
         document.getElementById("topStoreName").textContent = state.store.name || "POS Terminal";
@@ -1957,6 +2943,7 @@
         document.querySelectorAll(".curr-sym-label").forEach(el => el.textContent = state.store.activeCurrencySymbol || "zł");
         renderProducts();
         renderCart();
+        renderAdminProducts();
         renderAdminCurrencies();
       }
     });
@@ -1965,24 +2952,22 @@
       state.categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderCategories();
       renderAdminCategories();
-      populateProductFormSelects();
+      populateAdminCategoryFilters();
     });
 
     onSnapshot(collection(db, "taxes"), (snap) => {
       state.taxes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderAdminTaxes();
-      populateProductFormSelects();
     });
 
     onSnapshot(collection(db, "units"), (snap) => {
       state.units = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderAdminUnits();
-      populateProductFormSelects();
     });
 
     onSnapshot(collection(db, "discounts"), (snap) => {
       state.discounts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderDiscountSelect();
+      renderReceiptDiscountModalOptions();
       renderAdminDiscounts();
     });
 
@@ -1995,6 +2980,9 @@
       state.operators = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderOperatorsSelect();
       renderAdminOperators();
+      if (!stepOperatorList.classList.contains("hidden")) {
+        renderLockOperatorPickList();
+      }
     });
 
     onSnapshot(collection(db, "payment_methods"), (snap) => {
@@ -2010,23 +2998,722 @@
       renderAdminStock();
     });
 
-    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc"), limit(100)), (snap) => {
+    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc"), limit(250)), (snap) => {
       state.transactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderReceiptsHistory();
     });
 
-    onSnapshot(query(collection(db, "invoices"), orderBy("createdAt", "desc"), limit(100)), (snap) => {
+    onSnapshot(query(collection(db, "invoices"), orderBy("createdAt", "desc"), limit(250)), (snap) => {
       state.invoices = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderInvoicesTable();
     });
 
-    onSnapshot(query(collection(db, "returns"), orderBy("createdAt", "desc"), limit(100)), (snap) => {
+    onSnapshot(query(collection(db, "returns"), orderBy("createdAt", "desc"), limit(250)), (snap) => {
       state.returns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderReturnsHistory();
     });
 
+    onSnapshot(query(collection(db, "reports"), orderBy("createdAt", "desc"), limit(150)), (snap) => {
+      state.reports = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderSavedReportsTables();
+    });
+
     // ==========================================
-    // ADMIN FORMS & ACTIONS
+    // MODUŁ RABATU NA CAŁY PARAGON (PŁYWAJĄCE OKNO)
+    // ==========================================
+    const receiptDiscountModal = document.getElementById("receiptDiscountModal");
+
+    document.getElementById("btnOpenReceiptDiscount").addEventListener("click", () => {
+      renderReceiptDiscountModalOptions();
+      receiptDiscountModal.classList.remove("hidden");
+    });
+
+    document.getElementById("btnCloseReceiptDiscountModal").addEventListener("click", () => {
+      receiptDiscountModal.classList.add("hidden");
+    });
+
+    document.getElementById("btnRemoveReceiptDiscount").addEventListener("click", () => {
+      state.selectedDiscountId = "";
+      receiptDiscountModal.classList.add("hidden");
+      renderCart();
+      showToast("Usunięto rabat z paragonu", "info");
+    });
+
+    function renderReceiptDiscountModalOptions() {
+      const container = document.getElementById("receiptDiscountOptionsList");
+      if (state.discounts.length === 0) {
+        container.innerHTML = `
+          <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:13px; background:#f8fafc; border-radius:10px;">
+            Brak zaprogramowanych rabatów. Dodaj je w zakładce <strong>Administracja -> Rabaty</strong>.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.discounts.map(d => {
+        const isSelected = state.selectedDiscountId === d.id;
+        return `
+          <button type="button" class="operator-pick-item" data-disc-id="${d.id}" style="border-color:${isSelected ? 'var(--pepco-magenta)' : 'var(--border-color)'}; background:${isSelected ? '#fdf2f8' : '#f8fafc'};">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:36px; height:36px; border-radius:10px; background:${isSelected ? '#fce7f3' : '#eef2ff'}; color:${isSelected ? 'var(--pepco-magenta)' : 'var(--pepco-indigo)'}; display:flex; align-items:center; justify-content:center;">
+                <span class="m-icon sm">sell</span>
+              </div>
+              <div style="text-align:left;">
+                <div style="font-weight:700; font-size:13.5px; color:var(--text-main);">${d.name}</div>
+                <div style="font-size:11.5px; color:var(--pepco-magenta); font-weight:700;">-${d.percent}% na cały paragon</div>
+              </div>
+            </div>
+            ${isSelected ? '<span class="badge-success">Wybrany</span>' : '<span class="m-icon sm" style="color:var(--text-muted);">chevron_right</span>'}
+          </button>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".operator-pick-item").forEach(item => {
+        item.addEventListener("click", () => {
+          const discId = item.dataset.discId;
+          state.selectedDiscountId = discId;
+          receiptDiscountModal.classList.add("hidden");
+          renderCart();
+          const activeDisc = state.discounts.find(d => d.id === discId);
+          showToast(`Zastosowano rabat: ${activeDisc ? activeDisc.name : ''} (-${activeDisc?.percent}%)`, "sell");
+        });
+      });
+    }
+
+    // ==========================================
+    // MODUŁ RAPORTÓW (DOBOWY, MIESIĘCZNY, OKRESOWY)
+    // ==========================================
+    const reportPreviewModal = document.getElementById("reportPreviewModal");
+    document.getElementById("btnCloseReportModal").addEventListener("click", () => reportPreviewModal.classList.add("hidden"));
+    document.getElementById("btnOkReportModal").addEventListener("click", () => reportPreviewModal.classList.add("hidden"));
+
+    function parseDocLocalDate(docObj) {
+      if (docObj.createdAt && typeof docObj.createdAt.toDate === "function") {
+        return docObj.createdAt.toDate();
+      }
+      if (docObj.localTimestamp) {
+        return new Date(docObj.localTimestamp);
+      }
+      return new Date();
+    }
+
+    function formatReportText(rep) {
+      const sym = rep.currencySymbol || "zł";
+      const s = rep.storeSnapshot || state.store;
+      const header = [
+        s.name || "PEPCO SKLEP",
+        s.address || "",
+        s.nip ? `NIP: ${s.nip}` : "",
+        s.regon9 ? `REGON: ${s.regon9}` : "",
+        s.krs ? `KRS: ${s.krs}` : "",
+        s.bdo ? `BDO: ${s.bdo}` : ""
+      ].filter(Boolean).join("\n");
+
+      const payLines = Object.entries(rep.paymentBreakdown || {}).length
+        ? Object.entries(rep.paymentBreakdown).map(([pm, val]) => `  ${pm.padEnd(24)} ${Number(val).toFixed(2)} ${sym}`).join("\n")
+        : "  Brak wpłat w okresie";
+
+      const vatLines = Object.entries(rep.vatBreakdown || {}).length
+        ? Object.entries(rep.vatBreakdown).map(([rate, obj]) =>
+            `  VAT ${String(rate).padEnd(4)}% | Netto: ${Number(obj.net).toFixed(2).padStart(8)} | VAT: ${Number(obj.vat).toFixed(2).padStart(7)} | Brutto: ${Number(obj.gross).toFixed(2).padStart(8)}`
+          ).join("\n")
+        : "  Brak sprzedaży opodatkowanej";
+
+      const opLines = Object.entries(rep.operatorBreakdown || {}).length
+        ? Object.entries(rep.operatorBreakdown).map(([op, val]) => `  ${op.slice(0, 24).padEnd(24)} ${Number(val).toFixed(2)} ${sym}`).join("\n")
+        : "  Brak aktywności kasjerów";
+
+      return `${header}
+==================================================
+${rep.reportTitle.toUpperCase()}
+NUMER RAPORTU: ${rep.reportNumber}
+OKRES RAPORTU: ${rep.periodLabel}
+WYKONAŁ:       ${rep.generatedBy}
+DATA WYDRUKU:  ${new Date(rep.localTimestamp).toLocaleString("pl-PL")}
+==================================================
+1. PODSUMOWANIE DOKUMENTÓW SPRZEDAŻY:
+  Liczba paragonów fiskalnych:     ${rep.receiptsCount}
+  Liczba faktur bezpośrednich:    ${rep.directInvoicesCount}
+  Liczba faktur do paragonów:      ${rep.invoicesToReceiptCount}
+  Łączna liczba pozycji sprzed.:   ${rep.soldItemsCount}
+  Liczba protokołów zwrotu:        ${rep.returnsCount}
+--------------------------------------------------
+2. ZESTAWIENIE FINANSOWE SPRZEDAŻY:
+  Sprzedaż NETTO:                  ${Number(rep.salesNet).toFixed(2)} ${sym}
+  Naliczony podatek VAT:           ${Number(rep.salesVat).toFixed(2)} ${sym}
+  Sprzedaż BRUTTO (przed zwrot.):  ${Number(rep.salesGross).toFixed(2)} ${sym}
+  Udzielone rabaty łącznie:       -${Number(rep.totalDiscounts).toFixed(2)} ${sym}
+  Wartość zwrotów BRUTTO:         -${Number(rep.returnsGross).toFixed(2)} ${sym}
+--------------------------------------------------
+  UTARG KOŃCOWY BRUTTO (NETTO KAS):${Number(rep.netCashBalance).toFixed(2)} ${sym}
+==================================================
+3. PODZIAŁ WEDŁUG STAWEK VAT:
+${vatLines}
+--------------------------------------------------
+4. PODZIAŁ WEDŁUG FORM PŁATNOŚCI:
+${payLines}
+--------------------------------------------------
+5. SPRZEDAŻ WEDŁUG OPERATORÓW KASY:
+${opLines}
+==================================================
+          KONIEC RAPORTU FISKALNEGO`;
+    }
+
+    window.openSavedReportModal = (reportId) => {
+      const rep = state.reports.find(r => r.id === reportId);
+      if (!rep) return;
+      document.getElementById("reportModalTypeBadge").textContent = rep.reportTitle.toUpperCase();
+      document.getElementById("reportModalTitle").textContent = `${rep.reportNumber} (${rep.periodLabel})`;
+      document.getElementById("reportPrintArea").textContent = formatReportText(rep);
+      reportPreviewModal.classList.remove("hidden");
+    };
+
+    async function executeAndSaveReport(reportType, startDate, endDate, periodLabel) {
+      const matchingReceipts = state.transactions.filter(t => {
+        const d = parseDocLocalDate(t);
+        return d >= startDate && d <= endDate;
+      });
+
+      const matchingDirectInvoices = state.invoices.filter(inv => {
+        const d = parseDocLocalDate(inv);
+        return inv.sourceType === "direct_pos" && d >= startDate && d <= endDate;
+      });
+
+      const matchingInvoicesToReceipt = state.invoices.filter(inv => {
+        const d = parseDocLocalDate(inv);
+        return inv.sourceType === "to_receipt" && d >= startDate && d <= endDate;
+      });
+
+      const matchingReturns = state.returns.filter(r => {
+        const d = parseDocLocalDate(r);
+        return d >= startDate && d <= endDate;
+      });
+
+      const allSalesDocs = [...matchingReceipts, ...matchingDirectInvoices];
+
+      let salesNet = 0;
+      let salesVat = 0;
+      let salesGross = 0;
+      let totalDiscounts = 0;
+      let soldItemsCount = 0;
+
+      const paymentBreakdown = {};
+      const vatBreakdown = {};
+      const operatorBreakdown = {};
+
+      allSalesDocs.forEach(docItem => {
+        const gross = Number(docItem.totalAmount || 0);
+        const net = Number(docItem.netAmount || 0);
+        const vat = Number(docItem.vatAmount || 0);
+        const disc = Number(docItem.discountAmount || 0);
+
+        salesGross += gross;
+        salesNet += net;
+        salesVat += vat;
+        totalDiscounts += disc;
+
+        const pm = docItem.paymentMethod || "Inna";
+        paymentBreakdown[pm] = Number(((paymentBreakdown[pm] || 0) + gross).toFixed(2));
+
+        const op = docItem.operator || "Nieznany";
+        operatorBreakdown[op] = Number(((operatorBreakdown[op] || 0) + gross).toFixed(2));
+
+        const globalDiscPct = Number(docItem.discountPercent || 0);
+        (docItem.items || []).forEach(it => {
+          const qty = Number(it.qty || 0);
+          soldItemsCount += qty;
+          const lineGross = (it.lineTotalAfterItemDisc !== undefined ? Number(it.lineTotalAfterItemDisc) : Number(it.price || 0) * qty) * (1 - globalDiscPct / 100);
+          const rate = String(it.taxRate ?? 23);
+          const lineNet = lineGross / (1 + Number(rate) / 100);
+          const lineVat = lineGross - lineNet;
+
+          if (!vatBreakdown[rate]) vatBreakdown[rate] = { net: 0, vat: 0, gross: 0 };
+          vatBreakdown[rate].net = Number((vatBreakdown[rate].net + lineNet).toFixed(2));
+          vatBreakdown[rate].vat = Number((vatBreakdown[rate].vat + lineVat).toFixed(2));
+          vatBreakdown[rate].gross = Number((vatBreakdown[rate].gross + lineGross).toFixed(2));
+        });
+      });
+
+      let returnsGross = 0;
+      matchingReturns.forEach(ret => {
+        returnsGross += Number(ret.totalRefund || 0);
+      });
+
+      const netCashBalance = Number((salesGross - returnsGross).toFixed(2));
+
+      const prefixMap = { daily: "RD", monthly: "RM", periodic: "RO" };
+      const titleMap = {
+        daily: "Raport dobowy (Z)",
+        monthly: "Raport miesięczny",
+        periodic: "Raport okresowy"
+      };
+
+      const now = new Date();
+      const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      const reportNumber = `${prefixMap[reportType]}/${stamp}/${Math.floor(1000 + Math.random() * 9000)}`;
+
+      const reportPayload = {
+        reportType,
+        reportTitle: titleMap[reportType],
+        reportNumber,
+        periodLabel,
+        generatedBy: state.activeOperator,
+        storeSnapshot: state.store,
+        currencySymbol: state.store.activeCurrencySymbol || "zł",
+        receiptsCount: matchingReceipts.length,
+        directInvoicesCount: matchingDirectInvoices.length,
+        invoicesToReceiptCount: matchingInvoicesToReceipt.length,
+        soldItemsCount,
+        returnsCount: matchingReturns.length,
+        salesNet: Number(salesNet.toFixed(2)),
+        salesVat: Number(salesVat.toFixed(2)),
+        salesGross: Number(salesGross.toFixed(2)),
+        totalDiscounts: Number(totalDiscounts.toFixed(2)),
+        returnsGross: Number(returnsGross.toFixed(2)),
+        netCashBalance,
+        paymentBreakdown,
+        vatBreakdown,
+        operatorBreakdown,
+        createdAt: serverTimestamp(),
+        localTimestamp: now.toISOString()
+      };
+
+      try {
+        await addDoc(collection(db, "reports"), reportPayload);
+        showToast(`Wykonano i zapisano ${titleMap[reportType]} (${reportNumber})`, "summarize");
+
+        document.getElementById("reportModalTypeBadge").textContent = reportPayload.reportTitle.toUpperCase();
+        document.getElementById("reportModalTitle").textContent = `${reportPayload.reportNumber} (${reportPayload.periodLabel})`;
+        document.getElementById("reportPrintArea").textContent = formatReportText(reportPayload);
+        reportPreviewModal.classList.remove("hidden");
+      } catch (err) {
+        showToast("Błąd zapisu raportu: " + err.message, "error");
+      }
+    }
+
+    document.getElementById("btnGenerateDailyReport").addEventListener("click", async () => {
+      const dateStr = document.getElementById("repDailyDateInput").value;
+      if (!dateStr) return showToast("Wybierz datę raportu dobowego!", "warning");
+
+      const [y, m, d] = dateStr.split("-").map(Number);
+      const start = new Date(y, m - 1, d, 0, 0, 0, 0);
+      const end = new Date(y, m - 1, d, 23, 59, 59, 999);
+      await executeAndSaveReport("daily", start, end, dateStr);
+    });
+
+    document.getElementById("btnGenerateMonthlyReport").addEventListener("click", async () => {
+      const ymStr = document.getElementById("repMonthlyInput").value;
+      if (!ymStr) return showToast("Wybierz miesiąc i rok!", "warning");
+
+      const [y, m] = ymStr.split("-").map(Number);
+      const start = new Date(y, m - 1, 1, 0, 0, 0, 0);
+      const end = new Date(y, m, 0, 23, 59, 59, 999);
+      await executeAndSaveReport("monthly", start, end, ymStr);
+    });
+
+    document.getElementById("btnGeneratePeriodicReport").addEventListener("click", async () => {
+      const fromStr = document.getElementById("repPeriodicFromInput").value;
+      const toStr = document.getElementById("repPeriodicToInput").value;
+      if (!fromStr || !toStr) return showToast("Wybierz datę początkową i końcową!", "warning");
+      if (fromStr > toStr) return showToast("Data początkowa nie może być późniejsza niż końcowa!", "warning");
+
+      const [fy, fm, fd] = fromStr.split("-").map(Number);
+      const [ty, tm, td] = toStr.split("-").map(Number);
+      const start = new Date(fy, fm - 1, fd, 0, 0, 0, 0);
+      const end = new Date(ty, tm - 1, td, 23, 59, 59, 999);
+      await executeAndSaveReport("periodic", start, end, `${fromStr} — ${toStr}`);
+    });
+
+    function renderSavedReportsTables() {
+      const renderRows = (type, emptyMsg) => {
+        const list = state.reports.filter(r => r.reportType === type);
+        if (list.length === 0) {
+          return `<tr><td colspan="7" style="color:var(--text-muted); text-align:center;">${emptyMsg}</td></tr>`;
+        }
+        return list.map(r => {
+          const execDate = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
+          const totalDocs = Number(r.receiptsCount || 0) + Number(r.directInvoicesCount || 0);
+          return `<tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.reportNumber}</td>
+            <td><strong>${r.periodLabel}</strong></td>
+            <td>${execDate}</td>
+            <td>${r.generatedBy || "—"}</td>
+            <td>Sprzedaż: ${totalDocs} | Zwroty: ${r.returnsCount || 0}</td>
+            <td style="font-weight:800; color:var(--pepco-indigo);">${Number(r.netCashBalance || 0).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
+            <td style="display:flex; gap:6px;">
+              <button class="btn-secondary-sm" onclick="openSavedReportModal('${r.id}')"><span class="m-icon sm">visibility</span> Podgląd</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('reports', '${r.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+            </td>
+          </tr>`;
+        }).join("");
+      };
+
+      document.getElementById("dailyReportsTableBody").innerHTML = renderRows("daily", "Brak zapisanych raportów dobowych w bazie.");
+      document.getElementById("monthlyReportsTableBody").innerHTML = renderRows("monthly", "Brak zapisanych raportów miesięcznych w bazie.");
+      document.getElementById("periodicReportsTableBody").innerHTML = renderRows("periodic", "Brak zapisanych raportów okresowych w bazie.");
+    }
+
+    // ==========================================
+    // PŁYWAJĄCE OKNO DODAWANIA I EDYCJI W ADMINISTRACJI
+    // ==========================================
+    const adminCrudModal = document.getElementById("adminCrudModal");
+    const adminCrudFieldsContainer = document.getElementById("adminCrudFieldsContainer");
+    let currentCrudEntity = null;
+    let currentCrudEditId = null;
+
+    window.openAdminCrudModal = (entity, editId = null) => {
+      currentCrudEntity = entity;
+      currentCrudEditId = editId;
+
+      const titleEl = document.getElementById("adminCrudTitle");
+      const subEl = document.getElementById("adminCrudSubtitle");
+      const isEdit = Boolean(editId);
+
+      if (entity === "operators") {
+        const item = isEdit ? state.operators.find(o => o.id === editId) : null;
+        subEl.textContent = "Operatorzy kasy";
+        titleEl.textContent = isEdit ? "Edytuj operatora kasy" : "Dodaj operatora kasy";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Imię i nazwisko *</label>
+            <input type="text" id="crudOpName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Anna Kowalska" required />
+          </div>
+          <div class="form-group">
+            <label>Identyfikator / Nr kasjera *</label>
+            <input type="text" id="crudOpCode" class="form-control" value="${item ? item.code : ""}" placeholder="np. KAS-01" required />
+          </div>
+          <div class="form-group">
+            <label>Kod PIN (cyfry) *</label>
+            <input type="password" inputmode="numeric" id="crudOpPin" class="form-control" value="${item ? item.pin : ""}" placeholder="np. 1234" maxlength="8" required />
+          </div>
+          <div class="form-group">
+            <label>Uprawnienia (Rola)</label>
+            <select id="crudOpRole" class="form-control">
+              <option value="Kasjer" ${item?.role === "Kasjer" ? "selected" : ""}>Kasjer</option>
+              <option value="Kierownik zmiany" ${item?.role === "Kierownik zmiany" ? "selected" : ""}>Kierownik zmiany</option>
+              <option value="Administrator" ${item?.role === "Administrator" ? "selected" : ""}>Administrator</option>
+            </select>
+          </div>
+        `;
+      } else if (entity === "payment_methods") {
+        const item = isEdit ? state.paymentMethods.find(p => p.id === editId) : null;
+        const curIcon = item ? resolveAndroidIcon(item.icon, item.isCash) : "credit_card";
+        subEl.textContent = "Formy płatności";
+        titleEl.textContent = isEdit ? "Edytuj formę płatności" : "Dodaj formę płatności";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Nazwa formy płatności *</label>
+            <input type="text" id="crudPmName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Karta płatnicza, Gotówka, BLIK" required />
+          </div>
+          <div class="form-group">
+            <label>Ikona systemowa (Android 17)</label>
+            <select id="crudPmIcon" class="form-control">
+              <option value="credit_card" ${curIcon === "credit_card" ? "selected" : ""}>Karta płatnicza (credit_card)</option>
+              <option value="payments" ${curIcon === "payments" ? "selected" : ""}>Gotówka / Banknoty (payments)</option>
+              <option value="qr_code_2" ${curIcon === "qr_code_2" ? "selected" : ""}>BLIK / Kod QR (qr_code_2)</option>
+              <option value="contactless" ${curIcon === "contactless" ? "selected" : ""}>Zbliżeniowo / NFC (contactless)</option>
+              <option value="redeem" ${curIcon === "redeem" ? "selected" : ""}>Karta Podarunkowa / Bon (redeem)</option>
+              <option value="account_balance_wallet" ${curIcon === "account_balance_wallet" ? "selected" : ""}>Portfel elektroniczny (wallet)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Typ rozliczenia</label>
+            <select id="crudPmIsCash" class="form-control">
+              <option value="false" ${!item?.isCash ? "selected" : ""}>Bezgotówkowa (szybkie zatwierdzenie)</option>
+              <option value="true" ${item?.isCash ? "selected" : ""}>Gotówkowa (z kalkulatorem reszty)</option>
+            </select>
+          </div>
+        `;
+      } else if (entity === "products") {
+        const item = isEdit ? state.products.find(p => p.id === editId) : null;
+        const catOptions = state.categories.length
+          ? state.categories.map(c => `<option value="${c.name}" ${item?.category === c.name ? "selected" : ""}>${c.name}</option>`).join("")
+          : `<option value="Ogólna">Ogólna</option>`;
+        const taxOptions = state.taxes.length
+          ? state.taxes.map(t => `<option value="${t.rate}" data-name="${t.name}" ${Number(item?.taxRate) === Number(t.rate) ? "selected" : ""}>${t.name} (${t.rate}%)</option>`).join("")
+          : `<option value="23" data-name="VAT 23%">VAT 23%</option>`;
+        const unitOptions = state.units.length
+          ? state.units.map(u => `<option value="${u.symbol}" ${item?.unit === u.symbol ? "selected" : ""}>${u.symbol} (${u.fullName})</option>`).join("")
+          : `<option value="szt.">szt.</option>`;
+
+        subEl.textContent = "Asortyment";
+        titleEl.textContent = isEdit ? "Edytuj towar" : "Dodaj towar do bazy";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Kod kreskowy EAN / QR / SKU *</label>
+            <input type="text" id="crudProdEan" class="form-control" value="${item ? item.ean : ""}" placeholder="np. 5901234567890" required />
+          </div>
+          <div class="form-group">
+            <label>Nazwa towaru *</label>
+            <input type="text" id="crudProdName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Koc polarowy 150x200" required />
+          </div>
+          <div class="form-grid" style="grid-template-columns:1fr 1fr; margin-bottom:0;">
+            <div class="form-group">
+              <label>Cena sprzedaży brutto *</label>
+              <input type="number" step="0.01" min="0" id="crudProdPrice" class="form-control" value="${item ? item.price : ""}" placeholder="0.00" required />
+            </div>
+            <div class="form-group">
+              <label>Stan magazynowy *</label>
+              <input type="number" step="1" min="0" id="crudProdStock" class="form-control" value="${item ? (item.stock ?? 0) : 10}" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Kategoria *</label>
+            <select id="crudProdCategory" class="form-control" required>${catOptions}</select>
+          </div>
+          <div class="form-grid" style="grid-template-columns:1fr 1fr; margin-bottom:0;">
+            <div class="form-group">
+              <label>Stawka podatkowa VAT *</label>
+              <select id="crudProdTax" class="form-control" required>${taxOptions}</select>
+            </div>
+            <div class="form-group">
+              <label>Jednostka miary *</label>
+              <select id="crudProdUnit" class="form-control" required>${unitOptions}</select>
+            </div>
+          </div>
+        `;
+      } else if (entity === "stock_delivery") {
+        const prodOpts = state.products.length
+          ? state.products.map(p => `<option value="${p.id}">[${p.ean}] ${p.name} (obecnie: ${p.stock ?? 0} ${p.unit || "szt."})</option>`).join("")
+          : `<option value="">Brak towarów w bazie</option>`;
+        subEl.textContent = "Magazyn (PZ)";
+        titleEl.textContent = "Przyjmij dostawę towaru na stan";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Wybierz towar z bazy *</label>
+            <select id="crudPzProduct" class="form-control" required>${prodOpts}</select>
+          </div>
+          <div class="form-group">
+            <label>Ilość przyjmowana na magazyn (+) *</label>
+            <input type="number" min="1" step="1" id="crudPzQty" class="form-control" value="10" required />
+          </div>
+        `;
+      } else if (entity === "categories") {
+        const item = isEdit ? state.categories.find(c => c.id === editId) : null;
+        subEl.textContent = "Kategorie";
+        titleEl.textContent = isEdit ? "Edytuj kategorię" : "Dodaj kategorię";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Nazwa kategorii *</label>
+            <input type="text" id="crudCatName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Odzież damska, Dom i wnętrze" required />
+          </div>
+        `;
+      } else if (entity === "discounts") {
+        const item = isEdit ? state.discounts.find(d => d.id === editId) : null;
+        subEl.textContent = "Rabaty";
+        titleEl.textContent = isEdit ? "Edytuj rabat" : "Dodaj rabat";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Nazwa rabatu *</label>
+            <input type="text" id="crudDiscName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Rabat Pracowniczy" required />
+          </div>
+          <div class="form-group">
+            <label>Wartość rabatu (%) *</label>
+            <input type="number" step="0.1" min="0.1" max="100" id="crudDiscPercent" class="form-control" value="${item ? item.percent : ""}" placeholder="np. 15" required />
+          </div>
+        `;
+      } else if (entity === "taxes") {
+        const item = isEdit ? state.taxes.find(t => t.id === editId) : null;
+        subEl.textContent = "Stawki podatkowe";
+        titleEl.textContent = isEdit ? "Edytuj stawkę podatkową (VAT)" : "Dodaj stawkę podatkową (VAT)";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Oznaczenie / Nazwa *</label>
+            <input type="text" id="crudTaxName" class="form-control" value="${item ? item.name : ""}" placeholder="np. VAT 23% (A)" required />
+          </div>
+          <div class="form-group">
+            <label>Wartość procentowa (%) *</label>
+            <input type="number" step="0.01" min="0" max="100" id="crudTaxRate" class="form-control" value="${item ? item.rate : ""}" placeholder="23" required />
+          </div>
+        `;
+      } else if (entity === "units") {
+        const item = isEdit ? state.units.find(u => u.id === editId) : null;
+        subEl.textContent = "Jednostki miary";
+        titleEl.textContent = isEdit ? "Edytuj jednostkę miary" : "Dodaj jednostkę miary";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Skrót jednostki *</label>
+            <input type="text" id="crudUnitSymbol" class="form-control" value="${item ? item.symbol : ""}" placeholder="np. szt." required />
+          </div>
+          <div class="form-group">
+            <label>Pełna nazwa *</label>
+            <input type="text" id="crudUnitFullName" class="form-control" value="${item ? item.fullName : ""}" placeholder="np. Sztuka" required />
+          </div>
+        `;
+      } else if (entity === "currencies") {
+        const item = isEdit ? state.currencies.find(c => c.id === editId) : null;
+        const isCurrentlyDefault = item ? (state.store.activeCurrencyCode === item.code || item.isDefault === true) : (state.currencies.length === 0);
+        subEl.textContent = "Waluty systemu";
+        titleEl.textContent = isEdit ? "Edytuj walutę" : "Dodaj walutę";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Kod waluty ISO *</label>
+            <input type="text" id="crudCurrCode" class="form-control" value="${item ? item.code : ""}" placeholder="np. PLN, EUR" maxlength="5" required />
+          </div>
+          <div class="form-group">
+            <label>Symbol waluty *</label>
+            <input type="text" id="crudCurrSymbol" class="form-control" value="${item ? item.symbol : ""}" placeholder="np. zł, €" maxlength="6" required />
+          </div>
+          <div class="form-group">
+            <label>Nazwa waluty *</label>
+            <input type="text" id="crudCurrName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Polski złoty" required />
+          </div>
+          <label style="display:flex; align-items:center; gap:9px; padding:10px 12px; background:#eef2ff; border:1px solid #c7d2fe; border-radius:10px; cursor:pointer; font-size:13px; font-weight:700; color:var(--pepco-indigo);">
+            <input type="checkbox" id="crudCurrIsDefault" style="width:17px; height:17px;" ${isCurrentlyDefault ? "checked" : ""} />
+            <span>Ustaw jako domyślną walutę kasy</span>
+          </label>
+        `;
+      }
+
+      adminCrudModal.classList.remove("hidden");
+    };
+
+    function closeAdminCrudModal() {
+      adminCrudModal.classList.add("hidden");
+      currentCrudEntity = null;
+      currentCrudEditId = null;
+    }
+
+    document.getElementById("btnCloseAdminCrudModal").addEventListener("click", closeAdminCrudModal);
+    document.getElementById("btnCancelAdminCrud").addEventListener("click", closeAdminCrudModal);
+
+    document.getElementById("adminCrudForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        if (currentCrudEntity === "operators") {
+          const payload = {
+            name: document.getElementById("crudOpName").value.trim(),
+            code: document.getElementById("crudOpCode").value.trim(),
+            pin: document.getElementById("crudOpPin").value.trim(),
+            role: document.getElementById("crudOpRole").value
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "operators", currentCrudEditId), payload);
+            showToast("Zaktualizowano operatora kasy", "check_circle");
+          } else {
+            await addDoc(collection(db, "operators"), payload);
+            showToast("Dodano operatora kasy", "check_circle");
+          }
+        } else if (currentCrudEntity === "payment_methods") {
+          const payload = {
+            name: document.getElementById("crudPmName").value.trim(),
+            icon: document.getElementById("crudPmIcon").value || "credit_card",
+            isCash: document.getElementById("crudPmIsCash").value === "true"
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "payment_methods", currentCrudEditId), payload);
+            showToast("Zaktualizowano formę płatności", "check_circle");
+          } else {
+            await addDoc(collection(db, "payment_methods"), payload);
+            showToast("Dodano formę płatności", "check_circle");
+          }
+        } else if (currentCrudEntity === "products") {
+          const taxSel = document.getElementById("crudProdTax");
+          const opt = taxSel.options[taxSel.selectedIndex];
+          const payload = {
+            ean: document.getElementById("crudProdEan").value.trim(),
+            name: document.getElementById("crudProdName").value.trim(),
+            price: Number(document.getElementById("crudProdPrice").value),
+            stock: Number(document.getElementById("crudProdStock").value) || 0,
+            category: document.getElementById("crudProdCategory").value,
+            taxName: opt ? opt.dataset.name : "VAT 23%",
+            taxRate: opt ? Number(opt.value) : 23,
+            unit: document.getElementById("crudProdUnit").value || "szt."
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "products", currentCrudEditId), payload);
+            showToast("Zaktualizowano dane towaru", "check_circle");
+          } else {
+            await addDoc(collection(db, "products"), payload);
+            showToast("Dodano towar do bazy", "check_circle");
+          }
+        } else if (currentCrudEntity === "stock_delivery") {
+          const prodId = document.getElementById("crudPzProduct").value;
+          const qty = Number(document.getElementById("crudPzQty").value);
+          if (!prodId || qty <= 0) return;
+          await updateDoc(doc(db, "products", prodId), { stock: increment(qty) });
+          showToast(`Przyjęto +${qty} szt. na magazyn!`, "move_to_inbox");
+        } else if (currentCrudEntity === "categories") {
+          const payload = { name: document.getElementById("crudCatName").value.trim() };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "categories", currentCrudEditId), payload);
+            showToast("Zaktualizowano kategorię", "check_circle");
+          } else {
+            await addDoc(collection(db, "categories"), payload);
+            showToast("Dodano kategorię", "check_circle");
+          }
+        } else if (currentCrudEntity === "discounts") {
+          const payload = {
+            name: document.getElementById("crudDiscName").value.trim(),
+            percent: Number(document.getElementById("crudDiscPercent").value)
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "discounts", currentCrudEditId), payload);
+            showToast("Zaktualizowano rabat", "check_circle");
+          } else {
+            await addDoc(collection(db, "discounts"), payload);
+            showToast("Dodano rabat", "check_circle");
+          }
+        } else if (currentCrudEntity === "taxes") {
+          const payload = {
+            name: document.getElementById("crudTaxName").value.trim(),
+            rate: Number(document.getElementById("crudTaxRate").value)
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "taxes", currentCrudEditId), payload);
+            showToast("Zaktualizowano stawkę VAT", "check_circle");
+          } else {
+            await addDoc(collection(db, "taxes"), payload);
+            showToast("Dodano stawkę VAT", "check_circle");
+          }
+        } else if (currentCrudEntity === "units") {
+          const payload = {
+            symbol: document.getElementById("crudUnitSymbol").value.trim(),
+            fullName: document.getElementById("crudUnitFullName").value.trim()
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "units", currentCrudEditId), payload);
+            showToast("Zaktualizowano jednostkę miary", "check_circle");
+          } else {
+            await addDoc(collection(db, "units"), payload);
+            showToast("Dodano jednostkę miary", "check_circle");
+          }
+        } else if (currentCrudEntity === "currencies") {
+          const code = document.getElementById("crudCurrCode").value.trim().toUpperCase();
+          const symbol = document.getElementById("crudCurrSymbol").value.trim();
+          const name = document.getElementById("crudCurrName").value.trim();
+          const isDefault = document.getElementById("crudCurrIsDefault").checked;
+
+          if (isDefault) {
+            for (const c of state.currencies) {
+              if (c.isDefault && c.id !== currentCrudEditId) {
+                await updateDoc(doc(db, "currencies", c.id), { isDefault: false });
+              }
+            }
+            await setDoc(doc(db, "settings", "store_profile"), {
+              activeCurrencyCode: code,
+              activeCurrencySymbol: symbol
+            }, { merge: true });
+          }
+
+          const payload = { code, symbol, name, isDefault };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "currencies", currentCrudEditId), payload);
+            showToast("Zaktualizowano walutę", "check_circle");
+          } else {
+            await addDoc(collection(db, "currencies"), payload);
+            showToast("Dodano walutę", "check_circle");
+          }
+        }
+
+        closeAdminCrudModal();
+      } catch (err) {
+        showToast("Błąd zapisu: " + err.message, "error");
+      }
+    });
+
+    // ==========================================
+    // POZOSTAŁE AKCJE ADMINISTRACJI
     // ==========================================
     document.getElementById("formStoreSettings").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -2040,223 +3727,157 @@
           krs: document.getElementById("setStoreKrs").value.trim(),
           bdo: document.getElementById("setStoreBdo").value.trim()
         }, { merge: true });
-        showToast("✅ Zapisano dane sklepu!");
-      } catch (err) { showToast("❌ Błąd zapisu: " + err.message); }
-    });
-
-    document.getElementById("formAddOperator").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "operators"), {
-          name: document.getElementById("opName").value.trim(),
-          code: document.getElementById("opCode").value.trim(),
-          pin: document.getElementById("opPin").value.trim(),
-          role: document.getElementById("opRole").value
-        });
-        e.target.reset();
-        showToast("✅ Dodano operatora kasy");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddPaymentMethod").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "payment_methods"), {
-          name: document.getElementById("pmName").value.trim(),
-          icon: document.getElementById("pmIcon").value.trim() || "💳",
-          isCash: document.getElementById("pmIsCash").value === "true"
-        });
-        e.target.reset();
-        document.getElementById("pmIcon").value = "💳";
-        showToast("✅ Dodano formę płatności");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddCategory").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "categories"), { name: document.getElementById("catNameInput").value.trim() });
-        e.target.reset();
-        showToast("✅ Dodano kategorię");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddTax").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "taxes"), {
-          name: document.getElementById("taxName").value.trim(),
-          rate: Number(document.getElementById("taxRate").value)
-        });
-        e.target.reset();
-        showToast("✅ Dodano stawkę podatkową");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddUnit").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "units"), {
-          symbol: document.getElementById("unitSymbol").value.trim(),
-          fullName: document.getElementById("unitFullName").value.trim()
-        });
-        e.target.reset();
-        showToast("✅ Dodano jednostkę miary");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddDiscount").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await addDoc(collection(db, "discounts"), {
-          name: document.getElementById("discName").value.trim(),
-          percent: Number(document.getElementById("discPercent").value)
-        });
-        e.target.reset();
-        showToast("✅ Dodano rabat");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddCurrency").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        const code = document.getElementById("currCode").value.trim().toUpperCase();
-        const symbol = document.getElementById("currSymbol").value.trim();
-        const name = document.getElementById("currName").value.trim();
-        await addDoc(collection(db, "currencies"), { code, symbol, name });
-        if (state.currencies.length === 0) {
-          await setDoc(doc(db, "settings", "store_profile"), { activeCurrencyCode: code, activeCurrencySymbol: symbol }, { merge: true });
-        }
-        e.target.reset();
-        showToast("✅ Dodano walutę");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
-    });
-
-    document.getElementById("formAddProduct").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const taxSelect = document.getElementById("prodTax");
-      const selectedTaxOpt = taxSelect.options[taxSelect.selectedIndex];
-
-      try {
-        await addDoc(collection(db, "products"), {
-          ean: document.getElementById("prodEan").value.trim(),
-          name: document.getElementById("prodName").value.trim(),
-          price: Number(document.getElementById("prodPrice").value),
-          stock: Number(document.getElementById("prodInitialStock").value) || 0,
-          category: document.getElementById("prodCategory").value,
-          taxName: selectedTaxOpt ? selectedTaxOpt.dataset.name : "VAT 23%",
-          taxRate: selectedTaxOpt ? Number(selectedTaxOpt.value) : 23,
-          unit: document.getElementById("prodUnit").value || "szt."
-        });
-        e.target.reset();
-        document.getElementById("prodInitialStock").value = 10;
-        showToast("✅ Towar dodany do bazy");
-      } catch (err) { showToast("❌ Błąd dodawania towaru: " + err.message); }
-    });
-
-    document.getElementById("formStockDelivery").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const prodId = document.getElementById("stockProductSelect").value;
-      const qty = Number(document.getElementById("stockAddQty").value);
-      if (!prodId || qty <= 0) return;
-
-      try {
-        await updateDoc(doc(db, "products", prodId), { stock: increment(qty) });
-        showToast(`📥 Przyjęto +${qty} szt. na magazyn!`);
-      } catch (err) { showToast("❌ Błąd aktualizacji stanu: " + err.message); }
+        showToast("Zapisano dane sklepu!", "check_circle");
+      } catch (err) { showToast("Błąd zapisu: " + err.message, "error"); }
     });
 
     window.setManualStock = async (prodId, currentStock) => {
       const val = prompt("Podaj nowy dokładny stan magazynowy:", currentStock);
       if (val === null) return;
       const num = Number(val);
-      if (isNaN(num) || num < 0) return showToast("❌ Nieprawidłowa wartość");
+      if (isNaN(num) || num < 0) return showToast("Nieprawidłowa wartość", "warning");
       try {
         await updateDoc(doc(db, "products", prodId), { stock: num });
-        showToast("✅ Zaktualizowano stan magazynowy");
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
+        showToast("Zaktualizowano stan magazynowy", "check_circle");
+      } catch (err) { showToast("Błąd: " + err.message, "error"); }
     };
 
     window.deleteFirestoreDoc = async (colName, docId) => {
       try {
         await deleteDoc(doc(db, colName, docId));
-        showToast("🗑️ Usunięto pozycję");
-      } catch (err) { showToast("❌ Błąd usuwania: " + err.message); }
+        showToast("Usunięto pozycję", "delete");
+      } catch (err) { showToast("Błąd usuwania: " + err.message, "error"); }
     };
 
-    window.setActiveCurrency = async (code, symbol) => {
+    window.setActiveCurrency = async (currId, code, symbol) => {
       try {
-        await setDoc(doc(db, "settings", "store_profile"), { activeCurrencyCode: code, activeCurrencySymbol: symbol }, { merge: true });
-        showToast(`💱 Ustawiono walutę: ${code}`);
-      } catch (err) { showToast("❌ Błąd: " + err.message); }
+        for (const c of state.currencies) {
+          if (c.isDefault && c.id !== currId) {
+            await updateDoc(doc(db, "currencies", c.id), { isDefault: false });
+          }
+        }
+        await updateDoc(doc(db, "currencies", currId), { isDefault: true });
+        await setDoc(doc(db, "settings", "store_profile"), {
+          activeCurrencyCode: code,
+          activeCurrencySymbol: symbol
+        }, { merge: true });
+        showToast(`Ustawiono domyślną walutę: ${code} (${symbol})`, "currency_exchange");
+      } catch (err) { showToast("Błąd: " + err.message, "error"); }
     };
 
     // ==========================================
-    // RENDER ADMIN TABLES
+    // RENDER ADMIN TABLES + FILTRY W TOWARACH I PZ
     // ==========================================
-    function populateProductFormSelects() {
-      const catSel = document.getElementById("prodCategory");
-      catSel.innerHTML = state.categories.length
-        ? state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("")
-        : `<option value="Ogólna">Ogólna</option>`;
+    function populateAdminCategoryFilters() {
+      const opts = `<option value="Wszystkie">Wszystkie kategorie</option>` +
+        state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
 
-      const taxSel = document.getElementById("prodTax");
-      taxSel.innerHTML = state.taxes.length
-        ? state.taxes.map(t => `<option value="${t.rate}" data-name="${t.name}">${t.name} (${t.rate}%)</option>`).join("")
-        : `<option value="23" data-name="VAT 23%">VAT 23%</option>`;
-
-      const unitSel = document.getElementById("prodUnit");
-      unitSel.innerHTML = state.units.length
-        ? state.units.map(u => `<option value="${u.symbol}">${u.symbol} (${u.fullName})</option>`).join("")
-        : `<option value="szt.">szt.</option>`;
+      const prodFilter = document.getElementById("adminProdCatFilter");
+      const stockFilter = document.getElementById("adminStockCatFilter");
+      prodFilter.innerHTML = opts;
+      stockFilter.innerHTML = opts;
+      prodFilter.value = state.adminProdCat;
+      stockFilter.value = state.adminStockCat;
     }
+
+    document.getElementById("adminProdSearchInput").addEventListener("input", (e) => {
+      state.adminProdSearch = e.target.value;
+      renderAdminProducts();
+    });
+
+    document.getElementById("adminProdCatFilter").addEventListener("change", (e) => {
+      state.adminProdCat = e.target.value;
+      renderAdminProducts();
+    });
+
+    document.getElementById("adminStockSearchInput").addEventListener("input", (e) => {
+      state.adminStockSearch = e.target.value;
+      renderAdminStock();
+    });
+
+    document.getElementById("adminStockCatFilter").addEventListener("change", (e) => {
+      state.adminStockCat = e.target.value;
+      renderAdminStock();
+    });
 
     function renderAdminPaymentMethods() {
       document.getElementById("adminPaymentMethodsTable").innerHTML = state.paymentMethods.length
-        ? state.paymentMethods.map(pm => `
+        ? state.paymentMethods.map(pm => {
+          const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
+          return `
           <tr>
-            <td style="font-size:20px;">${pm.icon || "💳"}</td>
+            <td><span class="m-icon" style="color:var(--pepco-indigo);">${iconName}</span></td>
             <td><strong>${pm.name}</strong></td>
             <td>${pm.isCash ? '<span class="badge-warn">Gotówkowa (z resztą)</span>' : '<span class="badge-pay">Bezgotówkowa</span>'}</td>
-            <td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('payment_methods', '${pm.id}')">Usuń</button></td>
-          </tr>`).join("")
-        : `<tr><td colspan="4" style="color:var(--text-muted);">Brak zdefiniowanych form płatności w bazie (domyślnie wyświetlą się Karta, Gotówka, BLIK).</td></tr>`;
+            <td style="display:flex; gap:6px;">
+              <button class="btn-secondary-sm" onclick="openAdminCrudModal('payment_methods', '${pm.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('payment_methods', '${pm.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+            </td>
+          </tr>`;
+        }).join("")
+        : `<tr><td colspan="4" style="color:var(--text-muted);">Brak zdefiniowanych form płatności w bazie.</td></tr>`;
     }
 
     function renderAdminCategories() {
       document.getElementById("adminCategoriesTable").innerHTML = state.categories.length
-        ? state.categories.map(c => `<tr><td><strong>${c.name}</strong></td><td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('categories', '${c.id}')">Usuń</button></td></tr>`).join("")
+        ? state.categories.map(c => `<tr>
+          <td><strong>${c.name}</strong></td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('categories', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('categories', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
         : `<tr><td colspan="2" style="color:var(--text-muted);">Brak kategorii.</td></tr>`;
     }
 
     function renderAdminTaxes() {
       document.getElementById("adminTaxesTable").innerHTML = state.taxes.length
-        ? state.taxes.map(t => `<tr><td><strong>${t.name}</strong></td><td>${t.rate}%</td><td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('taxes', '${t.id}')">Usuń</button></td></tr>`).join("")
+        ? state.taxes.map(t => `<tr>
+          <td><strong>${t.name}</strong></td>
+          <td>${t.rate}%</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('taxes', '${t.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('taxes', '${t.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
         : `<tr><td colspan="3" style="color:var(--text-muted);">Brak stawek VAT.</td></tr>`;
     }
 
     function renderAdminUnits() {
       document.getElementById("adminUnitsTable").innerHTML = state.units.length
-        ? state.units.map(u => `<tr><td><strong>${u.symbol}</strong></td><td>${u.fullName}</td><td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('units', '${u.id}')">Usuń</button></td></tr>`).join("")
+        ? state.units.map(u => `<tr>
+          <td><strong>${u.symbol}</strong></td>
+          <td>${u.fullName}</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('units', '${u.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('units', '${u.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
         : `<tr><td colspan="3" style="color:var(--text-muted);">Brak jednostek miary.</td></tr>`;
     }
 
     function renderAdminDiscounts() {
       document.getElementById("adminDiscountsTable").innerHTML = state.discounts.length
-        ? state.discounts.map(d => `<tr><td><strong>${d.name}</strong></td><td>-${d.percent}%</td><td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('discounts', '${d.id}')">Usuń</button></td></tr>`).join("")
+        ? state.discounts.map(d => `<tr>
+          <td><strong>${d.name}</strong></td>
+          <td>-${d.percent}%</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('discounts', '${d.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('discounts', '${d.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
         : `<tr><td colspan="3" style="color:var(--text-muted);">Brak rabatów.</td></tr>`;
     }
 
     function renderAdminCurrencies() {
       document.getElementById("adminCurrenciesTable").innerHTML = state.currencies.length
         ? state.currencies.map(c => {
-          const isActive = state.store.activeCurrencyCode === c.code;
+          const isDefault = state.store.activeCurrencyCode === c.code || c.isDefault === true;
           return `<tr>
-            <td><strong>${c.code}</strong></td><td>${c.symbol}</td><td>${c.name}</td>
-            <td>${isActive ? '<span class="badge-pay">Aktywna</span>' : 'Nieaktywna'}</td>
-            <td style="display:flex; gap:6px;">
-              ${!isActive ? `<button class="btn-secondary-sm" onclick="setActiveCurrency('${c.code}', '${c.symbol}')">Aktywuj</button>` : ''}
-              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('currencies', '${c.id}')">Usuń</button>
+            <td><strong>${c.code}</strong></td>
+            <td>${c.symbol}</td>
+            <td>${c.name}</td>
+            <td>${isDefault ? '<span class="badge-success">✓ Domyślna waluta</span>' : '<span style="color:var(--text-muted); font-size:12px;">Dodatkowa</span>'}</td>
+            <td style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${!isDefault ? `<button class="btn-secondary-sm" onclick="setActiveCurrency('${c.id}', '${c.code}', '${c.symbol}')">Ustaw domyślną</button>` : ''}
+              <button class="btn-secondary-sm" onclick="openAdminCrudModal('currencies', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('currencies', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
             </td></tr>`;
         }).join("")
         : `<tr><td colspan="5" style="color:var(--text-muted);">Brak walut (domyślnie PLN).</td></tr>`;
@@ -2268,31 +3889,46 @@
           <td style="font-family:'JetBrains Mono', monospace;">${o.code}</td>
           <td><strong>${o.name}</strong></td>
           <td><span class="badge-pay">${o.role}</span></td>
-          <td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('operators', '${o.id}')">Usuń</button></td></tr>`).join("")
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('operators', '${o.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('operators', '${o.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
         : `<tr><td colspan="4" style="color:var(--text-muted);">Brak operatorów kasy.</td></tr>`;
     }
 
     function renderAdminProducts() {
-      document.getElementById("adminProductsTable").innerHTML = state.products.length
-        ? state.products.map(p => `<tr>
+      const q = state.adminProdSearch.toLowerCase().trim();
+      const filtered = state.products.filter(p => {
+        const matchCat = state.adminProdCat === "Wszystkie" || p.category === state.adminProdCat;
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.ean && p.ean.toLowerCase().includes(q));
+        return matchCat && matchQ;
+      });
+
+      document.getElementById("adminProductsTable").innerHTML = filtered.length
+        ? filtered.map(p => `<tr>
           <td style="font-family:'JetBrains Mono', monospace;">${p.ean}</td>
           <td><strong>${p.name}</strong></td>
           <td>${p.category}</td>
           <td>${p.taxName || (p.taxRate + '%')}</td>
           <td><strong>${p.stock ?? 0} ${p.unit || 'szt.'}</strong></td>
           <td style="font-weight:700; color:var(--pepco-indigo);">${formatMoney(p.price)}</td>
-          <td><button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')">Usuń</button></td></tr>`).join("")
-        : `<tr><td colspan="7" style="color:var(--text-muted);">Brak towarów w bazie.</td></tr>`;
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('products', '${p.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td></tr>`).join("")
+        : `<tr><td colspan="7" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
     }
 
     function renderAdminStock() {
-      const sel = document.getElementById("stockProductSelect");
-      sel.innerHTML = state.products.length
-        ? state.products.map(p => `<option value="${p.id}">[${p.ean}] ${p.name} (obecnie: ${p.stock ?? 0} ${p.unit || 'szt.'})</option>`).join("")
-        : `<option value="">Brak towarów w bazie</option>`;
+      const q = state.adminStockSearch.toLowerCase().trim();
+      const filtered = state.products.filter(p => {
+        const matchCat = state.adminStockCat === "Wszystkie" || p.category === state.adminStockCat;
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.ean && p.ean.toLowerCase().includes(q));
+        return matchCat && matchQ;
+      });
 
-      document.getElementById("adminStockTable").innerHTML = state.products.length
-        ? state.products.map(p => {
+      document.getElementById("adminStockTable").innerHTML = filtered.length
+        ? filtered.map(p => {
           const st = Number(p.stock ?? 0);
           const badge = st === 0 
             ? `<span class="badge-ret">Brak na stanie</span>` 
@@ -2303,28 +3939,15 @@
             <td>${p.category}</td>
             <td style="font-weight:800; font-size:14px;">${st} ${p.unit || 'szt.'}</td>
             <td>${badge}</td>
-            <td><button class="btn-secondary-sm" onclick="setManualStock('${p.id}', ${st})">✏️ Koryguj stan</button></td>
+            <td><button class="btn-secondary-sm" onclick="setManualStock('${p.id}', ${st})"><span class="m-icon sm">edit</span> Koryguj stan</button></td>
           </tr>`;
         }).join("")
-        : `<tr><td colspan="6" style="color:var(--text-muted);">Brak towarów w magazynie.</td></tr>`;
+        : `<tr><td colspan="6" style="color:var(--text-muted);">Brak towarów w magazynie spełniających kryteria.</td></tr>`;
     }
 
     // ==========================================
-    // POS REGISTER, CART & ITEM DISCOUNT / EDIT MODAL
+    // POS REGISTER, CART & ITEM EDIT MODAL
     // ==========================================
-    function renderOperatorsSelect() {
-      const sel = document.getElementById("activeOperatorSelect");
-      const current = sel.value;
-      sel.innerHTML = `<option value="Brak operatora">Kasjer: Nie wybrano</option>` +
-        state.operators.map(o => `<option value="${o.name} (${o.code})">${o.name} [${o.code}]</option>`).join("");
-      if ([...sel.options].some(opt => opt.value === current)) sel.value = current;
-      state.activeOperator = sel.value;
-    }
-
-    document.getElementById("activeOperatorSelect").addEventListener("change", (e) => {
-      state.activeOperator = e.target.value;
-    });
-
     function renderCategories() {
       const bar = document.getElementById("categoryBar");
       const cats = ["Wszystkie", ...state.categories.map(c => c.name)];
@@ -2341,12 +3964,6 @@
       });
     }
 
-    function renderDiscountSelect() {
-      const sel = document.getElementById("discountSelect");
-      sel.innerHTML = `<option value="">Brak rabatu (0%)</option>` +
-        state.discounts.map(d => `<option value="${d.id}">${d.name} (-${d.percent}%)</option>`).join("");
-    }
-
     function renderProducts() {
       const grid = document.getElementById("productsGrid");
       const filtered = state.products.filter(p => {
@@ -2358,7 +3975,7 @@
 
       if (state.products.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
-          Brak towarów w bazie. Przejdź do zakładki <strong>⚙️ Administracja -> Towary</strong>, aby dodać asortyment.
+          Brak towarów w bazie. Przejdź do zakładki <strong>Administracja -> Towary</strong>, aby dodać asortyment.
         </div>`;
         return;
       }
@@ -2399,7 +4016,7 @@
       const currentInCart = existing ? existing.qty : 0;
 
       if (currentInCart + 1 > availableStock) {
-        showToast(`⚠️ Brak wystarczającego stanu magazynowego dla "${prod.name}" (dostępne: ${availableStock})`);
+        showToast(`Brak wystarczającego stanu magazynowego dla "${prod.name}" (dostępne: ${availableStock})`, "warning");
         return;
       }
 
@@ -2409,7 +4026,7 @@
         state.cart.push({
           ...prod,
           qty: 1,
-          itemDiscountType: "percent", // Domyślnie rabat procentowy
+          itemDiscountType: "percent",
           itemDiscountValue: 0
         });
       }
@@ -2424,7 +4041,7 @@
         const prod = state.products.find(p => p.id === prodId);
         const availableStock = prod ? Number(prod.stock ?? 0) : 9999;
         if (state.cart[idx].qty + delta > availableStock) {
-          showToast(`⚠️ Maksymalny dostępny stan magazynowy: ${availableStock}`);
+          showToast(`Maksymalny dostępny stan magazynowy: ${availableStock}`, "warning");
           return;
         }
       }
@@ -2434,9 +4051,6 @@
       renderCart();
     }
 
-    // ==========================================
-    // MODAL EDYCJI POZYCJI PARAGONU (CENA, ILOŚĆ, RABAT % / KWOTOWY)
-    // ==========================================
     const itemEditModal = document.getElementById("itemEditModal");
     let editingCartItemId = null;
     let editingDiscType = "percent";
@@ -2512,8 +4126,7 @@
 
     document.getElementById("btnEditQtyMinus").addEventListener("click", () => {
       const inp = document.getElementById("editItemQtyInput");
-      const val = Math.max(1, (parseInt(inp.value) || 1) - 1);
-      inp.value = val;
+      inp.value = Math.max(1, (parseInt(inp.value) || 1) - 1);
       updateItemEditPreview();
     });
 
@@ -2523,7 +4136,7 @@
       const maxStock = prod ? Number(prod.stock ?? 9999) : 9999;
       const nextVal = (parseInt(inp.value) || 1) + 1;
       if (nextVal > maxStock) {
-        showToast(`⚠️ Maksymalny dostępny stan magazynowy: ${maxStock}`);
+        showToast(`Maksymalny dostępny stan magazynowy: ${maxStock}`, "warning");
         return;
       }
       inp.value = nextVal;
@@ -2545,21 +4158,19 @@
       const prod = state.products.find(p => p.id === editingCartItemId);
       const maxStock = prod ? Number(prod.stock ?? 9999) : 9999;
       if (newQty > maxStock) {
-        showToast(`⚠️ Dostępny stan magazynowy to maksymalnie ${maxStock} szt.`);
+        showToast(`Dostępny stan magazynowy to maksymalnie ${maxStock} szt.`, "warning");
         return;
       }
-
-      const clampedDiscVal = editingDiscType === "percent" ? Math.min(100, rawDiscVal) : rawDiscVal;
 
       state.cart[idx].price = newPrice;
       state.cart[idx].qty = newQty;
       state.cart[idx].itemDiscountType = editingDiscType;
-      state.cart[idx].itemDiscountValue = clampedDiscVal;
+      state.cart[idx].itemDiscountValue = editingDiscType === "percent" ? Math.min(100, rawDiscVal) : rawDiscVal;
 
       itemEditModal.classList.add("hidden");
       editingCartItemId = null;
       renderCart();
-      showToast("✅ Zaktualizowano pozycję na paragonie");
+      showToast("Zaktualizowano pozycję na paragonie", "check_circle");
     });
 
     document.getElementById("btnRemoveItemFromModal").addEventListener("click", () => {
@@ -2568,15 +4179,12 @@
       itemEditModal.classList.add("hidden");
       editingCartItemId = null;
       renderCart();
-      showToast("🗑️ Usunięto pozycję z paragonu");
+      showToast("Usunięto pozycję z paragonu", "delete");
     });
 
     document.getElementById("btnCloseItemEditModal").addEventListener("click", () => itemEditModal.classList.add("hidden"));
     document.getElementById("btnCancelItemEdit").addEventListener("click", () => itemEditModal.classList.add("hidden"));
 
-    // ==========================================
-    // TOTALS & CART RENDERING
-    // ==========================================
     document.querySelectorAll(".doc-type-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.remove("active"));
@@ -2643,7 +4251,7 @@
     }
 
     function renderCart() {
-      const { discountVal, total, net, vat } = getCartTotals();
+      const { discountVal, total, net, vat, discPercent, discName } = getCartTotals();
       const sym = state.store.activeCurrencySymbol || "zł";
 
       document.getElementById("cartCountBadge").textContent = `(${state.cart.length} poz.)`;
@@ -2651,6 +4259,20 @@
       document.getElementById("vatAmount").textContent = formatMoney(vat);
       document.getElementById("discountAmount").textContent = "-" + formatMoney(discountVal);
       document.getElementById("totalAmount").textContent = formatMoney(total);
+
+      // Aktualizacja wyglądu przycisku rabatu w nagłówku w zależności czy wybrano rabat
+      const btnDiscTrigger = document.getElementById("btnOpenReceiptDiscount");
+      if (discPercent > 0) {
+        btnDiscTrigger.innerHTML = `<span class="m-icon sm">sell</span> Rabat: ${discName} (-${discPercent}%)`;
+        btnDiscTrigger.style.background = "#fdf2f8";
+        btnDiscTrigger.style.borderColor = "#fbcfe8";
+        btnDiscTrigger.style.color = "var(--pepco-magenta)";
+      } else {
+        btnDiscTrigger.innerHTML = `<span class="m-icon sm">sell</span> Rabat`;
+        btnDiscTrigger.style.background = "#eef2ff";
+        btnDiscTrigger.style.borderColor = "#c7d2fe";
+        btnDiscTrigger.style.color = "var(--pepco-indigo)";
+      }
 
       const isOver450 = state.docType === "receipt_nip" && total > 450;
       document.getElementById("limit450Alert").classList.toggle("hidden", !isOver450);
@@ -2660,9 +4282,9 @@
       if (state.cart.length === 0) {
         container.innerHTML = `
           <div class="empty-cart">
-            <span>🛒</span>
+            <span class="m-icon xl" style="color:#cbd5e1;">shopping_basket</span>
             <strong>Paragon jest pusty</strong>
-            <p style="font-size: 12px; margin-top: 4px;">Wybierz towar z katalogu lub zeskanuj kod EAN</p>
+            <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod QR / EAN</p>
           </div>`;
         return;
       }
@@ -2684,7 +4306,7 @@
         return `
           <div class="cart-item" data-id="${item.id}" title="Kliknij, aby edytować cenę, ilość lub naliczyć rabat">
             <div class="item-info">
-              <h4>${item.name} <span style="font-size:11px; color:var(--pepco-blue); font-weight:500;">✎</span></h4>
+              <h4>${item.name} <span class="m-icon sm" style="color:var(--pepco-blue);">edit</span></h4>
               <p>${formatMoney(item.price)} / ${item.unit || "szt."} • VAT ${item.taxRate ?? 23}%</p>
               ${discLabel ? `<span class="item-disc-pill">${discLabel}</span>` : ""}
             </div>
@@ -2701,7 +4323,6 @@
         `;
       }).join("");
 
-      // Kliknięcie w pozycję otwiera modal edycji ceny, ilości i rabatu
       container.querySelectorAll(".cart-item").forEach(row => {
         row.addEventListener("click", (e) => {
           if (e.target.closest(".qty-controls")) return;
@@ -2725,7 +4346,8 @@
 
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && state.searchQuery.trim() !== "") {
-        const match = state.products.find(p => p.ean === state.searchQuery.trim());
+        const clean = state.searchQuery.trim().replace(/^(EAN|QR|SKU):/i, "");
+        const match = state.products.find(p => p.ean === clean);
         if (match) {
           addToCart(match.id);
           searchInput.value = "";
@@ -2733,11 +4355,6 @@
           renderProducts();
         }
       }
-    });
-
-    document.getElementById("discountSelect").addEventListener("change", (e) => {
-      state.selectedDiscountId = e.target.value;
-      renderCart();
     });
 
     document.getElementById("btnClearCart").addEventListener("click", () => {
@@ -2748,7 +4365,6 @@
       state.cart = [];
       state.selectedDiscountId = "";
       state.docType = "receipt";
-      document.getElementById("discountSelect").value = "";
       document.getElementById("receiptBuyerNip").value = "";
       document.getElementById("invBuyerNip").value = "";
       document.getElementById("invBuyerName").value = "";
@@ -2761,7 +4377,7 @@
     }
 
     // ==========================================
-    // FLOATING PAYMENT SCREEN (PODSUMA -> WYMAZANIE TŁA -> WYBÓR PŁATNOŚCI)
+    // FLOATING PAYMENT SCREEN (PODSUMA)
     // ==========================================
     const floatingOverlay = document.getElementById("floatingPaymentOverlay");
     const fpCashCalcBox = document.getElementById("fpCashCalcBox");
@@ -2828,11 +4444,11 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
       if (state.docType === "receipt_nip") {
         const nip = document.getElementById("receiptBuyerNip").value.trim();
         if (!nip || nip.replace(/\D/g, "").length !== 10) {
-          showToast("⚠️ Wpisz poprawny 10-cyfrowy NIP nabywcy dla paragonu do 450 PLN!");
+          showToast("Wpisz poprawny 10-cyfrowy NIP nabywcy dla paragonu do 450 PLN!", "warning");
           return;
         }
         if (totals.total > 450) {
-          showToast("⚠️ Kwota powyżej 450 PLN wymaga wystawienia Zwykłej Faktury!");
+          showToast("Kwota powyżej 450 PLN wymaga wystawienia Zwykłej Faktury!", "warning");
           return;
         }
         buyerInfo.nip = nip;
@@ -2845,11 +4461,11 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
         const address = document.getElementById("invBuyerAddress").value.trim();
 
         if (!name || !address) {
-          showToast("⚠️ Uzupełnij nazwę i adres nabywcy na fakturze!");
+          showToast("Uzupełnij nazwę i adres nabywcy na fakturze!", "warning");
           return;
         }
         if (mode === "with_nip" && nip.replace(/\D/g, "").length !== 10) {
-          showToast("⚠️ Wpisz poprawny 10-cyfrowy NIP nabywcy lub wybierz 'Faktura bez NIP'!");
+          showToast("Wpisz poprawny 10-cyfrowy NIP nabywcy lub wybierz 'Faktura bez NIP'!", "warning");
           return;
         }
         buyerInfo = { nip: mode === "with_nip" ? nip : "", name, address };
@@ -2896,20 +4512,23 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
       const methods = state.paymentMethods.length > 0
         ? state.paymentMethods
         : [
-            { id: "def_card", name: "Karta płatnicza", icon: "💳", isCash: false },
-            { id: "def_cash", name: "Gotówka", icon: "💵", isCash: true },
-            { id: "def_blik", name: "BLIK", icon: "📱", isCash: false }
+            { id: "def_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
+            { id: "def_cash", name: "Gotówka", icon: "payments", isCash: true },
+            { id: "def_blik", name: "BLIK", icon: "qr_code_2", isCash: false }
           ];
 
-      grid.innerHTML = methods.map(m => `
+      grid.innerHTML = methods.map(m => {
+        const iconName = resolveAndroidIcon(m.icon, m.isCash);
+        return `
         <button type="button" class="payment-tile" data-pm-id="${m.id}" data-pm-name="${m.name}" data-pm-cash="${m.isCash}">
-          <div class="tile-icon">${m.icon || "💳"}</div>
+          <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
           <div>
             <div class="tile-name">${m.name}</div>
             <div class="tile-sub">${m.isCash ? "Kliknij, aby przeliczyć / zatwierdzić" : "Szybka płatność bezgotówkowa"}</div>
           </div>
         </button>
-      `).join("");
+      `;
+      }).join("");
 
       grid.querySelectorAll(".payment-tile").forEach(tile => {
         tile.addEventListener("click", async () => {
@@ -2996,7 +4615,7 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
             createdAt: serverTimestamp(),
             localTimestamp: new Date().toISOString()
           });
-          showToast(`✅ Opłacono (${paymentMethodName}) • Wystawiono Fakturę ${docNo}`);
+          showToast(`Opłacono (${paymentMethodName}) • Wystawiono Fakturę ${docNo}`, "check_circle");
         } else {
           await addDoc(collection(db, "transactions"), {
             receiptNumber: String(docNo),
@@ -3018,13 +4637,13 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
             createdAt: serverTimestamp(),
             localTimestamp: new Date().toISOString()
           });
-          showToast(`✅ Opłacono (${paymentMethodName}) • Paragon #${docNo} zapisany!`);
+          showToast(`Opłacono (${paymentMethodName}) • Paragon #${docNo} zapisany!`, "check_circle");
         }
 
         floatingOverlay.classList.add("hidden");
         resetSaleScreen();
       } catch (err) {
-        showToast("❌ Błąd zapisu transakcji: " + err.message);
+        showToast("Błąd zapisu transakcji: " + err.message, "error");
       } finally {
         window._isSavingSale = false;
       }
@@ -3083,7 +4702,7 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
           <td>${inv.buyerNip ? `<span class="badge-pay">${inv.buyerNip}</span>` : `<span style="color:var(--text-muted);">Bez NIP</span>`}</td>
           <td>${dateStr}</td>
           <td style="font-weight:700;">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
-          <td><button class="btn-secondary-sm" onclick="previewSavedInvoice('${inv.id}')">👁️ Podgląd</button></td>
+          <td><button class="btn-secondary-sm" onclick="previewSavedInvoice('${inv.id}')"><span class="m-icon sm">visibility</span> Podgląd</button></td>
         </tr>`;
       }).join("");
     }
@@ -3123,12 +4742,12 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       const box = document.getElementById("invToReceiptFormBox");
 
       if (!rec) {
-        showToast("❌ Nie znaleziono paragonu o podanym numerze.");
+        showToast("Nie znaleziono paragonu o podanym numerze.", "search_off");
         box.classList.add("hidden");
         return;
       }
       if (rec.invoiced) {
-        showToast(`⚠️ Do tego paragonu wystawiono już fakturę ${rec.invoiceNumber}!`);
+        showToast(`Do tego paragonu wystawiono już fakturę ${rec.invoiceNumber}!`, "warning");
         box.classList.add("hidden");
         return;
       }
@@ -3160,7 +4779,7 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       const errBox = document.getElementById("f2pErrorAlert");
 
       if (isWithNip && foundReceiptForInvoice && !foundReceiptForInvoice.hasBuyerNip) {
-        errBox.textContent = "⚠️ Pierwotny paragon nie zawierał NIP nabywcy. Wybierz opcję 'Faktura do paragonu BEZ NIP'.";
+        errBox.textContent = "Pierwotny paragon nie zawierał NIP nabywcy. Wybierz opcję 'Faktura do paragonu BEZ NIP'.";
         errBox.classList.remove("hidden");
       } else {
         errBox.classList.add("hidden");
@@ -3174,9 +4793,9 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       const name = document.getElementById("f2pBuyerName").value.trim();
       const address = document.getElementById("f2pBuyerAddress").value.trim();
 
-      if (mode === "with_nip" && !foundReceiptForInvoice.hasBuyerNip) return showToast("❌ Brak NIP na pierwotnym paragonie!");
-      if (mode === "with_nip" && nip !== foundReceiptForInvoice.buyerNip) return showToast("❌ NIP musi być identyczny z NIP na paragonie!");
-      if (!name || !address) return showToast("⚠️ Wpisz dane oraz adres nabywcy!");
+      if (mode === "with_nip" && !foundReceiptForInvoice.hasBuyerNip) return showToast("Brak NIP na pierwotnym paragonie!", "warning");
+      if (mode === "with_nip" && nip !== foundReceiptForInvoice.buyerNip) return showToast("NIP musi być identyczny z NIP na paragonie!", "warning");
+      if (!name || !address) return showToast("Wpisz dane oraz adres nabywcy!", "warning");
 
       const now = new Date();
       const invNumber = `FV/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
@@ -3207,14 +4826,13 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
           invoiceNumber: invNumber
         });
 
-        showToast(`✅ Wystawiono fakturę ${invNumber} do paragonu #${foundReceiptForInvoice.receiptNumber}!`);
+        showToast(`Wystawiono fakturę ${invNumber} do paragonu #${foundReceiptForInvoice.receiptNumber}!`, "check_circle");
         document.getElementById("invToReceiptFormBox").classList.add("hidden");
         document.getElementById("searchReceiptForInv").value = "";
         foundReceiptForInvoice = null;
-      } catch (err) { showToast("❌ Błąd wystawiania faktury: " + err.message); }
+      } catch (err) { showToast("Błąd wystawiania faktury: " + err.message, "error"); }
     });
 
-    // Zwroty
     let foundReceiptForReturn = null;
 
     document.getElementById("btnFindReceiptReturn").addEventListener("click", () => {
@@ -3223,7 +4841,7 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       const box = document.getElementById("returnProcessBox");
 
       if (!rec) {
-        showToast("❌ Nie znaleziono paragonu o podanym numerze.");
+        showToast("Nie znaleziono paragonu o podanym numerze.", "search_off");
         box.classList.add("hidden");
         return;
       }
@@ -3302,7 +4920,7 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
         }
       });
 
-      if (returnedItems.length === 0) return showToast("⚠️ Wybierz ilość zwracanych produktów!");
+      if (returnedItems.length === 0) return showToast("Wybierz ilość zwracanych produktów!", "warning");
 
       const returnNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(10000 + Math.random() * 90000)}`;
 
@@ -3326,11 +4944,11 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
           localTimestamp: new Date().toISOString()
         });
 
-        showToast(`↩️ Zwrot ${returnNumber} zatwierdzony! Stan magazynowy przywrócony.`);
+        showToast(`Zwrot ${returnNumber} zatwierdzony! Stan magazynowy przywrócony.`, "check_circle");
         document.getElementById("returnProcessBox").classList.add("hidden");
         document.getElementById("searchReceiptForReturn").value = "";
         foundReceiptForReturn = null;
-      } catch (err) { showToast("❌ Błąd realizacji zwrotu: " + err.message); }
+      } catch (err) { showToast("Błąd realizacji zwrotu: " + err.message, "error"); }
     });
 
     function renderReturnsHistory() {
@@ -3401,7 +5019,8 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       });
     });
 
-    populateProductFormSelects();
+    // Uruchomienie od ekranu blokady przy starcie aplikacji
+    showLockStep("locked");
     renderFloatingPaymentTiles();
   </script>
 </body>
