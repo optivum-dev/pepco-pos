@@ -46,6 +46,10 @@
       overflow: hidden;
     }
 
+    body.pepco-vk-open {
+      padding-bottom: 268px;
+    }
+
     /* MATERIAL SYMBOLS (ANDROID 17 STYLE) */
     .m-icon {
       font-family: 'Material Symbols Rounded';
@@ -69,6 +73,13 @@
     .m-icon.sm { font-size: 16px; }
     .m-icon.lg { font-size: 26px; }
     .m-icon.xl { font-size: 40px; }
+
+    /* ACTIVE VK TARGET HIGHLIGHT */
+    .pepco-vk-active-field {
+      border-color: var(--pepco-magenta) !important;
+      box-shadow: 0 0 0 3px rgba(230, 30, 110, 0.22) !important;
+      background-color: #fffafb !important;
+    }
 
     /* TOP BAR */
     .topbar {
@@ -565,29 +576,38 @@
       color: var(--text-muted);
     }
 
-    /* PEPCO ON-SCREEN KEYBOARD (MOTYW PEPCO) */
-    .pepco-vk-panel {
-      background: linear-gradient(160deg, #1b1166 0%, #24149e 48%, #1a286e 100%);
-      border: 1.5px solid rgba(255, 255, 255, 0.22);
-      border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 12px 30px rgba(24, 15, 112, 0.35);
-      flex-shrink: 0;
+    /* GLOBAL FLOATING PEPCO POS VIRTUAL KEYBOARD (ZAMIAST SYSTEMOWEJ ANDROID) */
+    .pepco-global-vk {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      background: linear-gradient(155deg, #1b1166 0%, #24149e 48%, #16225c 100%);
+      border-top: 2px solid rgba(255, 255, 255, 0.28);
+      padding: 8px 10px 10px 10px;
+      box-shadow: 0 -10px 34px rgba(15, 10, 80, 0.48);
       user-select: none;
-      animation: vkSlideUp 0.16s ease-out;
+      animation: vkSlideUpGlobal 0.16s ease-out;
     }
 
-    @keyframes vkSlideUp {
-      from { opacity: 0; transform: translateY(8px); }
+    @keyframes vkSlideUpGlobal {
+      from { opacity: 0; transform: translateY(100%); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pepco-vk-inner {
+      max-width: 1120px;
+      margin: 0 auto;
     }
 
     .pepco-vk-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-      padding: 0 4px;
+      margin-bottom: 7px;
+      gap: 8px;
+      padding: 0 2px;
     }
 
     .pepco-vk-badge {
@@ -602,14 +622,18 @@
       background: rgba(255, 255, 255, 0.14);
       padding: 4px 10px;
       border-radius: 999px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 72vw;
     }
 
     .pepco-vk-close {
-      background: rgba(230, 30, 110, 0.88);
+      background: rgba(230, 30, 110, 0.92);
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 8px;
-      padding: 4px 10px;
+      padding: 4px 11px;
       font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
@@ -617,6 +641,7 @@
       align-items: center;
       gap: 4px;
       transition: 0.12s;
+      flex-shrink: 0;
     }
 
     .pepco-vk-close:hover {
@@ -626,7 +651,7 @@
     .pepco-vk-rows {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     .pepco-vk-row {
@@ -638,10 +663,10 @@
     .vk-key {
       flex: 1;
       min-width: 0;
-      height: 38px;
-      border-radius: 9px;
+      height: 36px;
+      border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       color: #111827;
       font-family: 'Inter', sans-serif;
       font-size: 14px;
@@ -651,7 +676,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 0 rgba(12, 8, 66, 0.45);
-      transition: transform 0.06s, background 0.12s, color 0.12s;
+      transition: transform 0.05s, background 0.1s, color 0.1s;
     }
 
     .vk-key:hover {
@@ -675,7 +700,7 @@
     .vk-key.func-key {
       background: rgba(255, 255, 255, 0.18);
       color: #fff;
-      font-size: 12px;
+      font-size: 11.5px;
       flex: 1.45;
     }
 
@@ -686,7 +711,7 @@
 
     .vk-key.space-key {
       flex: 4.5;
-      font-size: 12px;
+      font-size: 11.5px;
       letter-spacing: 0.6px;
       text-transform: uppercase;
       color: var(--pepco-indigo);
@@ -696,8 +721,8 @@
       flex: 1.9;
       background: var(--pepco-gradient);
       color: #fff;
-      border-color: rgba(255, 255, 255, 0.4);
-      font-size: 12px;
+      border-color: rgba(255, 255, 255, 0.45);
+      font-size: 11.5px;
       gap: 4px;
     }
 
@@ -1638,7 +1663,7 @@
       border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
-      z-index: 400;
+      z-index: 10050;
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       display: flex;
       align-items: center;
@@ -1804,15 +1829,13 @@
             class="scanner-input" 
             placeholder="Zeskanuj kod EAN / QR / wpisz PLU lub nazwę towaru..." 
             autocomplete="off"
-            inputmode="none"
-            readonly
           />
           <button type="button" id="btnClearSearchInput" class="scanner-clear-btn hidden" title="Wyczyść pole wyszukiwania">
             <span class="m-icon sm">close</span>
           </button>
         </div>
 
-        <button type="button" id="btnTogglePepcoVk" class="toolbar-action-btn" title="Pokaż / ukryj klawiaturę ekranową Pepco">
+        <button type="button" id="btnTogglePepcoVk" class="toolbar-action-btn" title="Pokaż / ukryj klawiaturę ekranową PEPCO POS">
           <span class="m-icon">keyboard</span>
         </button>
 
@@ -1835,19 +1858,6 @@
         <div style="grid-column: 1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
           Brak towarów w bazie. Przejdź do zakładki <strong>Administracja -> Towary</strong>, aby dodać asortyment.
         </div>
-      </div>
-
-      <!-- KLAWIATURA EKRANOWA WITRYNY W MOTYWIE PEPCO -->
-      <div class="pepco-vk-panel hidden" id="pepcoVirtualKeyboard">
-        <div class="pepco-vk-header">
-          <span class="pepco-vk-badge">
-            <span class="m-icon sm">keyboard</span> Klawiatura PEPCO POS
-          </span>
-          <button type="button" class="pepco-vk-close" id="btnClosePepcoVk">
-            <span class="m-icon sm">keyboard_hide</span> Ukryj klawiaturę
-          </button>
-        </div>
-        <div class="pepco-vk-rows" id="pepcoVkRowsContainer"></div>
       </div>
     </section>
 
@@ -2786,6 +2796,22 @@
     </div>
   </div>
 
+  <!-- GLOBALNA KLAWIATURA EKRANOWA PEPCO POS (ZAMIAST SYSTEMOWEJ ANDROID) -->
+  <div class="pepco-global-vk hidden" id="pepcoGlobalVkPanel">
+    <div class="pepco-vk-inner">
+      <div class="pepco-vk-header">
+        <span class="pepco-vk-badge">
+          <span class="m-icon sm">keyboard</span>
+          <span id="pepcoVkTargetLabel">Klawiatura PEPCO POS</span>
+        </span>
+        <button type="button" class="pepco-vk-close" id="btnCloseGlobalPepcoVk">
+          <span class="m-icon sm">keyboard_hide</span> Ukryj klawiaturę
+        </button>
+      </div>
+      <div class="pepco-vk-rows" id="pepcoGlobalVkRows"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast hidden"></div>
 
   <!-- FIREBASE & APP LOGIC -->
@@ -2905,103 +2931,166 @@
     setInterval(updateClock, 1000);
 
     // ==========================================
-    // DOPASOWANIE PRODUKTU PO KODZIE EAN / PLU / QR
+    // GLOBALNA KLAWIATURA EKRANOWA PEPCO POS (ZAMIAST SYSTEMOWEJ ANDROID)
+    // Działa we WSZYSTKICH polach wprowadzania tekstu i liczb w całej kasie!
     // ==========================================
-    function findProductByCode(rawCode) {
-      const clean = String(rawCode || "").trim().replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
-      if (!clean) return null;
-      const lower = clean.toLowerCase();
-
-      return state.products.find(p =>
-        (p.ean && String(p.ean).trim().toLowerCase() === lower) ||
-        (p.plu && String(p.plu).trim().toLowerCase() === lower)
-      ) || null;
-    }
-
-    // ==========================================
-    // KLAWIATURA EKRANOWA WITRYNY (MOTYW PEPCO) + BLOKADA SYSTEMOWEJ
-    // ==========================================
-    const searchInput = document.getElementById("searchInput");
-    const btnClearSearchInput = document.getElementById("btnClearSearchInput");
-    const pepcoVkPanel = document.getElementById("pepcoVirtualKeyboard");
-    const pepcoVkRowsContainer = document.getElementById("pepcoVkRowsContainer");
+    const pepcoGlobalVkPanel = document.getElementById("pepcoGlobalVkPanel");
+    const pepcoGlobalVkRows = document.getElementById("pepcoGlobalVkRows");
+    const pepcoVkTargetLabel = document.getElementById("pepcoVkTargetLabel");
+    let activeVkTarget = null;
     let vkShiftActive = false;
 
     const VK_ROWS = [
-      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-      ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-      ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ó"],
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."],
+      ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "@"],
+      ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ó", "-"],
       ["SHIFT", "z", "x", "c", "v", "b", "n", "m", "ą", "ę", "BACKSPACE"],
-      ["ł", "ś", "ć", "ż", "ź", "ń", "-", "/"],
+      ["ł", "ś", "ć", "ż", "ź", "ń", ",", "/", "#"],
       ["CLEAR", "SPACE", "ENTER"]
     ];
 
-    function syncSearchFieldUI(keepFocus = true) {
-      searchInput.value = state.searchQuery;
-      btnClearSearchInput.classList.toggle("hidden", state.searchQuery.length === 0);
-      renderProducts();
-      if (keepFocus) {
-        searchInput.focus({ preventScroll: true });
+    function isTextOrNumericInput(el) {
+      if (!el || el.disabled) return false;
+      if (el.tagName === "TEXTAREA") return true;
+      if (el.tagName !== "INPUT") return false;
+      const supportedTypes = ["text", "number", "password", "search", "tel", "email", "url"];
+      return supportedTypes.includes((el.type || "text").toLowerCase());
+    }
+
+    // Natychmiastowe zablokowanie systemowej klawiatury Android na dowolnym polu tekstowym
+    function suppressAndroidKeyboard(el) {
+      if (!isTextOrNumericInput(el)) return;
+      el.setAttribute("inputmode", "none");
+      if (!el.dataset.pepcoVkLocked) {
+        el.dataset.pepcoVkLocked = "1";
+        el.setAttribute("readonly", "readonly");
       }
     }
 
-    function openPepcoVirtualKeyboard() {
-      pepcoVkPanel.classList.remove("hidden");
-      renderPepcoVirtualKeyboard();
+    function scanAndSuppressAllInputs(root = document) {
+      root.querySelectorAll("input, textarea").forEach(suppressAndroidKeyboard);
     }
 
-    function closePepcoVirtualKeyboard() {
-      pepcoVkPanel.classList.add("hidden");
+    // Obserwuj dynamicznie dodawane pola (np. modale CRUD, pola zwrotów itp.)
+    const domObserver = new MutationObserver((mutations) => {
+      mutations.forEach(m => {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType === 1) {
+            if (isTextOrNumericInput(node)) suppressAndroidKeyboard(node);
+            scanAndSuppressAllInputs(node);
+          }
+        });
+      });
+    });
+    domObserver.observe(document.body, { childList: true, subtree: true });
+    scanAndSuppressAllInputs();
+
+    function describeTargetField(el) {
+      if (!el) return "Klawiatura PEPCO POS";
+      const lbl = el.closest(".form-group")?.querySelector("label")?.textContent?.trim();
+      if (lbl) return `Klawiatura PEPCO POS • ${lbl.replace("*", "").trim()}`;
+      if (el.placeholder) return `Klawiatura PEPCO POS • ${el.placeholder.slice(0, 42)}`;
+      return "Klawiatura PEPCO POS";
     }
 
-    function handleVkKeyPress(keyVal) {
+    function openGlobalPepcoVk(targetEl) {
+      if (!isTextOrNumericInput(targetEl)) return;
+      if (activeVkTarget && activeVkTarget !== targetEl) {
+        activeVkTarget.classList.remove("pepco-vk-active-field");
+      }
+      activeVkTarget = targetEl;
+      activeVkTarget.classList.add("pepco-vk-active-field");
+      pepcoVkTargetLabel.textContent = describeTargetField(targetEl);
+      pepcoGlobalVkPanel.classList.remove("hidden");
+      document.body.classList.add("pepco-vk-open");
+      renderGlobalPepcoVk();
+
+      setTimeout(() => {
+        if (activeVkTarget) {
+          activeVkTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 60);
+    }
+
+    function closeGlobalPepcoVk() {
+      if (activeVkTarget) {
+        activeVkTarget.classList.remove("pepco-vk-active-field");
+      }
+      activeVkTarget = null;
+      pepcoGlobalVkPanel.classList.add("hidden");
+      document.body.classList.remove("pepco-vk-open");
+    }
+
+    function setNativeInputValueAndDispatch(el, newVal) {
+      el.value = newVal;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function handleGlobalVkPress(keyVal) {
+      const target = activeVkTarget;
+      if (!target) return;
+
       if (keyVal === "SHIFT") {
         vkShiftActive = !vkShiftActive;
-        renderPepcoVirtualKeyboard();
+        renderGlobalPepcoVk();
         return;
       }
+
       if (keyVal === "BACKSPACE") {
-        state.searchQuery = state.searchQuery.slice(0, -1);
-        syncSearchFieldUI(true);
+        const cur = String(target.value || "");
+        setNativeInputValueAndDispatch(target, cur.slice(0, -1));
         return;
       }
+
       if (keyVal === "CLEAR") {
-        state.searchQuery = "";
-        syncSearchFieldUI(true);
+        setNativeInputValueAndDispatch(target, "");
         return;
       }
+
       if (keyVal === "SPACE") {
-        state.searchQuery += " ";
-        syncSearchFieldUI(true);
+        setNativeInputValueAndDispatch(target, String(target.value || "") + " ");
         return;
       }
+
       if (keyVal === "ENTER") {
-        const trimmed = state.searchQuery.trim();
-        if (trimmed) {
-          const exactProd = findProductByCode(trimmed);
-          if (exactProd) {
-            addToCart(exactProd.id);
-            showToast(`Dodano z klawiatury/kodu: ${exactProd.name}`, "add_shopping_cart");
-            state.searchQuery = "";
-            syncSearchFieldUI(true);
-            return;
+        // Jeśli jesteśmy w głównym polu wyszukiwania kasy i wpisano kod EAN/PLU, od razu wrzuć towar na paragon
+        if (target.id === "searchInput") {
+          const trimmed = String(target.value || "").trim();
+          if (trimmed) {
+            const exactProd = findProductByCode(trimmed);
+            if (exactProd) {
+              addToCart(exactProd.id);
+              showToast(`Dodano z klawiatury/kodu: ${exactProd.name}`, "add_shopping_cart");
+              setNativeInputValueAndDispatch(target, "");
+              return;
+            }
           }
         }
-        closePepcoVirtualKeyboard();
+        // Wyślij zdarzenie Enter (dla wyszukiwarek paragonów, formularzy itp.)
+        target.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true }));
+        closeGlobalPepcoVk();
         return;
       }
 
-      const charToAdd = vkShiftActive ? keyVal.toLocaleUpperCase("pl-PL") : keyVal;
-      state.searchQuery += charToAdd;
+      const isLetter = /^[a-ząćęłńóśźż]$/i.test(keyVal);
+      const charToAdd = (vkShiftActive && isLetter) ? keyVal.toLocaleUpperCase("pl-PL") : keyVal;
+      let nextValue = String(target.value || "") + charToAdd;
+
+      if (target.maxLength && target.maxLength > 0 && nextValue.length > target.maxLength) {
+        nextValue = nextValue.slice(0, target.maxLength);
+      }
+
+      setNativeInputValueAndDispatch(target, nextValue);
+
       if (vkShiftActive) {
         vkShiftActive = false;
-        renderPepcoVirtualKeyboard();
+        renderGlobalPepcoVk();
       }
-      syncSearchFieldUI(true);
     }
 
-    function renderPepcoVirtualKeyboard() {
-      pepcoVkRowsContainer.innerHTML = VK_ROWS.map(row => {
+    function renderGlobalPepcoVk() {
+      pepcoGlobalVkRows.innerHTML = VK_ROWS.map(row => {
         const buttonsHtml = row.map(k => {
           if (k === "SHIFT") {
             return `<button type="button" class="vk-key func-key ${vkShiftActive ? 'active-shift' : ''}" data-vk="SHIFT">
@@ -3021,56 +3110,88 @@
           }
           if (k === "ENTER") {
             return `<button type="button" class="vk-key enter-key" data-vk="ENTER">
-              <span class="m-icon sm">keyboard_return</span> ZATWIERDŹ
+              <span class="m-icon sm">check</span> ZATWIERDŹ
             </button>`;
           }
-          const isDigit = /^[0-9]$/.test(k);
-          const label = vkShiftActive && !isDigit ? k.toLocaleUpperCase("pl-PL") : k;
+          const isDigit = /^[0-9.,]$/.test(k);
+          const isLetter = /^[a-ząćęłńóśźż]$/i.test(k);
+          const label = (vkShiftActive && isLetter) ? k.toLocaleUpperCase("pl-PL") : k;
           return `<button type="button" class="vk-key ${isDigit ? 'num-key' : ''}" data-vk="${k}">${label}</button>`;
         }).join("");
         return `<div class="pepco-vk-row">${buttonsHtml}</div>`;
       }).join("");
 
-      pepcoVkRowsContainer.querySelectorAll(".vk-key").forEach(btn => {
+      pepcoGlobalVkRows.querySelectorAll(".vk-key").forEach(btn => {
         btn.addEventListener("pointerdown", (e) => {
           e.preventDefault();
-          handleVkKeyPress(btn.dataset.vk);
+          e.stopPropagation();
+          handleGlobalVkPress(btn.dataset.vk);
         });
       });
     }
 
-    // Blokada klawiatury systemowej (inputmode="none" + readonly zdejmowane tylko chwilowo przy wpisywaniu ze sprzętu)
-    // oraz otwarcie klawiatury witryny PEPCO po kliknięciu w pole wyszukiwania
-    searchInput.addEventListener("pointerdown", () => {
-      searchInput.setAttribute("inputmode", "none");
-      searchInput.setAttribute("readonly", "readonly");
-      openPepcoVirtualKeyboard();
-    });
+    // Przechwytuj kliknięcia i fokus na KAŻDYM polu wprowadzania tekstu w całej kasie POS
+    document.addEventListener("pointerdown", (e) => {
+      const target = e.target;
+      if (target.closest("#pepcoGlobalVkPanel")) return;
 
-    searchInput.addEventListener("focus", () => {
-      searchInput.setAttribute("inputmode", "none");
-      openPepcoVirtualKeyboard();
-    });
+      if (isTextOrNumericInput(target)) {
+        suppressAndroidKeyboard(target);
+        openGlobalPepcoVk(target);
+      } else if (activeVkTarget && !target.closest("button") && !target.closest("label")) {
+        // Kliknięcie poza polem i poza klawiaturą zamyka klawiaturę
+        closeGlobalPepcoVk();
+      }
+    }, true);
 
-    document.getElementById("btnTogglePepcoVk").addEventListener("click", () => {
-      if (pepcoVkPanel.classList.contains("hidden")) {
-        openPepcoVirtualKeyboard();
-        searchInput.focus({ preventScroll: true });
-      } else {
-        closePepcoVirtualKeyboard();
+    document.addEventListener("focusin", (e) => {
+      const target = e.target;
+      if (isTextOrNumericInput(target)) {
+        suppressAndroidKeyboard(target);
+        openGlobalPepcoVk(target);
       }
     });
 
-    document.getElementById("btnClosePepcoVk").addEventListener("click", closePepcoVirtualKeyboard);
+    document.getElementById("btnCloseGlobalPepcoVk").addEventListener("click", closeGlobalPepcoVk);
+
+    const searchInput = document.getElementById("searchInput");
+    const btnClearSearchInput = document.getElementById("btnClearSearchInput");
+
+    searchInput.addEventListener("input", () => {
+      state.searchQuery = searchInput.value;
+      btnClearSearchInput.classList.toggle("hidden", state.searchQuery.length === 0);
+      renderProducts();
+    });
+
+    document.getElementById("btnTogglePepcoVk").addEventListener("click", () => {
+      if (pepcoGlobalVkPanel.classList.contains("hidden")) {
+        openGlobalPepcoVk(searchInput);
+      } else {
+        closeGlobalPepcoVk();
+      }
+    });
 
     btnClearSearchInput.addEventListener("click", () => {
-      state.searchQuery = "";
-      syncSearchFieldUI(true);
+      setNativeInputValueAndDispatch(searchInput, "");
     });
 
     // ==========================================
+    // DOPASOWANIE PRODUKTU PO KODZIE EAN / PLU / QR
+    // ==========================================
+    function findProductByCode(rawCode) {
+      const clean = String(rawCode || "").trim().replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
+      if (!clean) return null;
+      const lower = clean.toLowerCase();
+
+      return state.products.find(p =>
+        (p.ean && String(p.ean).trim().toLowerCase() === lower) ||
+        (p.plu && String(p.plu).trim().toLowerCase() === lower)
+      ) || null;
+    }
+
+    // ==========================================
     // GLOBALNA OBSŁUGA PODPIĘTEGO SKANERA KODÓW KRESKOWYCH (USB / BLUETOOTH HID)
-    // Skanuje kod towaru w dowolnym momencie na ekranie kasy i od razu wrzuca do paragonu!
+    // Oraz obsługa fizycznej klawiatury PC przy aktywnym polu PEPCO VK
     // ==========================================
     let hwScannerBuffer = "";
     let hwScannerLastKeyTime = 0;
@@ -3105,21 +3226,43 @@
         return;
       }
 
-      // 2. Jeśli aktywny jest widok Kasy Sprzedaży i nie jest otwarte okno modalne
+      // 2. Jeśli aktywne jest dowolne pole z przypiętą klawiaturą PEPCO VK (pola są readonly przeciw klawiaturze Android),
+      // przekieruj znaki z fizycznej klawiatury USB/Bluetooth bezpośrednio do tego pola
+      if (activeVkTarget && activeVkTarget.id !== "searchInput") {
+        if (e.key === "Backspace") {
+          e.preventDefault();
+          handleGlobalVkPress("BACKSPACE");
+          return;
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleGlobalVkPress("ENTER");
+          return;
+        }
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          let nextVal = String(activeVkTarget.value || "") + e.key;
+          if (activeVkTarget.maxLength && activeVkTarget.maxLength > 0 && nextVal.length > activeVkTarget.maxLength) {
+            nextVal = nextVal.slice(0, activeVkTarget.maxLength);
+          }
+          setNativeInputValueAndDispatch(activeVkTarget, nextVal);
+          return;
+        }
+      }
+
+      // 3. Jeśli aktywny jest widok Kasy Sprzedaży i nie jest otwarte okno modalne — obsługa skanera kodów
       if (posView.classList.contains("hidden") || isAnyBlockingModalOpen()) {
         return;
       }
 
-      // Nie przechwytuj wpisywania w polach NIP/Faktura nabywcy w prawym panelu
-      const activeEl = document.activeElement;
-      const isBuyerInputFocused = activeEl && activeEl.classList.contains("buyer-input");
-      if (isBuyerInputFocused) return;
+      if (activeVkTarget && activeVkTarget.classList.contains("buyer-input")) {
+        return;
+      }
 
       const now = Date.now();
       const timeDiff = now - hwScannerLastKeyTime;
       hwScannerLastKeyTime = now;
 
-      // Skanery kodów wysyłają znaki bardzo szybko (< 65 ms między znakami) i kończą klawiszem Enter
       if (e.key === "Enter") {
         const candidateCode = (hwScannerBuffer || state.searchQuery).trim();
         hwScannerBuffer = "";
@@ -3130,14 +3273,12 @@
             e.preventDefault();
             addToCart(matchedProd.id);
             showToast(`Zeskanowano: ${matchedProd.name} (+1)`, "barcode_scanner");
-            state.searchQuery = "";
-            syncSearchFieldUI(false);
+            setNativeInputValueAndDispatch(searchInput, "");
             return;
           } else if (candidateCode.length >= 3 && timeDiff < 120) {
             e.preventDefault();
             showToast(`Nie znaleziono w kartotece towaru dla kodu: ${candidateCode}`, "search_off");
-            state.searchQuery = "";
-            syncSearchFieldUI(false);
+            setNativeInputValueAndDispatch(searchInput, "");
             return;
           }
         }
@@ -3146,10 +3287,9 @@
 
       if (e.key === "Backspace") {
         hwScannerBuffer = hwScannerBuffer.slice(0, -1);
-        if (activeEl === searchInput) {
+        if (activeVkTarget === searchInput) {
           e.preventDefault();
-          state.searchQuery = state.searchQuery.slice(0, -1);
-          syncSearchFieldUI(true);
+          setNativeInputValueAndDispatch(searchInput, String(searchInput.value || "").slice(0, -1));
         }
         return;
       }
@@ -3160,12 +3300,9 @@
         }
         hwScannerBuffer += e.key;
 
-        // Gdy focus jest w polu wyszukiwania (które jest readonly aby blokować klawiaturę systemową),
-        // dopisujemy znak również do state.searchQuery (zarówno dla fizycznej klawiatury jak i skanera)
-        if (activeEl === searchInput) {
+        if (activeVkTarget === searchInput) {
           e.preventDefault();
-          state.searchQuery += e.key;
-          syncSearchFieldUI(true);
+          setNativeInputValueAndDispatch(searchInput, String(searchInput.value || "") + e.key);
         }
       }
     });
@@ -3183,6 +3320,7 @@
     let pinReturnMode = "operator_list";
 
     function showLockStep(stepName) {
+      closeGlobalPepcoVk();
       lockOverlay.classList.remove("hidden");
       stepLocked.classList.toggle("hidden", stepName !== "locked");
       stepOperatorList.classList.toggle("hidden", stepName !== "operator_list");
@@ -3392,6 +3530,7 @@
     }
 
     async function startQrScanner() {
+      closeGlobalPepcoVk();
       qrModal.classList.remove("hidden");
       qrStatusText.textContent = "Uruchamianie kamery...";
       document.getElementById("manualQrInput").value = "";
@@ -3431,6 +3570,7 @@
     }
 
     function stopQrScanner() {
+      closeGlobalPepcoVk();
       clearInterval(qrScanInterval);
       qrScanInterval = null;
       if (qrMediaStream) {
@@ -3555,6 +3695,7 @@
     const receiptDiscountModal = document.getElementById("receiptDiscountModal");
 
     document.getElementById("btnOpenReceiptDiscount").addEventListener("click", () => {
+      closeGlobalPepcoVk();
       renderReceiptDiscountModalOptions();
       receiptDiscountModal.classList.remove("hidden");
     });
@@ -3622,12 +3763,13 @@
 
     document.getElementById("btnClearProdDiscFromPicker").addEventListener("click", () => {
       const inp = document.getElementById("crudProdDiscount");
-      if (inp) inp.value = 0;
+      if (inp) setNativeInputValueAndDispatch(inp, "0");
       prodDiscPickerModal.classList.add("hidden");
       showToast("Wyzerowano rabat na towar (0%)", "info");
     });
 
     window.openProductDiscountPickerModal = () => {
+      closeGlobalPepcoVk();
       const listContainer = document.getElementById("prodDiscPickerList");
       const currentVal = Number(document.getElementById("crudProdDiscount")?.value || 0);
 
@@ -3660,7 +3802,7 @@
           btn.addEventListener("click", () => {
             const pct = btn.dataset.pct;
             const inp = document.getElementById("crudProdDiscount");
-            if (inp) inp.value = pct;
+            if (inp) setNativeInputValueAndDispatch(inp, String(pct));
             prodDiscPickerModal.classList.add("hidden");
             showToast(`Wybrano rabat: -${pct}%`, "sell");
           });
@@ -3750,6 +3892,7 @@ ${opLines}
     }
 
     window.openSavedReportModal = (reportId) => {
+      closeGlobalPepcoVk();
       const rep = state.reports.find(r => r.id === reportId);
       if (!rep) return;
       document.getElementById("reportModalTypeBadge").textContent = rep.reportTitle.toUpperCase();
@@ -3759,6 +3902,7 @@ ${opLines}
     };
 
     async function executeAndSaveReport(reportType, startDate, endDate, periodLabel) {
+      closeGlobalPepcoVk();
       const matchingReceipts = state.transactions.filter(t => {
         const d = parseDocLocalDate(t);
         return d >= startDate && d <= endDate;
@@ -3998,11 +4142,13 @@ ${opLines}
       `;
 
       document.getElementById("btnPzModeSingle").addEventListener("click", () => {
+        closeGlobalPepcoVk();
         state.pzModalMode = "single";
         buildPzModalContent();
       });
 
       document.getElementById("btnPzModeBatch").addEventListener("click", () => {
+        closeGlobalPepcoVk();
         state.pzModalMode = "batch";
         buildPzModalContent();
       });
@@ -4095,6 +4241,7 @@ ${opLines}
     }
 
     window.openAdminCrudModal = (entity, editId = null) => {
+      closeGlobalPepcoVk();
       currentCrudEntity = entity;
       currentCrudEditId = editId;
 
@@ -4119,7 +4266,7 @@ ${opLines}
           </div>
           <div class="form-group">
             <label>Kod PIN (cyfry) *</label>
-            <input type="password" inputmode="numeric" id="crudOpPin" class="form-control" value="${item ? item.pin : ""}" placeholder="np. 1234" maxlength="8" required />
+            <input type="password" id="crudOpPin" class="form-control" value="${item ? item.pin : ""}" placeholder="np. 1234" maxlength="8" required />
           </div>
           <div class="form-group">
             <label>Uprawnienia (Rola)</label>
@@ -4309,6 +4456,7 @@ ${opLines}
     };
 
     function closeAdminCrudModal() {
+      closeGlobalPepcoVk();
       adminCrudModal.classList.add("hidden");
       currentCrudEntity = null;
       currentCrudEditId = null;
@@ -4478,6 +4626,7 @@ ${opLines}
     // ==========================================
     document.getElementById("formStoreSettings").addEventListener("submit", async (e) => {
       e.preventDefault();
+      closeGlobalPepcoVk();
       try {
         await setDoc(doc(db, "settings", "store_profile"), {
           name: document.getElementById("setStoreName").value.trim(),
@@ -4493,6 +4642,7 @@ ${opLines}
     });
 
     window.setManualStock = async (prodId, currentStock) => {
+      closeGlobalPepcoVk();
       const val = prompt("Podaj nowy dokładny stan magazynowy:", currentStock);
       if (val === null) return;
       const num = Number(val);
@@ -4842,6 +4992,7 @@ ${opLines}
     let editingDiscType = "percent";
 
     function openItemEditModal(prodId) {
+      closeGlobalPepcoVk();
       const item = state.cart.find(i => i.id === prodId);
       if (!item) return;
 
@@ -4905,15 +5056,13 @@ ${opLines}
 
     document.querySelectorAll("#quickItemPercentBtns button").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.getElementById("editItemDiscountInput").value = btn.dataset.qdisc;
-        updateItemEditPreview();
+        setNativeInputValueAndDispatch(document.getElementById("editItemDiscountInput"), btn.dataset.qdisc);
       });
     });
 
     document.getElementById("btnEditQtyMinus").addEventListener("click", () => {
       const inp = document.getElementById("editItemQtyInput");
-      inp.value = Math.max(1, (parseInt(inp.value) || 1) - 1);
-      updateItemEditPreview();
+      setNativeInputValueAndDispatch(inp, String(Math.max(1, (parseInt(inp.value) || 1) - 1)));
     });
 
     document.getElementById("btnEditQtyPlus").addEventListener("click", () => {
@@ -4925,8 +5074,7 @@ ${opLines}
         showToast(`Maksymalny dostępny stan magazynowy: ${maxStock}`, "warning");
         return;
       }
-      inp.value = nextVal;
-      updateItemEditPreview();
+      setNativeInputValueAndDispatch(inp, String(nextVal));
     });
 
     document.getElementById("editItemPriceInput").addEventListener("input", updateItemEditPreview);
@@ -4934,6 +5082,7 @@ ${opLines}
     document.getElementById("editItemDiscountInput").addEventListener("input", updateItemEditPreview);
 
     document.getElementById("btnSaveItemEdit").addEventListener("click", () => {
+      closeGlobalPepcoVk();
       const idx = state.cart.findIndex(i => i.id === editingCartItemId);
       if (idx === -1) return;
 
@@ -4960,6 +5109,7 @@ ${opLines}
     });
 
     document.getElementById("btnRemoveItemFromModal").addEventListener("click", () => {
+      closeGlobalPepcoVk();
       if (!editingCartItemId) return;
       state.cart = state.cart.filter(i => i.id !== editingCartItemId);
       itemEditModal.classList.add("hidden");
@@ -4968,11 +5118,12 @@ ${opLines}
       showToast("Usunięto pozycję z paragonu", "delete");
     });
 
-    document.getElementById("btnCloseItemEditModal").addEventListener("click", () => itemEditModal.classList.add("hidden"));
-    document.getElementById("btnCancelItemEdit").addEventListener("click", () => itemEditModal.classList.add("hidden"));
+    document.getElementById("btnCloseItemEditModal").addEventListener("click", () => { closeGlobalPepcoVk(); itemEditModal.classList.add("hidden"); });
+    document.getElementById("btnCancelItemEdit").addEventListener("click", () => { closeGlobalPepcoVk(); itemEditModal.classList.add("hidden"); });
 
     document.querySelectorAll(".doc-type-btn").forEach(btn => {
       btn.addEventListener("click", () => {
+        closeGlobalPepcoVk();
         document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.docType = btn.dataset.docType;
@@ -4985,6 +5136,7 @@ ${opLines}
 
     document.querySelectorAll("input[name='invBuyerMode']").forEach(radio => {
       radio.addEventListener("change", (e) => {
+        closeGlobalPepcoVk();
         document.getElementById("invBuyerNip").classList.toggle("hidden", e.target.value === "no_nip");
       });
     });
@@ -5128,6 +5280,7 @@ ${opLines}
     });
 
     function resetSaleScreen() {
+      closeGlobalPepcoVk();
       state.cart = [];
       state.selectedDiscountId = "";
       state.docType = "receipt";
@@ -5139,7 +5292,9 @@ ${opLines}
       document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.toggle("active", b.dataset.docType === "receipt"));
       document.getElementById("receiptNipBox").classList.add("hidden");
       document.getElementById("invoiceBuyerBox").classList.add("hidden");
-      syncSearchFieldUI(false);
+      searchInput.value = "";
+      btnClearSearchInput.classList.add("hidden");
+      renderProducts();
       renderCart();
       switchMainView("pos");
     }
@@ -5151,200 +5306,190 @@ ${opLines}
     const fpCashCalcBox = document.getElementById("fpCashCalcBox");
     const fpCashReceived = document.getElementById("fpCashReceived");
 
-    function buildStoreHeader() {
+    function buildReceiptText(docNumber, payMethodName, cashGiven = 0) {
+      const { discountVal, discPercent, total, net, vat } = getCartTotals();
       const s = state.store;
-      return [
+      const sym = s.activeCurrencySymbol || "zł";
+      const header = [
         s.name || "PEPCO SKLEP",
         s.address || "",
         s.nip ? `NIP: ${s.nip}` : "",
-        s.regon9 ? `REGON (9): ${s.regon9}` : "",
-        s.regon14 ? `REGON (14): ${s.regon14}` : "",
+        s.regon9 ? `REGON: ${s.regon9}` : "",
         s.krs ? `KRS: ${s.krs}` : "",
-        s.bdo ? `Nr BDO: ${s.bdo}` : ""
+        s.bdo ? `BDO: ${s.bdo}` : ""
       ].filter(Boolean).join("\n");
-    }
 
-    function generateDocumentPreview(docNumber, totals, buyerInfo, paymentName = "OCZEKUJE...") {
-      const sym = state.store.activeCurrencySymbol || "zł";
-      const headerLines = buildStoreHeader();
-
-      const itemLines = state.cart.map(i => {
-        const { itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          i.price, i.qty, i.itemDiscountType || "percent", i.itemDiscountValue || 0
-        );
-        let line = `${i.name.slice(0, 20).padEnd(20)} ${i.qty}${i.unit || "szt"} x ${i.price.toFixed(2)} = ${lineTotalAfterItemDisc.toFixed(2)}`;
-        if (itemDiscAmount > 0) {
-          const dLabel = i.itemDiscountType === "amount" ? `-${Number(i.itemDiscountValue).toFixed(2)} ${sym}` : `-${i.itemDiscountValue}%`;
-          line += `\n   [Rabat poz. ${dLabel}: -${itemDiscAmount.toFixed(2)} ${sym}]`;
-        }
-        return line;
-      }).join("\n");
-
-      let docTitle = `PARAGON FISKALNY #${docNumber}`;
-      let buyerSection = "";
-
+      let buyerBlock = "";
       if (state.docType === "receipt_nip") {
-        docTitle = `PARAGON FISKALNY Z NIP (DO 450 PLN) #${docNumber}`;
-        buyerSection = `NIP NABYWCY: ${buyerInfo.nip}\n------------------------------------------\n`;
+        buyerBlock = `\nNIP NABYWCY: ${document.getElementById("receiptBuyerNip").value.trim()}\n(Faktura uproszczona art. 106e ust. 5 pkt 3)`;
       } else if (state.docType === "invoice") {
-        docTitle = `FAKTURA VAT ${docNumber}`;
-        buyerSection = `NABYWCA:\n${buyerInfo.name}\n${buyerInfo.address}\n${buyerInfo.nip ? `NIP: ${buyerInfo.nip}` : "Faktura bez NIP (osoba prywatna)"}\n------------------------------------------\n`;
+        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
+        const nip = mode === "with_nip" ? document.getElementById("invBuyerNip").value.trim() : "BRAK (osoba fizyczna)";
+        buyerBlock = `\nNABYWCA: ${document.getElementById("invBuyerName").value.trim()}\nADRES: ${document.getElementById("invBuyerAddress").value.trim()}\nNIP: ${nip}`;
       }
 
-      return `${headerLines}
+      const lines = state.cart.map(i => {
+        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
+          i.price, i.qty, i.itemDiscountType || "percent", i.itemDiscountValue || 0
+        );
+        let row = `${i.name}\n  ${i.qty} ${i.unit || "szt."} x ${Number(i.price).toFixed(2)} = ${baseTotal.toFixed(2)} ${sym}`;
+        if (itemDiscAmount > 0) {
+          const tag = i.itemDiscountType === "amount" ? `-${Number(i.itemDiscountValue).toFixed(2)} ${sym}` : `-${i.itemDiscountValue}%`;
+          row += `\n  Rabat na poz. (${tag}): -${itemDiscAmount.toFixed(2)} ${sym} -> ${lineTotalAfterItemDisc.toFixed(2)} ${sym}`;
+        }
+        return row;
+      }).join("\n");
+
+      const docLabel = state.docType === "invoice" ? "FAKTURA VAT" : (state.docType === "receipt_nip" ? "PARAGON FISKALNY Z NIP" : "PARAGON FISKALNY");
+      const cashBlock = cashGiven > 0 ? `\nWPŁATA GOTÓWKA: ${cashGiven.toFixed(2)} ${sym}\nRESZTA:         ${Math.max(0, cashGiven - total).toFixed(2)} ${sym}` : "";
+
+      return `${header}
 ------------------------------------------
-${docTitle}
+${docLabel}
+Nr: ${docNumber}
 Kasjer: ${state.activeOperator}
+Data: ${new Date().toLocaleString("pl-PL")}${buyerBlock}
 ------------------------------------------
-${buyerSection}${itemLines}
+${lines}
 ------------------------------------------
-${totals.totalItemDiscounts > 0 ? `RABATY NA POZYCJACH:     -${totals.totalItemDiscounts.toFixed(2)} ${sym}\n` : ""}${totals.globalDiscountVal > 0 ? `RABAT PARAGON (${totals.discName} -${totals.discPercent}%): -${totals.globalDiscountVal.toFixed(2)} ${sym}\n` : ""}WARTOŚĆ NETTO:          ${totals.net.toFixed(2)} ${sym}
-KWOTA VAT:              ${totals.vat.toFixed(2)} ${sym}
-SUMA BRUTTO:            ${totals.total.toFixed(2)} ${sym}
-PŁATNOŚĆ:               ${paymentName.toUpperCase()}
-DATA: ${new Date().toLocaleString("pl-PL")}`;
+Wartość Netto:      ${net.toFixed(2)} ${sym}
+Podatek VAT:        ${vat.toFixed(2)} ${sym}${discPercent > 0 ? `\nRabat na paragon (-${discPercent}%):` : ""}${discountVal > 0 ? `\nŁączny rabat:      -${discountVal.toFixed(2)} ${sym}` : ""}
+SUMA BRUTTO:        ${total.toFixed(2)} ${sym}
+PŁATNOŚĆ:           ${payMethodName}${cashBlock}
+------------------------------------------
+      Dziękujemy za zakupy w Pepco!`;
+    }
+
+    function renderFloatingPaymentTiles() {
+      const grid = document.getElementById("paymentTilesGrid");
+      const methods = state.paymentMethods.length > 0
+        ? state.paymentMethods
+        : [
+            { id: "default_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
+            { id: "default_cash", name: "Gotówka", icon: "payments", isCash: true },
+            { id: "default_blik", name: "BLIK", icon: "qr_code_2", isCash: false }
+          ];
+
+      grid.innerHTML = methods.map(pm => {
+        const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
+        return `
+        <button type="button" class="payment-tile" data-pm-name="${pm.name}" data-is-cash="${pm.isCash ? 'true' : 'false'}">
+          <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
+          <div>
+            <div class="tile-name">${pm.name}</div>
+            <div class="tile-sub">${pm.isCash ? 'Gotówka (kalkulator reszty)' : 'Zatwierdź i rozlicz'}</div>
+          </div>
+        </button>
+      `;
+      }).join("");
+
+      grid.querySelectorAll(".payment-tile").forEach(tile => {
+        tile.addEventListener("click", async () => {
+          const pmName = tile.dataset.pmName;
+          const isCash = tile.dataset.isCash === "true";
+
+          if (isCash && fpCashCalcBox.classList.contains("hidden")) {
+            fpCashCalcBox.classList.remove("hidden");
+            grid.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
+            tile.classList.add("selected");
+            fpCashReceived.value = "";
+            document.getElementById("fpCashChange").textContent = formatMoney(0);
+            document.getElementById("fpReceiptPreview").textContent = buildReceiptText("PODGLĄD", pmName, 0);
+            showToast("Wpisz kwotę gotówki od klienta i kliknij ponownie kafelek Gotówka, aby zatwierdzić", "payments");
+            return;
+          }
+
+          await finalizeTransactionWithPayment(pmName, isCash);
+        });
+      });
     }
 
     document.getElementById("btnPodsuma").addEventListener("click", () => {
-      closePepcoVirtualKeyboard();
-      const totals = getCartTotals();
+      closeGlobalPepcoVk();
+      const { total } = getCartTotals();
 
-      let buyerInfo = { nip: "", name: "", address: "" };
       if (state.docType === "receipt_nip") {
-        const nip = document.getElementById("receiptBuyerNip").value.trim();
-        if (!nip || nip.replace(/\D/g, "").length !== 10) {
-          showToast("Wpisz poprawny 10-cyfrowy NIP nabywcy dla paragonu do 450 PLN!", "warning");
-          return;
-        }
-        if (totals.total > 450) {
-          showToast("Kwota powyżej 450 PLN wymaga wystawienia Zwykłej Faktury!", "warning");
-          return;
-        }
-        buyerInfo.nip = nip;
-        window._currentDocNumber = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById("fpDocLabel").textContent = `Paragon z NIP #${window._currentDocNumber}`;
-      } else if (state.docType === "invoice") {
-        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
-        const nip = document.getElementById("invBuyerNip").value.trim();
-        const name = document.getElementById("invBuyerName").value.trim();
-        const address = document.getElementById("invBuyerAddress").value.trim();
-
-        if (!name || !address) {
-          showToast("Uzupełnij nazwę i adres nabywcy na fakturze!", "warning");
-          return;
-        }
-        if (mode === "with_nip" && nip.replace(/\D/g, "").length !== 10) {
-          showToast("Wpisz poprawny 10-cyfrowy NIP nabywcy lub wybierz 'Faktura bez NIP'!", "warning");
-          return;
-        }
-        buyerInfo = { nip: mode === "with_nip" ? nip : "", name, address };
-        const now = new Date();
-        window._currentDocNumber = `FV/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
-        document.getElementById("fpDocLabel").textContent = `Faktura VAT ${window._currentDocNumber}`;
-      } else {
-        window._currentDocNumber = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById("fpDocLabel").textContent = `Paragon fiskalny #${window._currentDocNumber}`;
+        const nip = document.getElementById("receiptBuyerNip").value.replace(/[^0-9]/g, "");
+        if (nip.length !== 10) return showToast("Podaj poprawny 10-cyfrowy NIP nabywcy!", "warning");
+        if (total > 450) return showToast("Paragon z NIP nie może przekraczać 450,00 zł!", "warning");
       }
 
-      window._currentBuyerInfo = buyerInfo;
-      document.getElementById("fpTotalAmount").textContent = formatMoney(totals.total);
-      document.getElementById("fpReceiptPreview").textContent = generateDocumentPreview(window._currentDocNumber, totals, buyerInfo);
+      if (state.docType === "invoice") {
+        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
+        const name = document.getElementById("invBuyerName").value.trim();
+        const addr = document.getElementById("invBuyerAddress").value.trim();
+        if (!name || !addr) return showToast("Uzupełnij nazwę i adres nabywcy na fakturze!", "warning");
+        if (mode === "with_nip") {
+          const nip = document.getElementById("invBuyerNip").value.replace(/[^0-9]/g, "");
+          if (nip.length !== 10) return showToast("Podaj poprawny 10-cyfrowy NIP firmy!", "warning");
+        }
+      }
 
       fpCashCalcBox.classList.add("hidden");
-      fpCashReceived.value = Math.ceil(totals.total).toFixed(2);
-      updateFloatingCashChange();
+      fpCashReceived.value = "";
+      document.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
+
+      const docLabelMap = {
+        receipt: "Paragon fiskalny detaliczny",
+        receipt_nip: "Paragon fiskalny z NIP (do 450 zł)",
+        invoice: "Zwykła Faktura VAT"
+      };
+      document.getElementById("fpDocLabel").textContent = docLabelMap[state.docType] || "Paragon fiskalny";
+      document.getElementById("fpTotalAmount").textContent = formatMoney(total);
+      document.getElementById("fpReceiptPreview").textContent = buildReceiptText("OCZEKUJE NA PŁATNOŚĆ", "---", 0);
 
       renderFloatingPaymentTiles();
       floatingOverlay.classList.remove("hidden");
     });
 
     document.getElementById("btnCloseFloatingOverlay").addEventListener("click", () => {
+      closeGlobalPepcoVk();
       floatingOverlay.classList.add("hidden");
     });
 
-    function updateFloatingCashChange() {
+    fpCashReceived.addEventListener("input", () => {
       const { total } = getCartTotals();
-      const received = parseFloat(fpCashReceived.value) || 0;
-      document.getElementById("fpCashChange").textContent = formatMoney(Math.max(0, received - total));
-    }
+      const rec = parseFloat(fpCashReceived.value) || 0;
+      const change = Math.max(0, rec - total);
+      document.getElementById("fpCashChange").textContent = formatMoney(change);
+      document.getElementById("fpReceiptPreview").textContent = buildReceiptText("PODGLĄD", "Gotówka", rec);
+    });
 
-    fpCashReceived.addEventListener("input", updateFloatingCashChange);
-    document.querySelectorAll(".quick-cash button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        fpCashReceived.value = Number(btn.dataset.cash).toFixed(2);
-        updateFloatingCashChange();
+    document.querySelectorAll(".quick-cash button").forEach(b => {
+      b.addEventListener("click", () => {
+        setNativeInputValueAndDispatch(fpCashReceived, b.dataset.cash);
       });
     });
 
-    function renderFloatingPaymentTiles() {
-      const grid = document.getElementById("paymentTilesGrid");
-      const methods = state.paymentMethods.length ? state.paymentMethods : [
-        { id: "def_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
-        { id: "def_cash", name: "Gotówka", icon: "payments", isCash: true }
-      ];
+    async function finalizeTransactionWithPayment(paymentMethodName, isCash) {
+      closeGlobalPepcoVk();
+      const { total, net, vat, discountVal, discPercent } = getCartTotals();
+      const cashGiven = isCash ? (parseFloat(fpCashReceived.value) || total) : 0;
 
-      grid.innerHTML = methods.map(pm => {
-        const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
-        return `
-        <button type="button" class="payment-tile" data-pm-id="${pm.id}">
-          <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
-          <div>
-            <div class="tile-name">${pm.name}</div>
-            <div class="tile-sub">${pm.isCash ? "Rozlicz gotówką" : "Zatwierdź płatność"}</div>
-          </div>
-        </button>`;
-      }).join("");
-
-      grid.querySelectorAll(".payment-tile").forEach(tile => {
-        tile.addEventListener("click", async () => {
-          const pm = methods.find(m => m.id === tile.dataset.pmId);
-          if (!pm) return;
-
-          if (pm.isCash && fpCashCalcBox.classList.contains("hidden")) {
-            grid.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
-            tile.classList.add("selected");
-            fpCashCalcBox.classList.remove("hidden");
-            const totals = getCartTotals();
-            document.getElementById("fpReceiptPreview").textContent = generateDocumentPreview(
-              window._currentDocNumber, totals, window._currentBuyerInfo, pm.name
-            );
-            showToast("Wpisz otrzymaną gotówkę i kliknij ponownie kafel Gotówka, aby zamknąć paragon", "payments");
-            return;
-          }
-
-          await finalizeTransactionWithPayment(pm);
-        });
-      });
-    }
-
-    async function finalizeTransactionWithPayment(pm) {
-      const totals = getCartTotals();
-      const docNumber = window._currentDocNumber;
-      const buyerInfo = window._currentBuyerInfo || { nip: "", name: "", address: "" };
-
-      if (pm.isCash) {
-        const received = parseFloat(fpCashReceived.value) || 0;
-        if (received < totals.total) {
-          showToast("Otrzymana kwota gotówki jest mniejsza niż kwota do zapłaty!", "warning");
-          return;
-        }
+      if (isCash && fpCashReceived.value !== "" && cashGiven < total) {
+        return showToast("Otrzymana kwota gotówki jest mniejsza niż kwota do zapłaty!", "warning");
       }
 
-      const serializedItems = state.cart.map(i => {
+      const prefix = state.docType === "invoice" ? "FV" : "PAR";
+      const docNumber = `${prefix}/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
+
+      const soldItemsSnapshot = state.cart.map(item => {
         const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          i.price, i.qty, i.itemDiscountType || "percent", i.itemDiscountValue || 0
+          item.price, item.qty, item.itemDiscountType || "percent", item.itemDiscountValue || 0
         );
+        const effectiveUnitPrice = item.qty > 0 ? Number((lineTotalAfterItemDisc / item.qty).toFixed(2)) : Number(item.price);
         return {
-          id: i.id,
-          ean: i.ean || "",
-          plu: i.plu || "",
-          name: i.name,
-          price: i.price,
-          qty: i.qty,
-          unit: i.unit || "szt.",
-          taxRate: i.taxRate ?? 23,
-          itemDiscountType: i.itemDiscountType || "percent",
-          itemDiscountValue: i.itemDiscountValue || 0,
+          id: item.id,
+          ean: item.ean || "",
+          plu: item.plu || "",
+          name: item.name,
+          price: Number(item.price),
+          effectiveUnitPrice,
+          qty: Number(item.qty),
+          unit: item.unit || "szt.",
+          taxRate: Number(item.taxRate ?? 23),
+          itemDiscountType: item.itemDiscountType || "percent",
+          itemDiscountValue: Number(item.itemDiscountValue || 0),
           itemDiscountAmount: Number(itemDiscAmount.toFixed(2)),
           baseTotal: Number(baseTotal.toFixed(2)),
           lineTotalAfterItemDisc: Number(lineTotalAfterItemDisc.toFixed(2))
@@ -5352,55 +5497,60 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
       });
 
       const basePayload = {
-        items: serializedItems,
-        netAmount: Number(totals.net.toFixed(2)),
-        vatAmount: Number(totals.vat.toFixed(2)),
-        discountAmount: Number(totals.discountVal.toFixed(2)),
-        discountPercent: totals.discPercent,
-        totalAmount: Number(totals.total.toFixed(2)),
-        currencySymbol: state.store.activeCurrencySymbol || "zł",
-        paymentMethod: pm.name,
-        operator: state.activeOperator,
+        docNumber,
+        docType: state.docType,
         storeSnapshot: state.store,
+        operator: state.activeOperator,
+        currencySymbol: state.store.activeCurrencySymbol || "zł",
+        items: soldItemsSnapshot,
+        netAmount: Number(net.toFixed(2)),
+        vatAmount: Number(vat.toFixed(2)),
+        discountPercent: discPercent,
+        discountAmount: Number(discountVal.toFixed(2)),
+        totalAmount: Number(total.toFixed(2)),
+        paymentMethod: paymentMethodName,
+        cashReceived: cashGiven,
+        cashChange: isCash ? Math.max(0, Number((cashGiven - total).toFixed(2))) : 0,
         createdAt: serverTimestamp(),
         localTimestamp: new Date().toISOString()
       };
 
       try {
+        if (state.docType === "invoice") {
+          const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
+          const buyerNip = mode === "with_nip" ? document.getElementById("invBuyerNip").value.trim() : "";
+          await addDoc(collection(db, "invoices"), {
+            ...basePayload,
+            invoiceNumber: docNumber,
+            sourceType: "direct_pos",
+            sourceReceiptNumber: null,
+            hasNip: mode === "with_nip",
+            buyerNip,
+            buyerName: document.getElementById("invBuyerName").value.trim(),
+            buyerAddress: document.getElementById("invBuyerAddress").value.trim()
+          });
+        } else {
+          const buyerNip = state.docType === "receipt_nip" ? document.getElementById("receiptBuyerNip").value.trim() : "";
+          await addDoc(collection(db, "transactions"), {
+            ...basePayload,
+            receiptNumber: docNumber,
+            buyerNip,
+            hasInvoiceIssued: false,
+            returnedQuantities: {}
+          });
+        }
+
         for (const item of state.cart) {
           await updateDoc(doc(db, "products", item.id), {
             stock: increment(-Number(item.qty))
           });
         }
 
-        if (state.docType === "invoice") {
-          await addDoc(collection(db, "invoices"), {
-            ...basePayload,
-            invoiceNumber: docNumber,
-            sourceType: "direct_pos",
-            linkedReceiptNumber: null,
-            hasNip: Boolean(buyerInfo.nip),
-            buyerNip: buyerInfo.nip || "",
-            buyerName: buyerInfo.name,
-            buyerAddress: buyerInfo.address
-          });
-          showToast(`Wystawiono Fakturę VAT ${docNumber} (${pm.name})`, "description");
-        } else {
-          await addDoc(collection(db, "transactions"), {
-            ...basePayload,
-            receiptNumber: docNumber,
-            docSubType: state.docType,
-            buyerNip: buyerInfo.nip || "",
-            hasInvoiceIssued: false,
-            returnedQuantities: {}
-          });
-          showToast(`Zatwierdzono paragon #${docNumber} (${pm.name})`, "check_circle");
-        }
-
         floatingOverlay.classList.add("hidden");
+        showToast(`Sprzedaż zakończona (${paymentMethodName}) — ${docNumber}`, "verified");
         resetSaleScreen();
       } catch (err) {
-        showToast("Błąd zapisu transakcji: " + err.message, "error");
+        showToast("Błąd zapisu dokumentu: " + err.message, "error");
       }
     }
 
@@ -5408,390 +5558,382 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
     // DOCUMENTS, INVOICE TO RECEIPT & RETURNS
     // ==========================================
     function renderReceiptsHistory() {
+      let sum = 0;
       const tbody = document.getElementById("historyTableBody");
-      const sym = state.store.activeCurrencySymbol || "zł";
-      const sum = state.transactions.reduce((acc, t) => acc + Number(t.totalAmount || 0), 0);
-      document.getElementById("historyTotalSum").textContent = `${sum.toFixed(2).replace(".", ",")} ${sym}`;
-
       if (state.transactions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Brak zapisanych paragonów.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">Brak paragonów w bazie danych.</td></tr>`;
+        document.getElementById("historyTotalSum").textContent = formatMoney(0);
         return;
       }
 
       tbody.innerHTML = state.transactions.map(t => {
-        const d = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
-        const typeBadge = t.buyerNip ? `<span class="badge-warn">Paragon z NIP: ${t.buyerNip}</span>` : `<span class="badge-pay">Paragon zwykły</span>`;
-        const invStatus = t.hasInvoiceIssued ? `<span class="badge-ret">Wystawiono FV</span>` : `<span style="color:var(--success); font-weight:600; font-size:12px;">Aktywny</span>`;
-        return `
-          <tr>
-            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${t.receiptNumber}</td>
-            <td>${typeBadge}</td>
-            <td>${d}</td>
-            <td>${t.paymentMethod}</td>
-            <td style="font-weight:700; color:var(--pepco-indigo);">${Number(t.totalAmount).toFixed(2).replace(".", ",")} ${t.currencySymbol || sym}</td>
-            <td>${invStatus}</td>
-          </tr>
-        `;
+        sum += Number(t.totalAmount || 0);
+        const dateStr = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
+        const typeLabel = t.buyerNip ? `<span class="badge-warn">Paragon z NIP: ${t.buyerNip}</span>` : `<span class="badge-pay">Paragon detaliczny</span>`;
+        const statusBadges = [];
+        if (t.hasInvoiceIssued) statusBadges.push(`<span class="badge-pay">Wystawiono FV</span>`);
+        if (t.returnedQuantities && Object.keys(t.returnedQuantities).length > 0) statusBadges.push(`<span class="badge-ret">Częściowy/pełny zwrot</span>`);
+        if (statusBadges.length === 0) statusBadges.push(`<span style="color:var(--success); font-weight:600;">Zakończony</span>`);
+
+        return `<tr>
+          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${t.receiptNumber}</td>
+          <td>${typeLabel}</td>
+          <td>${dateStr}</td>
+          <td>${t.paymentMethod}</td>
+          <td style="font-weight:800;">${Number(t.totalAmount).toFixed(2).replace(".", ",")} ${t.currencySymbol || "zł"}</td>
+          <td>${statusBadges.join(" ")}</td>
+        </tr>`;
       }).join("");
+
+      document.getElementById("historyTotalSum").textContent = formatMoney(sum);
     }
 
     function renderInvoicesTable() {
       const tbody = document.getElementById("invoicesTableBody");
       if (state.invoices.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Brak wystawionych faktur VAT.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">Brak wystawionych faktur VAT.</td></tr>`;
         return;
       }
-
       tbody.innerHTML = state.invoices.map(inv => {
-        const d = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
-        const src = inv.sourceType === "to_receipt" ? `Do par. #${inv.linkedReceiptNumber}` : "Bezpośrednia POS";
-        return `
-          <tr>
-            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
-            <td><span class="badge-pay">${src}</span></td>
-            <td><strong>${inv.buyerName}</strong></td>
-            <td>${inv.buyerNip || "<em>Bez NIP</em>"}</td>
-            <td>${d}</td>
-            <td style="font-weight:700; color:var(--pepco-indigo);">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
-            <td><button class="btn-secondary-sm" onclick="openInvoicePreview('${inv.id}')"><span class="m-icon sm">visibility</span> Podgląd</button></td>
-          </tr>
-        `;
+        const dateStr = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
+        const src = inv.sourceType === "to_receipt" ? `Do paragonu: ${inv.sourceReceiptNumber}` : "Zwykła z kasy";
+        return `<tr>
+          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
+          <td>${src}</td>
+          <td><strong>${inv.buyerName}</strong></td>
+          <td>${inv.buyerNip || "<em>Bez NIP</em>"}</td>
+          <td>${dateStr}</td>
+          <td style="font-weight:800;">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
+          <td><button class="btn-secondary-sm" onclick="openInvoiceModal('${inv.id}')">Podgląd</button></td>
+        </tr>`;
       }).join("");
     }
 
-    window.openInvoicePreview = (invId) => {
+    window.openInvoiceModal = (invId) => {
+      closeGlobalPepcoVk();
       const inv = state.invoices.find(i => i.id === invId);
       if (!inv) return;
       const s = inv.storeSnapshot || state.store;
+      const sym = inv.currencySymbol || "zł";
       const itemsTxt = (inv.items || []).map(i => {
-        const lineFinal = i.lineTotalAfterItemDisc !== undefined ? i.lineTotalAfterItemDisc : (i.price * i.qty);
-        return `${i.name} | ${i.qty} ${i.unit || "szt."} x ${Number(i.price).toFixed(2)} = ${Number(lineFinal).toFixed(2)} ${inv.currencySymbol || "zł"}`;
+        const finalLine = i.lineTotalAfterItemDisc !== undefined ? Number(i.lineTotalAfterItemDisc) : Number(i.price) * Number(i.qty);
+        return `- ${i.name} | ${i.qty} ${i.unit || "szt."} | Netto: ${(finalLine / (1 + (i.taxRate||23)/100)).toFixed(2)} | VAT ${i.taxRate||23}% | Brutto: ${finalLine.toFixed(2)} ${sym}`;
       }).join("\n");
 
-      document.getElementById("invoiceModalContent").textContent = `SPRZEDAWCA:
+      document.getElementById("invoiceModalContent").textContent = `FAKTURA VAT NR: ${inv.invoiceNumber}
+Data wystawienia: ${new Date(inv.localTimestamp).toLocaleString("pl-PL")}
+${inv.sourceReceiptNumber ? `Do paragonu fiskalnego nr: ${inv.sourceReceiptNumber}` : "Faktura bezpośrednia"}
+==================================================
+SPRZEDAWCA:
 ${s.name || ""}
 ${s.address || ""}
-NIP: ${s.nip || ""} | REGON: ${s.regon9 || ""}
-KRS: ${s.krs || ""} | BDO: ${s.bdo || ""}
-==========================================
-FAKTURA VAT NR: ${inv.invoiceNumber}
-${inv.linkedReceiptNumber ? `DOTYCZY PARAGONU NR: #${inv.linkedReceiptNumber}\n` : ""}DATA WYSTAWIENIA: ${new Date(inv.localTimestamp).toLocaleString("pl-PL")}
-==========================================
+NIP: ${s.nip || ""} | REGON: ${s.regon9 || ""} | KRS: ${s.krs || ""}
+
 NABYWCA:
 ${inv.buyerName}
 ${inv.buyerAddress}
-${inv.buyerNip ? `NIP NABYWCY: ${inv.buyerNip}` : "Faktura bez NIP (osoba fizyczna)"}
-==========================================
-POZYCJE:
+NIP: ${inv.buyerNip || "BRAK (Faktura dla osoby fizycznej nieprowadzącej działalności)"}
+==================================================
+POZYCJE FAKTURY:
 ${itemsTxt}
-------------------------------------------
-WARTOŚĆ NETTO:  ${Number(inv.netAmount).toFixed(2)} ${inv.currencySymbol || "zł"}
-PODATEK VAT:    ${Number(inv.vatAmount).toFixed(2)} ${inv.currencySymbol || "zł"}
-DO ZAPŁATY:     ${Number(inv.totalAmount).toFixed(2)} ${inv.currencySymbol || "zł"}`;
+==================================================
+RAZEM NETTO:  ${Number(inv.netAmount).toFixed(2)} ${sym}
+KWOTA VAT:    ${Number(inv.vatAmount).toFixed(2)} ${sym}
+DO ZAPŁATY:   ${Number(inv.totalAmount).toFixed(2)} ${sym}
+Forma płatności: ${inv.paymentMethod}`;
       document.getElementById("invoicePreviewModal").classList.remove("hidden");
     };
 
-    let selectedReceiptForInvoice = null;
+    // ==========================================
+    // FAKTURA DO PARAGONU
+    // ==========================================
+    let foundReceiptForInv = null;
+
     document.getElementById("btnFindReceiptInv").addEventListener("click", () => {
-      const num = document.getElementById("searchReceiptForInv").value.replace("#", "").trim();
-      const found = state.transactions.find(t => String(t.receiptNumber) === num);
+      closeGlobalPepcoVk();
+      const nr = document.getElementById("searchReceiptForInv").value.trim();
+      const rec = state.transactions.find(t => t.receiptNumber.toLowerCase() === nr.toLowerCase());
       const box = document.getElementById("invToReceiptFormBox");
-      const errAlert = document.getElementById("f2pErrorAlert");
-      errAlert.classList.add("hidden");
-
-      if (!found) {
+      if (!rec) {
         box.classList.add("hidden");
-        showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
-        return;
+        return showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
       }
-      if (found.hasInvoiceIssued) {
-        box.classList.add("hidden");
-        showToast("Do tego paragonu została już wystawiona faktura VAT!", "warning");
-        return;
-      }
-
-      selectedReceiptForInvoice = found;
+      foundReceiptForInv = rec;
       box.classList.remove("hidden");
       document.getElementById("foundReceiptInfo").innerHTML = `
-        Znaleziono paragon <strong>#${found.receiptNumber}</strong> z dnia ${new Date(found.localTimestamp).toLocaleString("pl-PL")} 
-        na kwotę brutto <strong>${Number(found.totalAmount).toFixed(2)} ${found.currencySymbol || "zł"}</strong>. 
-        Status NIP na paragonie: <strong>${found.buyerNip ? `Posiada NIP (${found.buyerNip})` : "Brak NIP na paragonie"}</strong>
+        <strong>Znaleziony paragon:</strong> ${rec.receiptNumber} | Kwota brutto: <strong>${Number(rec.totalAmount).toFixed(2)} ${rec.currencySymbol || "zł"}</strong> | 
+        NIP na paragonie: <strong>${rec.buyerNip || "BRAK (paragon bez NIP)"}</strong>
       `;
 
       const modeSel = document.getElementById("f2pMode");
-      if (found.buyerNip) {
+      if (rec.buyerNip) {
         modeSel.value = "with_nip";
         document.getElementById("f2pNipGroup").classList.remove("hidden");
-        document.getElementById("f2pNip").value = found.buyerNip;
+        document.getElementById("f2pNip").value = rec.buyerNip;
       } else {
         modeSel.value = "no_nip";
         document.getElementById("f2pNipGroup").classList.add("hidden");
         document.getElementById("f2pNip").value = "";
       }
+      document.getElementById("f2pErrorAlert").classList.add("hidden");
     });
 
     document.getElementById("f2pMode").addEventListener("change", (e) => {
-      document.getElementById("f2pNipGroup").classList.toggle("hidden", e.target.value === "no_nip");
+      closeGlobalPepcoVk();
+      const isWithNip = e.target.value === "with_nip";
+      document.getElementById("f2pNipGroup").classList.toggle("hidden", !isWithNip);
     });
 
     document.getElementById("btnIssueInvoiceToReceipt").addEventListener("click", async () => {
-      if (!selectedReceiptForInvoice) return;
+      closeGlobalPepcoVk();
+      if (!foundReceiptForInv) return;
       const mode = document.getElementById("f2pMode").value;
-      const nip = document.getElementById("f2pNip").value.trim();
+      const nip = document.getElementById("f2pNip").value.replace(/[^0-9]/g, "");
       const name = document.getElementById("f2pBuyerName").value.trim();
-      const address = document.getElementById("f2pBuyerAddress").value.trim();
-      const errAlert = document.getElementById("f2pErrorAlert");
+      const addr = document.getElementById("f2pBuyerAddress").value.trim();
+      const errBox = document.getElementById("f2pErrorAlert");
 
-      if (!name || !address) {
-        errAlert.textContent = "Uzupełnij nazwę i adres nabywcy!";
-        errAlert.classList.remove("hidden");
+      if (!name || !addr) {
+        errBox.textContent = "Uzupełnij nazwę i adres nabywcy!";
+        errBox.classList.remove("hidden");
         return;
       }
 
       if (mode === "with_nip") {
-        if (!selectedReceiptForInvoice.buyerNip) {
-          errAlert.textContent = "BŁĄD FISKALNY: Paragon nie zawierał NIP nabywcy! Nie można wystawić faktury z NIP (wybierz opcję 'Faktura bez NIP').";
-          errAlert.classList.remove("hidden");
+        if (!foundReceiptForInv.buyerNip) {
+          errBox.textContent = "BŁĄD PRAWNY (art. 106b ust. 5 ustawy o VAT): Do paragonu bez NIP nie można wystawić faktury z NIP dla firmy! Wybierz tryb 'Bez NIP'.";
+          errBox.classList.remove("hidden");
           return;
         }
-        if (nip.replace(/\D/g, "") !== selectedReceiptForInvoice.buyerNip.replace(/\D/g, "")) {
-          errAlert.textContent = `NIP na fakturze musi być identyczny jak na paragonie (${selectedReceiptForInvoice.buyerNip})!`;
-          errAlert.classList.remove("hidden");
+        if (nip.length !== 10 || nip !== foundReceiptForInv.buyerNip.replace(/[^0-9]/g, "")) {
+          errBox.textContent = `NIP na fakturze musi być identyczny z NIP na paragonie (${foundReceiptForInv.buyerNip})!`;
+          errBox.classList.remove("hidden");
           return;
         }
       }
 
-      const now = new Date();
-      const invNumber = `FV/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
+      errBox.classList.add("hidden");
+      const invNr = `FV-PAR/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
 
       try {
         await addDoc(collection(db, "invoices"), {
-          invoiceNumber: invNumber,
+          invoiceNumber: invNr,
           sourceType: "to_receipt",
-          linkedReceiptNumber: selectedReceiptForInvoice.receiptNumber,
+          sourceReceiptNumber: foundReceiptForInv.receiptNumber,
+          storeSnapshot: foundReceiptForInv.storeSnapshot || state.store,
+          operator: state.activeOperator,
+          currencySymbol: foundReceiptForInv.currencySymbol || "zł",
           hasNip: mode === "with_nip",
           buyerNip: mode === "with_nip" ? nip : "",
           buyerName: name,
-          buyerAddress: address,
-          items: selectedReceiptForInvoice.items,
-          netAmount: selectedReceiptForInvoice.netAmount,
-          vatAmount: selectedReceiptForInvoice.vatAmount,
-          totalAmount: selectedReceiptForInvoice.totalAmount,
-          currencySymbol: selectedReceiptForInvoice.currencySymbol || "zł",
-          paymentMethod: selectedReceiptForInvoice.paymentMethod,
-          operator: state.activeOperator,
-          storeSnapshot: state.store,
+          buyerAddress: addr,
+          items: foundReceiptForInv.items,
+          netAmount: foundReceiptForInv.netAmount,
+          vatAmount: foundReceiptForInv.vatAmount,
+          totalAmount: foundReceiptForInv.totalAmount,
+          paymentMethod: foundReceiptForInv.paymentMethod,
           createdAt: serverTimestamp(),
-          localTimestamp: now.toISOString()
+          localTimestamp: new Date().toISOString()
         });
 
-        await updateDoc(doc(db, "transactions", selectedReceiptForInvoice.id), {
+        await updateDoc(doc(db, "transactions", foundReceiptForInv.id), {
           hasInvoiceIssued: true
         });
 
-        showToast(`Wystawiono Fakturę VAT ${invNumber} do paragonu #${selectedReceiptForInvoice.receiptNumber}`, "description");
+        showToast(`Wystawiono fakturę ${invNr} do paragonu ${foundReceiptForInv.receiptNumber}`, "description");
         document.getElementById("invToReceiptFormBox").classList.add("hidden");
         document.getElementById("searchReceiptForInv").value = "";
-        selectedReceiptForInvoice = null;
       } catch (err) {
-        showToast("Błąd zapisu faktury: " + err.message, "error");
+        showToast("Błąd: " + err.message, "error");
       }
     });
 
-    let selectedReceiptForReturn = null;
+    // ==========================================
+    // ZWROT TOWARU
+    // ==========================================
+    let foundReceiptForReturn = null;
+
     document.getElementById("btnFindReceiptReturn").addEventListener("click", () => {
-      const num = document.getElementById("searchReceiptForReturn").value.replace("#", "").trim();
-      const found = state.transactions.find(t => String(t.receiptNumber) === num);
+      closeGlobalPepcoVk();
+      const nr = document.getElementById("searchReceiptForReturn").value.trim();
+      const rec = state.transactions.find(t => t.receiptNumber.toLowerCase() === nr.toLowerCase());
       const box = document.getElementById("returnProcessBox");
 
-      if (!found) {
+      if (!rec) {
         box.classList.add("hidden");
-        showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
-        return;
+        return showToast("Nie znaleziono paragonu do zwrotu!", "search_off");
       }
 
-      selectedReceiptForReturn = found;
+      foundReceiptForReturn = rec;
       box.classList.remove("hidden");
       document.getElementById("returnReceiptMeta").innerHTML = `
-        Paragon <strong>#${found.receiptNumber}</strong> • Data zakupu: ${new Date(found.localTimestamp).toLocaleString("pl-PL")} • Płatność: ${found.paymentMethod}
+        <strong>Paragon:</strong> ${rec.receiptNumber} | <strong>Data zakupu:</strong> ${new Date(rec.localTimestamp).toLocaleString("pl-PL")} | <strong>Kwota paragonu:</strong> ${Number(rec.totalAmount).toFixed(2)} ${rec.currencySymbol || "zł"}
       `;
 
-      const retMap = found.returnedQuantities || {};
-      const globalDiscFactor = 1 - (Number(found.discountPercent || 0) / 100);
+      const retMap = rec.returnedQuantities || {};
+      const globalDisc = Number(rec.discountPercent || 0);
 
-      document.getElementById("returnItemsTableBody").innerHTML = found.items.map((item, idx) => {
-        const alreadyReturned = Number(retMap[item.id] || 0);
-        const maxReturnable = Math.max(0, Number(item.qty) - alreadyReturned);
-        const lineAfterItemDisc = item.lineTotalAfterItemDisc !== undefined ? Number(item.lineTotalAfterItemDisc) : (Number(item.price) * Number(item.qty));
-        const unitFinalPaid = ((lineAfterItemDisc / Number(item.qty)) * globalDiscFactor).toFixed(2);
+      document.getElementById("returnItemsTableBody").innerHTML = (rec.items || []).map((item, idx) => {
+        const alreadyRet = Number(retMap[item.id] || 0);
+        const maxRet = Math.max(0, Number(item.qty) - alreadyRet);
+        const baseEffective = item.effectiveUnitPrice !== undefined ? Number(item.effectiveUnitPrice) : Number(item.price);
+        const unitAfterDisc = Number((baseEffective * (1 - globalDisc / 100)).toFixed(2));
 
-        return `
-          <tr>
-            <td style="font-family:'JetBrains Mono', monospace;">${item.ean || "—"}${item.plu ? ` / PLU:${item.plu}` : ""}</td>
-            <td><strong>${item.name}</strong></td>
-            <td>${unitFinalPaid} ${found.currencySymbol || "zł"}</td>
-            <td>${item.qty}</td>
-            <td>${alreadyReturned}</td>
-            <td>
-              <input type="number" class="form-control ret-qty-input" data-idx="${idx}" data-unit-price="${unitFinalPaid}" min="0" max="${maxReturnable}" value="0" style="width:80px;" ${maxReturnable === 0 ? "disabled" : ""} />
-            </td>
-            <td class="ret-line-sum" id="retLineSum_${idx}" style="font-weight:700;">0,00 ${found.currencySymbol || "zł"}</td>
-          </tr>
-        `;
+        return `<tr>
+          <td style="font-family:'JetBrains Mono', monospace;">${item.ean || "—"}${item.plu ? ` / PLU: ${item.plu}` : ""}</td>
+          <td><strong>${item.name}</strong></td>
+          <td>${unitAfterDisc.toFixed(2)} ${rec.currencySymbol || "zł"}</td>
+          <td>${item.qty} ${item.unit || "szt."}</td>
+          <td>${alreadyRet} ${item.unit || "szt."}</td>
+          <td>
+            <input type="number" min="0" max="${maxRet}" value="0" data-idx="${idx}" data-unit-price="${unitAfterDisc}" class="form-control ret-qty-input" style="width:80px;" ${maxRet === 0 ? "disabled" : ""} />
+          </td>
+          <td class="ret-line-val" style="font-weight:700;">0,00 ${rec.currencySymbol || "zł"}</td>
+        </tr>`;
       }).join("");
 
       document.querySelectorAll(".ret-qty-input").forEach(inp => {
-        inp.addEventListener("input", recalculateReturnTotal);
+        inp.addEventListener("input", recalcReturnTotal);
       });
-      recalculateReturnTotal();
+      recalcReturnTotal();
     });
 
-    function recalculateReturnTotal() {
-      let totalRef = 0;
-      const sym = selectedReceiptForReturn?.currencySymbol || "zł";
+    function recalcReturnTotal() {
+      let sum = 0;
+      const sym = foundReceiptForReturn?.currencySymbol || "zł";
       document.querySelectorAll(".ret-qty-input").forEach(inp => {
-        const idx = inp.dataset.idx;
-        const maxVal = Number(inp.max);
-        let q = Math.max(0, Math.min(maxVal, Number(inp.value) || 0));
-        inp.value = q;
-        const unitP = Number(inp.dataset.unitPrice);
-        const lineSum = q * unitP;
-        totalRef += lineSum;
-        document.getElementById(`retLineSum_${idx}`).textContent = `${lineSum.toFixed(2).replace(".", ",")} ${sym}`;
+        const max = Number(inp.max);
+        let q = Number(inp.value) || 0;
+        if (q < 0) q = 0;
+        if (q > max) { q = max; inp.value = max; }
+        const lineSum = q * Number(inp.dataset.unitPrice);
+        sum += lineSum;
+        inp.closest("tr").querySelector(".ret-line-val").textContent = `${lineSum.toFixed(2).replace(".", ",")} ${sym}`;
       });
-      document.getElementById("totalRefundDisplay").textContent = `${totalRef.toFixed(2).replace(".", ",")} ${sym}`;
+      document.getElementById("totalRefundDisplay").textContent = `${sum.toFixed(2).replace(".", ",")} ${sym}`;
     }
 
     document.getElementById("btnConfirmReturn").addEventListener("click", async () => {
-      if (!selectedReceiptForReturn) return;
+      closeGlobalPepcoVk();
+      if (!foundReceiptForReturn) return;
+      const inputs = document.querySelectorAll(".ret-qty-input");
       const returnedItems = [];
       let totalRefund = 0;
-      const updatedReturnedMap = { ...(selectedReceiptForReturn.returnedQuantities || {}) };
+      const updatedReturnedMap = { ...(foundReceiptForReturn.returnedQuantities || {}) };
 
-      document.querySelectorAll(".ret-qty-input").forEach(inp => {
+      inputs.forEach(inp => {
         const q = Number(inp.value) || 0;
         if (q > 0) {
-          const item = selectedReceiptForReturn.items[Number(inp.dataset.idx)];
-          const unitP = Number(inp.dataset.unitPrice);
-          const lineRefund = q * unitP;
+          const item = foundReceiptForReturn.items[Number(inp.dataset.idx)];
+          const unitPrice = Number(inp.dataset.unitPrice);
+          const lineRefund = Number((q * unitPrice).toFixed(2));
           totalRefund += lineRefund;
           returnedItems.push({
             id: item.id,
-            ean: item.ean,
+            ean: item.ean || "",
             plu: item.plu || "",
             name: item.name,
             qty: q,
-            unitPrice: unitP,
-            refundSum: Number(lineRefund.toFixed(2))
+            unitPrice,
+            lineRefund
           });
           updatedReturnedMap[item.id] = (Number(updatedReturnedMap[item.id] || 0)) + q;
         }
       });
 
-      if (returnedItems.length === 0) {
-        showToast("Wybierz co najmniej 1 sztukę towaru do zwrotu!", "warning");
-        return;
-      }
+      if (returnedItems.length === 0) return showToast("Wpisz ilość zwracanego towaru (minimum 1 szt.)!", "warning");
 
-      const returnNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(10000 + Math.random() * 90000)}`;
+      const retNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
 
       try {
+        await addDoc(collection(db, "returns"), {
+          returnNumber: retNumber,
+          receiptNumber: foundReceiptForReturn.receiptNumber,
+          receiptId: foundReceiptForReturn.id,
+          operator: state.activeOperator,
+          reason: document.getElementById("returnReason").value,
+          refundMethod: document.getElementById("returnRefundMethod").value,
+          currencySymbol: foundReceiptForReturn.currencySymbol || "zł",
+          items: returnedItems,
+          totalRefund: Number(totalRefund.toFixed(2)),
+          createdAt: serverTimestamp(),
+          localTimestamp: new Date().toISOString()
+        });
+
+        await updateDoc(doc(db, "transactions", foundReceiptForReturn.id), {
+          returnedQuantities: updatedReturnedMap
+        });
+
         for (const rItem of returnedItems) {
           await updateDoc(doc(db, "products", rItem.id), {
             stock: increment(Number(rItem.qty))
           });
         }
 
-        await addDoc(collection(db, "returns"), {
-          returnNumber,
-          receiptNumber: selectedReceiptForReturn.receiptNumber,
-          items: returnedItems,
-          totalRefund: Number(totalRefund.toFixed(2)),
-          currencySymbol: selectedReceiptForReturn.currencySymbol || "zł",
-          reason: document.getElementById("returnReason").value,
-          refundMethod: document.getElementById("returnRefundMethod").value,
-          operator: state.activeOperator,
-          createdAt: serverTimestamp(),
-          localTimestamp: new Date().toISOString()
-        });
-
-        await updateDoc(doc(db, "transactions", selectedReceiptForReturn.id), {
-          returnedQuantities: updatedReturnedMap
-        });
-
-        showToast(`Zatwierdzono zwrot ${returnNumber}. Towar wrócił na stan magazynowy!`, "assignment_return");
+        showToast(`Zatwierdzono zwrot ${retNumber} i przywrócono stany magazynowe!`, "assignment_return");
         document.getElementById("returnProcessBox").classList.add("hidden");
         document.getElementById("searchReceiptForReturn").value = "";
-        selectedReceiptForReturn = null;
       } catch (err) {
-        showToast("Błąd podczas zwrotu: " + err.message, "error");
+        showToast("Błąd zwrotu: " + err.message, "error");
       }
     });
 
     function renderReturnsHistory() {
       const tbody = document.getElementById("returnsHistoryTableBody");
       if (state.returns.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Brak zarejestrowanych zwrotów.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">Brak zarejestrowanych zwrotów towarów.</td></tr>`;
         return;
       }
-
       tbody.innerHTML = state.returns.map(r => {
-        const d = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
+        const dateStr = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
         const itemsSummary = (r.items || []).map(i => `${i.name} (${i.qty} szt.)`).join(", ");
-        return `
-          <tr>
-            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
-            <td>#${r.receiptNumber}</td>
-            <td>${d}</td>
-            <td>${itemsSummary}</td>
-            <td>${r.reason}</td>
-            <td style="font-weight:700; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
-          </tr>
-        `;
+        return `<tr>
+          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
+          <td style="font-family:'JetBrains Mono', monospace;">${r.receiptNumber}</td>
+          <td>${dateStr}</td>
+          <td>${itemsSummary}</td>
+          <td>${r.reason}</td>
+          <td style="font-weight:800; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
+        </tr>`;
       }).join("");
     }
 
     // ==========================================
-    // VIEW NAVIGATION
+    // VIEW SWITCHING & NAVIGATION
     // ==========================================
     const posView = document.getElementById("posView");
     const docsView = document.getElementById("docsView");
     const adminView = document.getElementById("adminView");
 
-    const btnTabPos = document.getElementById("btnTabPos");
-    const btnTabDocs = document.getElementById("btnTabDocs");
-    const btnTabAdmin = document.getElementById("btnTabAdmin");
-
     function switchMainView(viewName) {
+      closeGlobalPepcoVk();
       posView.classList.toggle("hidden", viewName !== "pos");
       docsView.classList.toggle("hidden", viewName !== "docs");
       adminView.classList.toggle("hidden", viewName !== "admin");
 
-      btnTabPos.classList.toggle("active", viewName === "pos");
-      btnTabDocs.classList.toggle("active", viewName === "docs");
-      btnTabAdmin.classList.toggle("active", viewName === "admin");
-
-      if (viewName !== "pos") {
-        closePepcoVirtualKeyboard();
-      }
+      document.getElementById("btnTabPos").classList.toggle("active", viewName === "pos");
+      document.getElementById("btnTabDocs").classList.toggle("active", viewName === "docs");
+      document.getElementById("btnTabAdmin").classList.toggle("active", viewName === "admin");
     }
 
-    btnTabPos.addEventListener("click", () => switchMainView("pos"));
-    btnTabDocs.addEventListener("click", () => switchMainView("docs"));
-    btnTabAdmin.addEventListener("click", () => switchMainView("admin"));
+    document.getElementById("btnTabPos").addEventListener("click", () => switchMainView("pos"));
+    document.getElementById("btnTabDocs").addEventListener("click", () => switchMainView("docs"));
+    document.getElementById("btnTabAdmin").addEventListener("click", () => switchMainView("admin"));
 
-    document.querySelectorAll("#docsView .admin-tab-btn").forEach(btn => {
+    document.querySelectorAll("[data-doc-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("#docsView .admin-tab-btn").forEach(b => b.classList.remove("active"));
+        closeGlobalPepcoVk();
+        document.querySelectorAll("[data-doc-tab]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const target = btn.dataset.docTab;
         document.querySelectorAll(".doc-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
       });
     });
 
-    document.querySelectorAll("#adminView .admin-tab-btn").forEach(btn => {
+    document.querySelectorAll("[data-admin-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("#adminView .admin-tab-btn").forEach(b => b.classList.remove("active"));
+        closeGlobalPepcoVk();
+        document.querySelectorAll("[data-admin-tab]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const target = btn.dataset.adminTab;
         document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
