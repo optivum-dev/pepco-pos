@@ -339,17 +339,19 @@
 
     .scanner-input {
       width: 100%;
-      padding: 10px 14px 10px 40px;
+      padding: 10px 36px 10px 40px;
       border: 2px solid var(--border-color);
       border-radius: 10px;
       font-size: 14px;
       font-family: 'Inter', sans-serif;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
     }
 
     .scanner-input:focus {
-      border-color: var(--pepco-blue);
+      border-color: var(--pepco-indigo);
+      box-shadow: 0 0 0 3px rgba(46, 21, 232, 0.12);
     }
 
     .scanner-icon {
@@ -358,6 +360,29 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .scanner-clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 6px;
+      background: #f3f4f6;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scanner-clear-btn:hover {
+      background: #e5e7eb;
+      color: var(--text-main);
     }
 
     .toolbar-action-btn {
@@ -437,7 +462,7 @@
       flex: 1;
       overflow-y: auto;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
       gap: 12px;
       padding-right: 4px;
       align-content: start;
@@ -470,9 +495,15 @@
     .prod-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 8px;
       gap: 4px;
+    }
+
+    .prod-codes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
 
     .prod-ean {
@@ -482,6 +513,18 @@
       background: #f3f4f6;
       padding: 2px 6px;
       border-radius: 4px;
+      display: inline-block;
+    }
+
+    .prod-plu {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--pepco-indigo);
+      background: #eef2ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
     }
 
     .prod-stock-badge {
@@ -489,6 +532,7 @@
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 4px;
+      white-space: nowrap;
     }
 
     .stock-ok { background: #dcfce7; color: #166534; }
@@ -519,6 +563,142 @@
       font-size: 12px;
       font-weight: 500;
       color: var(--text-muted);
+    }
+
+    /* PEPCO ON-SCREEN KEYBOARD (MOTYW PEPCO) */
+    .pepco-vk-panel {
+      background: linear-gradient(160deg, #1b1166 0%, #24149e 48%, #1a286e 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 12px 30px rgba(24, 15, 112, 0.35);
+      flex-shrink: 0;
+      user-select: none;
+      animation: vkSlideUp 0.16s ease-out;
+    }
+
+    @keyframes vkSlideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pepco-vk-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .pepco-vk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.14);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .pepco-vk-close {
+      background: rgba(230, 30, 110, 0.88);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.12s;
+    }
+
+    .pepco-vk-close:hover {
+      background: var(--pepco-magenta);
+    }
+
+    .pepco-vk-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pepco-vk-row {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .vk-key {
+      flex: 1;
+      min-width: 0;
+      height: 38px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.94);
+      color: #111827;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 0 rgba(12, 8, 66, 0.45);
+      transition: transform 0.06s, background 0.12s, color 0.12s;
+    }
+
+    .vk-key:hover {
+      background: #eef2ff;
+      color: var(--pepco-indigo);
+    }
+
+    .vk-key:active {
+      transform: translateY(2px);
+      box-shadow: none;
+      background: var(--pepco-magenta);
+      color: #fff;
+    }
+
+    .vk-key.num-key {
+      background: #e0e7ff;
+      color: var(--pepco-indigo);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .vk-key.func-key {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      font-size: 12px;
+      flex: 1.45;
+    }
+
+    .vk-key.func-key.active-shift {
+      background: #fff;
+      color: var(--pepco-indigo);
+    }
+
+    .vk-key.space-key {
+      flex: 4.5;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--pepco-indigo);
+    }
+
+    .vk-key.enter-key {
+      flex: 1.9;
+      background: var(--pepco-gradient);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      gap: 4px;
     }
 
     /* RIGHT PANEL: CART & PODSUMA */
@@ -1622,10 +1802,19 @@
             type="text" 
             id="searchInput" 
             class="scanner-input" 
-            placeholder="Zeskanuj kod QR / EAN / SKU lub wpisz nazwę towaru..." 
+            placeholder="Zeskanuj kod EAN / QR / wpisz PLU lub nazwę towaru..." 
             autocomplete="off"
+            inputmode="none"
+            readonly
           />
+          <button type="button" id="btnClearSearchInput" class="scanner-clear-btn hidden" title="Wyczyść pole wyszukiwania">
+            <span class="m-icon sm">close</span>
+          </button>
         </div>
+
+        <button type="button" id="btnTogglePepcoVk" class="toolbar-action-btn" title="Pokaż / ukryj klawiaturę ekranową Pepco">
+          <span class="m-icon">keyboard</span>
+        </button>
 
         <button type="button" id="btnOpenQrScanner" class="toolbar-action-btn qr-btn" title="Skanuj kod QR lub kod kreskowy kamerą">
           <span class="m-icon">qr_code_scanner</span>
@@ -1646,6 +1835,19 @@
         <div style="grid-column: 1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
           Brak towarów w bazie. Przejdź do zakładki <strong>Administracja -> Towary</strong>, aby dodać asortyment.
         </div>
+      </div>
+
+      <!-- KLAWIATURA EKRANOWA WITRYNY W MOTYWIE PEPCO -->
+      <div class="pepco-vk-panel hidden" id="pepcoVirtualKeyboard">
+        <div class="pepco-vk-header">
+          <span class="pepco-vk-badge">
+            <span class="m-icon sm">keyboard</span> Klawiatura PEPCO POS
+          </span>
+          <button type="button" class="pepco-vk-close" id="btnClosePepcoVk">
+            <span class="m-icon sm">keyboard_hide</span> Ukryj klawiaturę
+          </button>
+        </div>
+        <div class="pepco-vk-rows" id="pepcoVkRowsContainer"></div>
       </div>
     </section>
 
@@ -1702,7 +1904,7 @@
         <div class="empty-cart">
           <span class="m-icon xl" style="color:#cbd5e1;">shopping_basket</span>
           <strong>Paragon jest pusty</strong>
-          <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod QR / EAN</p>
+          <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod EAN / PLU</p>
         </div>
       </div>
 
@@ -1804,7 +2006,7 @@
     </div>
   </div>
 
-  <!-- MODAL: PŁYWAJĄCE OKNO WYBORU RABATU Z LISTY DLA TOWARU (W OKNIE DODAWANIA/EDYCJI TOWARU) -->
+  <!-- MODAL: PŁYWAJĄCE OKNO WYBORU RABATU Z LISTY DLA TOWARU -->
   <div class="modal-backdrop hidden" id="productDiscountPickerModal" style="z-index: 260;">
     <div class="modal-box" style="max-width: 420px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -1850,7 +2052,7 @@
       </div>
 
       <div style="background:#f8fafc; border:1px solid var(--border-color); padding:10px; border-radius:10px; display:flex; gap:8px;">
-        <input type="text" id="manualQrInput" class="form-control" style="flex:1;" placeholder="Lub wpisz odczytany kod QR / EAN..." />
+        <input type="text" id="manualQrInput" class="form-control" style="flex:1;" placeholder="Lub wpisz odczytany kod EAN / PLU / QR..." />
         <button type="button" id="btnManualQrSubmit" class="btn-primary">Dodaj</button>
       </div>
     </div>
@@ -2104,7 +2306,7 @@
             <table class="data-table" style="background:#fff;">
               <thead>
                 <tr>
-                  <th>EAN</th>
+                  <th>EAN / PLU</th>
                   <th>Nazwa towaru</th>
                   <th>Cena końcowa jedn.</th>
                   <th>Zakupiono</th>
@@ -2405,8 +2607,8 @@
         <div class="admin-card">
           <div class="admin-card-header">
             <div>
-              <h2>Baza towarów</h2>
-              <p class="desc">Wyszukuj produkty, filtruj po kategoriach, nadawaj stałe rabaty na towary, dodawaj nowe pozycje i edytuj istniejące.</p>
+              <h2>Kartoteka towarów</h2>
+              <p class="desc">Wyszukuj produkty po nazwie, kodzie EAN lub PLU, filtruj po kategoriach, dodawaj nowe pozycje i edytuj istniejące.</p>
             </div>
             <button type="button" class="btn-primary" onclick="openAdminCrudModal('products', null)">
               <span class="m-icon sm">add_box</span> Dodaj towar
@@ -2416,7 +2618,7 @@
           <div class="filter-toolbar">
             <div style="position:relative; flex:2; min-width:210px;">
               <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
-              <input type="text" id="adminProdSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj towaru po nazwie lub kodzie EAN / SKU / PLU..." />
+              <input type="text" id="adminProdSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj towaru po nazwie, kodzie EAN lub PLU..." />
             </div>
             <div style="flex:1; min-width:180px;">
               <select id="adminProdCatFilter" class="form-control" style="width:100%;">
@@ -2428,7 +2630,8 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>EAN / SKU / PLU</th>
+                <th>Kod EAN</th>
+                <th>Kod PLU</th>
                 <th>Nazwa towaru</th>
                 <th>Kategoria</th>
                 <th>VAT</th>
@@ -2459,7 +2662,7 @@
           <div class="filter-toolbar">
             <div style="position:relative; flex:2; min-width:210px;">
               <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
-              <input type="text" id="adminStockSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj na magazynie po nazwie lub kodzie EAN / SKU / PLU..." />
+              <input type="text" id="adminStockSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj na magazynie po nazwie, kodzie EAN lub PLU..." />
             </div>
             <div style="flex:1; min-width:180px;">
               <select id="adminStockCatFilter" class="form-control" style="width:100%;">
@@ -2469,7 +2672,7 @@
           </div>
 
           <table class="data-table">
-            <thead><tr><th>EAN / SKU</th><th>Nazwa towaru</th><th>Kategoria</th><th>Aktualny stan</th><th>Status</th><th>Korekta ręczna</th></tr></thead>
+            <thead><tr><th>EAN / PLU</th><th>Nazwa towaru</th><th>Kategoria</th><th>Aktualny stan</th><th>Status</th><th>Korekta ręczna</th></tr></thead>
             <tbody id="adminStockTable"></tbody>
           </table>
         </div>
@@ -2702,6 +2905,272 @@
     setInterval(updateClock, 1000);
 
     // ==========================================
+    // DOPASOWANIE PRODUKTU PO KODZIE EAN / PLU / QR
+    // ==========================================
+    function findProductByCode(rawCode) {
+      const clean = String(rawCode || "").trim().replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
+      if (!clean) return null;
+      const lower = clean.toLowerCase();
+
+      return state.products.find(p =>
+        (p.ean && String(p.ean).trim().toLowerCase() === lower) ||
+        (p.plu && String(p.plu).trim().toLowerCase() === lower)
+      ) || null;
+    }
+
+    // ==========================================
+    // KLAWIATURA EKRANOWA WITRYNY (MOTYW PEPCO) + BLOKADA SYSTEMOWEJ
+    // ==========================================
+    const searchInput = document.getElementById("searchInput");
+    const btnClearSearchInput = document.getElementById("btnClearSearchInput");
+    const pepcoVkPanel = document.getElementById("pepcoVirtualKeyboard");
+    const pepcoVkRowsContainer = document.getElementById("pepcoVkRowsContainer");
+    let vkShiftActive = false;
+
+    const VK_ROWS = [
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+      ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+      ["a", "s", "d", "f", "g", "h", "j", "k", "l", "ó"],
+      ["SHIFT", "z", "x", "c", "v", "b", "n", "m", "ą", "ę", "BACKSPACE"],
+      ["ł", "ś", "ć", "ż", "ź", "ń", "-", "/"],
+      ["CLEAR", "SPACE", "ENTER"]
+    ];
+
+    function syncSearchFieldUI(keepFocus = true) {
+      searchInput.value = state.searchQuery;
+      btnClearSearchInput.classList.toggle("hidden", state.searchQuery.length === 0);
+      renderProducts();
+      if (keepFocus) {
+        searchInput.focus({ preventScroll: true });
+      }
+    }
+
+    function openPepcoVirtualKeyboard() {
+      pepcoVkPanel.classList.remove("hidden");
+      renderPepcoVirtualKeyboard();
+    }
+
+    function closePepcoVirtualKeyboard() {
+      pepcoVkPanel.classList.add("hidden");
+    }
+
+    function handleVkKeyPress(keyVal) {
+      if (keyVal === "SHIFT") {
+        vkShiftActive = !vkShiftActive;
+        renderPepcoVirtualKeyboard();
+        return;
+      }
+      if (keyVal === "BACKSPACE") {
+        state.searchQuery = state.searchQuery.slice(0, -1);
+        syncSearchFieldUI(true);
+        return;
+      }
+      if (keyVal === "CLEAR") {
+        state.searchQuery = "";
+        syncSearchFieldUI(true);
+        return;
+      }
+      if (keyVal === "SPACE") {
+        state.searchQuery += " ";
+        syncSearchFieldUI(true);
+        return;
+      }
+      if (keyVal === "ENTER") {
+        const trimmed = state.searchQuery.trim();
+        if (trimmed) {
+          const exactProd = findProductByCode(trimmed);
+          if (exactProd) {
+            addToCart(exactProd.id);
+            showToast(`Dodano z klawiatury/kodu: ${exactProd.name}`, "add_shopping_cart");
+            state.searchQuery = "";
+            syncSearchFieldUI(true);
+            return;
+          }
+        }
+        closePepcoVirtualKeyboard();
+        return;
+      }
+
+      const charToAdd = vkShiftActive ? keyVal.toLocaleUpperCase("pl-PL") : keyVal;
+      state.searchQuery += charToAdd;
+      if (vkShiftActive) {
+        vkShiftActive = false;
+        renderPepcoVirtualKeyboard();
+      }
+      syncSearchFieldUI(true);
+    }
+
+    function renderPepcoVirtualKeyboard() {
+      pepcoVkRowsContainer.innerHTML = VK_ROWS.map(row => {
+        const buttonsHtml = row.map(k => {
+          if (k === "SHIFT") {
+            return `<button type="button" class="vk-key func-key ${vkShiftActive ? 'active-shift' : ''}" data-vk="SHIFT">
+              <span class="m-icon sm">shift</span>
+            </button>`;
+          }
+          if (k === "BACKSPACE") {
+            return `<button type="button" class="vk-key func-key" data-vk="BACKSPACE">
+              <span class="m-icon sm">backspace</span>
+            </button>`;
+          }
+          if (k === "CLEAR") {
+            return `<button type="button" class="vk-key func-key" data-vk="CLEAR">WYCZYŚĆ</button>`;
+          }
+          if (k === "SPACE") {
+            return `<button type="button" class="vk-key space-key" data-vk="SPACE">SPACJA</button>`;
+          }
+          if (k === "ENTER") {
+            return `<button type="button" class="vk-key enter-key" data-vk="ENTER">
+              <span class="m-icon sm">keyboard_return</span> ZATWIERDŹ
+            </button>`;
+          }
+          const isDigit = /^[0-9]$/.test(k);
+          const label = vkShiftActive && !isDigit ? k.toLocaleUpperCase("pl-PL") : k;
+          return `<button type="button" class="vk-key ${isDigit ? 'num-key' : ''}" data-vk="${k}">${label}</button>`;
+        }).join("");
+        return `<div class="pepco-vk-row">${buttonsHtml}</div>`;
+      }).join("");
+
+      pepcoVkRowsContainer.querySelectorAll(".vk-key").forEach(btn => {
+        btn.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          handleVkKeyPress(btn.dataset.vk);
+        });
+      });
+    }
+
+    // Blokada klawiatury systemowej (inputmode="none" + readonly zdejmowane tylko chwilowo przy wpisywaniu ze sprzętu)
+    // oraz otwarcie klawiatury witryny PEPCO po kliknięciu w pole wyszukiwania
+    searchInput.addEventListener("pointerdown", () => {
+      searchInput.setAttribute("inputmode", "none");
+      searchInput.setAttribute("readonly", "readonly");
+      openPepcoVirtualKeyboard();
+    });
+
+    searchInput.addEventListener("focus", () => {
+      searchInput.setAttribute("inputmode", "none");
+      openPepcoVirtualKeyboard();
+    });
+
+    document.getElementById("btnTogglePepcoVk").addEventListener("click", () => {
+      if (pepcoVkPanel.classList.contains("hidden")) {
+        openPepcoVirtualKeyboard();
+        searchInput.focus({ preventScroll: true });
+      } else {
+        closePepcoVirtualKeyboard();
+      }
+    });
+
+    document.getElementById("btnClosePepcoVk").addEventListener("click", closePepcoVirtualKeyboard);
+
+    btnClearSearchInput.addEventListener("click", () => {
+      state.searchQuery = "";
+      syncSearchFieldUI(true);
+    });
+
+    // ==========================================
+    // GLOBALNA OBSŁUGA PODPIĘTEGO SKANERA KODÓW KRESKOWYCH (USB / BLUETOOTH HID)
+    // Skanuje kod towaru w dowolnym momencie na ekranie kasy i od razu wrzuca do paragonu!
+    // ==========================================
+    let hwScannerBuffer = "";
+    let hwScannerLastKeyTime = 0;
+
+    function isAnyBlockingModalOpen() {
+      if (!lockOverlay.classList.contains("hidden")) return true;
+      if (!floatingOverlay.classList.contains("hidden")) return true;
+      if (!itemEditModal.classList.contains("hidden")) return true;
+      if (!qrModal.classList.contains("hidden")) return true;
+      if (!receiptDiscountModal.classList.contains("hidden")) return true;
+      if (!adminCrudModal.classList.contains("hidden")) return true;
+      if (!reportPreviewModal.classList.contains("hidden")) return true;
+      if (!document.getElementById("invoicePreviewModal").classList.contains("hidden")) return true;
+      return false;
+    }
+
+    document.addEventListener("keydown", (e) => {
+      // 1. Obsługa klawiatury na ekranie PIN
+      if (!lockOverlay.classList.contains("hidden") && !stepPinEntry.classList.contains("hidden")) {
+        if (/^[0-9]$/.test(e.key)) {
+          if (enteredPinBuffer.length < 8) {
+            enteredPinBuffer += e.key;
+            updatePinDotsUI();
+          }
+        } else if (e.key === "Backspace") {
+          enteredPinBuffer = enteredPinBuffer.slice(0, -1);
+          updatePinDotsUI();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          verifyPinAndUnlock();
+        }
+        return;
+      }
+
+      // 2. Jeśli aktywny jest widok Kasy Sprzedaży i nie jest otwarte okno modalne
+      if (posView.classList.contains("hidden") || isAnyBlockingModalOpen()) {
+        return;
+      }
+
+      // Nie przechwytuj wpisywania w polach NIP/Faktura nabywcy w prawym panelu
+      const activeEl = document.activeElement;
+      const isBuyerInputFocused = activeEl && activeEl.classList.contains("buyer-input");
+      if (isBuyerInputFocused) return;
+
+      const now = Date.now();
+      const timeDiff = now - hwScannerLastKeyTime;
+      hwScannerLastKeyTime = now;
+
+      // Skanery kodów wysyłają znaki bardzo szybko (< 65 ms między znakami) i kończą klawiszem Enter
+      if (e.key === "Enter") {
+        const candidateCode = (hwScannerBuffer || state.searchQuery).trim();
+        hwScannerBuffer = "";
+
+        if (candidateCode.length > 0) {
+          const matchedProd = findProductByCode(candidateCode);
+          if (matchedProd) {
+            e.preventDefault();
+            addToCart(matchedProd.id);
+            showToast(`Zeskanowano: ${matchedProd.name} (+1)`, "barcode_scanner");
+            state.searchQuery = "";
+            syncSearchFieldUI(false);
+            return;
+          } else if (candidateCode.length >= 3 && timeDiff < 120) {
+            e.preventDefault();
+            showToast(`Nie znaleziono w kartotece towaru dla kodu: ${candidateCode}`, "search_off");
+            state.searchQuery = "";
+            syncSearchFieldUI(false);
+            return;
+          }
+        }
+        return;
+      }
+
+      if (e.key === "Backspace") {
+        hwScannerBuffer = hwScannerBuffer.slice(0, -1);
+        if (activeEl === searchInput) {
+          e.preventDefault();
+          state.searchQuery = state.searchQuery.slice(0, -1);
+          syncSearchFieldUI(true);
+        }
+        return;
+      }
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (timeDiff > 120) {
+          hwScannerBuffer = "";
+        }
+        hwScannerBuffer += e.key;
+
+        // Gdy focus jest w polu wyszukiwania (które jest readonly aby blokować klawiaturę systemową),
+        // dopisujemy znak również do state.searchQuery (zarówno dla fizycznej klawiatury jak i skanera)
+        if (activeEl === searchInput) {
+          e.preventDefault();
+          state.searchQuery += e.key;
+          syncSearchFieldUI(true);
+        }
+      }
+    });
+
+    // ==========================================
     // EKRAN BLOKADY, WYBÓR OPERATORA I KOD PIN
     // ==========================================
     const lockOverlay = document.getElementById("lockAuthOverlay");
@@ -2842,23 +3311,6 @@
 
     document.getElementById("btnPinConfirm").addEventListener("click", verifyPinAndUnlock);
 
-    document.addEventListener("keydown", (e) => {
-      if (!lockOverlay.classList.contains("hidden") && !stepPinEntry.classList.contains("hidden")) {
-        if (/^[0-9]$/.test(e.key)) {
-          if (enteredPinBuffer.length < 8) {
-            enteredPinBuffer += e.key;
-            updatePinDotsUI();
-          }
-        } else if (e.key === "Backspace") {
-          enteredPinBuffer = enteredPinBuffer.slice(0, -1);
-          updatePinDotsUI();
-        } else if (e.key === "Enter") {
-          e.preventDefault();
-          verifyPinAndUnlock();
-        }
-      }
-    });
-
     document.getElementById("activeOperatorSelect").addEventListener("change", (e) => {
       const selectedOpId = e.target.value;
       if (!selectedOpId) return;
@@ -2916,7 +3368,7 @@
     document.addEventListener("fullscreenchange", updateFullscreenButtonUI);
 
     // ==========================================
-    // SKANER KODÓW QR I KODÓW KRESKOWYCH
+    // SKANER KODÓW QR I KODÓW KRESKOWYCH KAMERĄ
     // ==========================================
     const qrModal = document.getElementById("qrScannerModal");
     const qrVideo = document.getElementById("qrVideoElement");
@@ -2928,18 +3380,13 @@
       const cleanCode = String(rawCode || "").trim();
       if (!cleanCode) return false;
 
-      const extracted = cleanCode.replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
-      const match = state.products.find(p =>
-        String(p.ean).toLowerCase() === extracted.toLowerCase() ||
-        String(p.ean).toLowerCase() === cleanCode.toLowerCase()
-      );
-
+      const match = findProductByCode(cleanCode);
       if (match) {
         addToCart(match.id);
         showToast(`Zeskanowano: ${match.name}`, "qr_code_scanner");
         return true;
       } else {
-        showToast(`Nie znaleziono w bazie produktu dla kodu: ${extracted}`, "search_off");
+        showToast(`Nie znaleziono w bazie produktu dla kodu: ${cleanCode}`, "search_off");
         return false;
       }
     }
@@ -2979,7 +3426,7 @@
           qrStatusText.textContent = "Podgląd kamery aktywny — użyj pola poniżej lub skanera USB";
         }
       } catch (err) {
-        qrStatusText.textContent = "Brak dostępu do kamery — wpisz kod QR / EAN ręcznie poniżej.";
+        qrStatusText.textContent = "Brak dostępu do kamery — wpisz kod EAN / PLU ręcznie poniżej.";
       }
     }
 
@@ -3524,7 +3971,7 @@ ${opLines}
           <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:8px;">
             <div style="position:relative;">
               <span class="m-icon sm" style="position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
-              <input type="text" id="pzFilterSearchInput" class="form-control" style="width:100%; padding-left:32px;" placeholder="Nazwa towaru lub EAN / SKU / PLU..." />
+              <input type="text" id="pzFilterSearchInput" class="form-control" style="width:100%; padding-left:32px;" placeholder="Nazwa towaru, EAN lub PLU..." />
             </div>
             <select id="pzFilterCatSelect" class="form-control">${catFilterOpts}</select>
           </div>
@@ -3581,23 +4028,22 @@ ${opLines}
         const matchCat = cat === "Wszystkie" || p.category === cat;
         const matchQ = !q ||
           (p.name && p.name.toLowerCase().includes(q)) ||
-          (p.ean && String(p.ean).toLowerCase().includes(q));
+          (p.ean && String(p.ean).toLowerCase().includes(q)) ||
+          (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
-      // 1. Aktualizacja listy rozwijanej dla trybu pojedynczego
       const singleSelect = document.getElementById("crudPzProduct");
       if (singleSelect) {
         if (filteredProds.length === 0) {
           singleSelect.innerHTML = `<option value="">Brak towarów spełniających kryteria filtrowania</option>`;
         } else {
           singleSelect.innerHTML = filteredProds.map(p =>
-            `<option value="${p.id}">[${p.ean}] ${p.name} • Kat: ${p.category} (stan: ${p.stock ?? 0} ${p.unit || "szt."})</option>`
+            `<option value="${p.id}">[EAN: ${p.ean || "—"}${p.plu ? " | PLU: " + p.plu : ""}] ${p.name} (stan: ${p.stock ?? 0} ${p.unit || "szt."})</option>`
           ).join("");
         }
       }
 
-      // 2. Aktualizacja listy dla trybu seryjnego
       const batchList = document.getElementById("pzBatchItemsList");
       if (batchList) {
         if (filteredProds.length === 0) {
@@ -3609,7 +4055,7 @@ ${opLines}
               <div class="pz-batch-row ${savedQty > 0 ? 'has-qty' : ''}" data-row-id="${p.id}">
                 <div style="min-width:0; flex:1;">
                   <div style="font-size:12.5px; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
-                  <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">${p.ean} • ${p.category} • Stan: <strong>${p.stock ?? 0}</strong></div>
+                  <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">EAN: ${p.ean || "—"} ${p.plu ? "• PLU: " + p.plu : ""} • Stan: <strong>${p.stock ?? 0}</strong></div>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
                   <span style="font-size:11px; color:var(--text-muted); font-weight:600;">+</span>
@@ -3725,12 +4171,18 @@ ${opLines}
           ? state.units.map(u => `<option value="${u.symbol}" ${item?.unit === u.symbol ? "selected" : ""}>${u.symbol} (${u.fullName})</option>`).join("")
           : `<option value="szt.">szt.</option>`;
 
-        subEl.textContent = "Asortyment";
-        titleEl.textContent = isEdit ? "Edytuj towar" : "Dodaj towar do bazy";
+        subEl.textContent = "Kartoteka towaru";
+        titleEl.textContent = isEdit ? "Edytuj towar" : "Dodaj towar do kartoteki";
         adminCrudFieldsContainer.innerHTML = `
-          <div class="form-group">
-            <label>Kod kreskowy EAN / QR / SKU / PLU *</label>
-            <input type="text" id="crudProdEan" class="form-control" value="${item ? item.ean : ""}" placeholder="np. 5901234567890" required />
+          <div class="form-grid" style="grid-template-columns:1.35fr 0.85fr; margin-bottom:0;">
+            <div class="form-group">
+              <label>Kod kreskowy EAN *</label>
+              <input type="text" id="crudProdEan" class="form-control" style="font-family:'JetBrains Mono', monospace;" value="${item ? (item.ean || "") : ""}" placeholder="np. 5901234567890" required />
+            </div>
+            <div class="form-group">
+              <label>Kod PLU</label>
+              <input type="text" id="crudProdPlu" class="form-control" style="font-family:'JetBrains Mono', monospace;" value="${item ? (item.plu || "") : ""}" placeholder="np. 1042" />
+            </div>
           </div>
           <div class="form-group">
             <label>Nazwa towaru *</label>
@@ -3903,6 +4355,7 @@ ${opLines}
 
           const payload = {
             ean: document.getElementById("crudProdEan").value.trim(),
+            plu: document.getElementById("crudProdPlu").value.trim(),
             name: document.getElementById("crudProdName").value.trim(),
             price: Number(document.getElementById("crudProdPrice").value),
             stock: Number(document.getElementById("crudProdStock").value) || 0,
@@ -3914,10 +4367,10 @@ ${opLines}
           };
           if (currentCrudEditId) {
             await updateDoc(doc(db, "products", currentCrudEditId), payload);
-            showToast("Zaktualizowano dane towaru", "check_circle");
+            showToast("Zaktualizowano dane towaru w kartotece", "check_circle");
           } else {
             await addDoc(collection(db, "products"), payload);
-            showToast("Dodano towar do bazy", "check_circle");
+            showToast("Dodano towar do kartoteki", "check_circle");
           }
         } else if (currentCrudEntity === "stock_delivery") {
           if (state.pzModalMode === "single") {
@@ -4208,7 +4661,10 @@ ${opLines}
       const q = state.adminProdSearch.toLowerCase().trim();
       const filtered = state.products.filter(p => {
         const matchCat = state.adminProdCat === "Wszystkie" || p.category === state.adminProdCat;
-        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.ean && p.ean.toLowerCase().includes(q));
+        const matchQ = !q ||
+          p.name.toLowerCase().includes(q) ||
+          (p.ean && String(p.ean).toLowerCase().includes(q)) ||
+          (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
@@ -4218,8 +4674,12 @@ ${opLines}
           const discBadge = discPct > 0
             ? `<span class="badge-ret" style="background:#fdf2f8; color:var(--pepco-magenta); border:1px solid #fbcfe8;">-${discPct}%</span>`
             : `<span style="color:var(--text-muted); font-size:12px;">0%</span>`;
+          const pluCell = p.plu
+            ? `<span class="badge-pay" style="font-family:'JetBrains Mono', monospace;">${p.plu}</span>`
+            : `<span style="color:var(--text-muted);">—</span>`;
           return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace;">${p.ean}</td>
+          <td style="font-family:'JetBrains Mono', monospace;">${p.ean || "—"}</td>
+          <td>${pluCell}</td>
           <td><strong>${p.name}</strong></td>
           <td>${p.category}</td>
           <td>${p.taxName || (p.taxRate + '%')}</td>
@@ -4231,14 +4691,17 @@ ${opLines}
             <button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
           </td></tr>`;
         }).join("")
-        : `<tr><td colspan="8" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
+        : `<tr><td colspan="9" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
     }
 
     function renderAdminStock() {
       const q = state.adminStockSearch.toLowerCase().trim();
       const filtered = state.products.filter(p => {
         const matchCat = state.adminStockCat === "Wszystkie" || p.category === state.adminStockCat;
-        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.ean && p.ean.toLowerCase().includes(q));
+        const matchQ = !q ||
+          p.name.toLowerCase().includes(q) ||
+          (p.ean && String(p.ean).toLowerCase().includes(q)) ||
+          (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
@@ -4249,7 +4712,7 @@ ${opLines}
             ? `<span class="badge-ret">Brak na stanie</span>` 
             : (st <= 5 ? `<span class="badge-warn">Niski stan</span>` : `<span class="badge-pay">Dostępny</span>`);
           return `<tr>
-            <td style="font-family:'JetBrains Mono', monospace;">${p.ean}</td>
+            <td style="font-family:'JetBrains Mono', monospace;">${p.ean || "—"} ${p.plu ? `<span class="badge-pay" style="margin-left:4px;">PLU: ${p.plu}</span>` : ""}</td>
             <td><strong>${p.name}</strong></td>
             <td>${p.category}</td>
             <td style="font-weight:800; font-size:14px;">${st} ${p.unit || 'szt.'}</td>
@@ -4284,7 +4747,10 @@ ${opLines}
       const filtered = state.products.filter(p => {
         const matchCat = state.selectedCategory === "Wszystkie" || p.category === state.selectedCategory;
         const q = state.searchQuery.toLowerCase().trim();
-        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.ean && p.ean.toLowerCase().includes(q));
+        const matchQ = !q ||
+          p.name.toLowerCase().includes(q) ||
+          (p.ean && String(p.ean).toLowerCase().includes(q)) ||
+          (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
@@ -4296,7 +4762,7 @@ ${opLines}
       }
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Nie znaleziono towaru.</div>`;
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Nie znaleziono towaru dla frazy „${state.searchQuery}”.</div>`;
         return;
       }
 
@@ -4308,7 +4774,10 @@ ${opLines}
           <div class="product-card ${st === 0 ? 'out-of-stock' : ''}" data-id="${p.id}">
             <div>
               <div class="prod-top">
-                <span class="prod-ean">${p.ean}</span>
+                <div class="prod-codes-stack">
+                  <span class="prod-ean">EAN: ${p.ean || "—"}</span>
+                  ${p.plu ? `<span class="prod-plu">PLU: ${p.plu}</span>` : ""}
+                </div>
                 <span class="prod-stock-badge ${stockClass}">Stan: ${st} ${p.unit || "szt."}</span>
               </div>
               <div class="prod-name">${p.name}</div>
@@ -4380,7 +4849,7 @@ ${opLines}
       editingDiscType = item.itemDiscountType || "percent";
 
       document.getElementById("editModalProdName").textContent = item.name;
-      document.getElementById("editModalProdMeta").textContent = `EAN: ${item.ean} • VAT ${item.taxRate ?? 23}%`;
+      document.getElementById("editModalProdMeta").textContent = `EAN: ${item.ean || "—"} ${item.plu ? "• PLU: " + item.plu : ""} • VAT ${item.taxRate ?? 23}%`;
       document.getElementById("editModalUnitLabel").textContent = item.unit || "szt.";
       document.getElementById("editItemPriceInput").value = Number(item.price).toFixed(2);
       document.getElementById("editItemQtyInput").value = item.qty;
@@ -4600,7 +5069,7 @@ ${opLines}
           <div class="empty-cart">
             <span class="m-icon xl" style="color:#cbd5e1;">shopping_basket</span>
             <strong>Paragon jest pusty</strong>
-            <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod QR / EAN</p>
+            <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod EAN / PLU</p>
           </div>`;
         return;
       }
@@ -4654,25 +5123,6 @@ ${opLines}
       });
     }
 
-    const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", (e) => {
-      state.searchQuery = e.target.value;
-      renderProducts();
-    });
-
-    searchInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && state.searchQuery.trim() !== "") {
-        const clean = state.searchQuery.trim().replace(/^(EAN|QR|SKU|PLU):/i, "");
-        const match = state.products.find(p => p.ean === clean);
-        if (match) {
-          addToCart(match.id);
-          searchInput.value = "";
-          state.searchQuery = "";
-          renderProducts();
-        }
-      }
-    });
-
     document.getElementById("btnClearCart").addEventListener("click", () => {
       resetSaleScreen();
     });
@@ -4681,6 +5131,7 @@ ${opLines}
       state.cart = [];
       state.selectedDiscountId = "";
       state.docType = "receipt";
+      state.searchQuery = "";
       document.getElementById("receiptBuyerNip").value = "";
       document.getElementById("invBuyerNip").value = "";
       document.getElementById("invBuyerName").value = "";
@@ -4688,6 +5139,7 @@ ${opLines}
       document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.toggle("active", b.dataset.docType === "receipt"));
       document.getElementById("receiptNipBox").classList.add("hidden");
       document.getElementById("invoiceBuyerBox").classList.add("hidden");
+      syncSearchFieldUI(false);
       renderCart();
       switchMainView("pos");
     }
@@ -4754,6 +5206,7 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
     }
 
     document.getElementById("btnPodsuma").addEventListener("click", () => {
+      closePepcoVirtualKeyboard();
       const totals = getCartTotals();
 
       let buyerInfo = { nip: "", name: "", address: "" };
@@ -4816,152 +5269,138 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
     }
 
     fpCashReceived.addEventListener("input", updateFloatingCashChange);
-    document.querySelectorAll(".quick-cash button").forEach(b => {
-      b.addEventListener("click", () => {
-        fpCashReceived.value = Number(b.dataset.cash).toFixed(2);
+    document.querySelectorAll(".quick-cash button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        fpCashReceived.value = Number(btn.dataset.cash).toFixed(2);
         updateFloatingCashChange();
       });
     });
 
     function renderFloatingPaymentTiles() {
       const grid = document.getElementById("paymentTilesGrid");
-      const methods = state.paymentMethods.length > 0
-        ? state.paymentMethods
-        : [
-            { id: "def_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
-            { id: "def_cash", name: "Gotówka", icon: "payments", isCash: true },
-            { id: "def_blik", name: "BLIK", icon: "qr_code_2", isCash: false }
-          ];
+      const methods = state.paymentMethods.length ? state.paymentMethods : [
+        { id: "def_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
+        { id: "def_cash", name: "Gotówka", icon: "payments", isCash: true }
+      ];
 
-      grid.innerHTML = methods.map(m => {
-        const iconName = resolveAndroidIcon(m.icon, m.isCash);
+      grid.innerHTML = methods.map(pm => {
+        const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
         return `
-        <button type="button" class="payment-tile" data-pm-id="${m.id}" data-pm-name="${m.name}" data-pm-cash="${m.isCash}">
+        <button type="button" class="payment-tile" data-pm-id="${pm.id}">
           <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
           <div>
-            <div class="tile-name">${m.name}</div>
-            <div class="tile-sub">${m.isCash ? "Kliknij, aby przeliczyć / zatwierdzić" : "Szybka płatność bezgotówkowa"}</div>
+            <div class="tile-name">${pm.name}</div>
+            <div class="tile-sub">${pm.isCash ? "Rozlicz gotówką" : "Zatwierdź płatność"}</div>
           </div>
-        </button>
-      `;
+        </button>`;
       }).join("");
 
       grid.querySelectorAll(".payment-tile").forEach(tile => {
         tile.addEventListener("click", async () => {
-          const pmName = tile.dataset.pmName;
-          const isCash = tile.dataset.pmCash === "true";
+          const pm = methods.find(m => m.id === tile.dataset.pmId);
+          if (!pm) return;
 
-          if (isCash && fpCashCalcBox.classList.contains("hidden")) {
+          if (pm.isCash && fpCashCalcBox.classList.contains("hidden")) {
             grid.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
             tile.classList.add("selected");
             fpCashCalcBox.classList.remove("hidden");
+            const totals = getCartTotals();
             document.getElementById("fpReceiptPreview").textContent = generateDocumentPreview(
-              window._currentDocNumber,
-              getCartTotals(),
-              window._currentBuyerInfo,
-              pmName
+              window._currentDocNumber, totals, window._currentBuyerInfo, pm.name
             );
-            tile.querySelector(".tile-sub").textContent = "Kliknij ponownie, aby zakończyć i wydać resztę";
+            showToast("Wpisz otrzymaną gotówkę i kliknij ponownie kafel Gotówka, aby zamknąć paragon", "payments");
             return;
           }
 
-          await finalizeAndSaveTransaction(pmName);
+          await finalizeTransactionWithPayment(pm);
         });
       });
     }
 
-    async function finalizeAndSaveTransaction(paymentMethodName) {
-      if (window._isSavingSale) return;
-      window._isSavingSale = true;
-
+    async function finalizeTransactionWithPayment(pm) {
       const totals = getCartTotals();
-      const buyer = window._currentBuyerInfo;
-      const docNo = window._currentDocNumber;
+      const docNumber = window._currentDocNumber;
+      const buyerInfo = window._currentBuyerInfo || { nip: "", name: "", address: "" };
 
-      const mappedItems = state.cart.map(i => {
-        const { itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
+      if (pm.isCash) {
+        const received = parseFloat(fpCashReceived.value) || 0;
+        if (received < totals.total) {
+          showToast("Otrzymana kwota gotówki jest mniejsza niż kwota do zapłaty!", "warning");
+          return;
+        }
+      }
+
+      const serializedItems = state.cart.map(i => {
+        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
           i.price, i.qty, i.itemDiscountType || "percent", i.itemDiscountValue || 0
         );
-        const effectiveUnitPriceBeforeGlobal = i.qty > 0 ? lineTotalAfterItemDisc / i.qty : i.price;
-
         return {
-          productId: i.id,
-          ean: i.ean,
+          id: i.id,
+          ean: i.ean || "",
+          plu: i.plu || "",
           name: i.name,
-          baseUnitPrice: i.price,
-          price: Number(effectiveUnitPriceBeforeGlobal.toFixed(4)),
+          price: i.price,
           qty: i.qty,
-          returnedQty: 0,
           unit: i.unit || "szt.",
           taxRate: i.taxRate ?? 23,
           itemDiscountType: i.itemDiscountType || "percent",
           itemDiscountValue: i.itemDiscountValue || 0,
           itemDiscountAmount: Number(itemDiscAmount.toFixed(2)),
+          baseTotal: Number(baseTotal.toFixed(2)),
           lineTotalAfterItemDisc: Number(lineTotalAfterItemDisc.toFixed(2))
         };
       });
 
+      const basePayload = {
+        items: serializedItems,
+        netAmount: Number(totals.net.toFixed(2)),
+        vatAmount: Number(totals.vat.toFixed(2)),
+        discountAmount: Number(totals.discountVal.toFixed(2)),
+        discountPercent: totals.discPercent,
+        totalAmount: Number(totals.total.toFixed(2)),
+        currencySymbol: state.store.activeCurrencySymbol || "zł",
+        paymentMethod: pm.name,
+        operator: state.activeOperator,
+        storeSnapshot: state.store,
+        createdAt: serverTimestamp(),
+        localTimestamp: new Date().toISOString()
+      };
+
       try {
         for (const item of state.cart) {
           await updateDoc(doc(db, "products", item.id), {
-            stock: increment(-item.qty)
+            stock: increment(-Number(item.qty))
           });
         }
 
         if (state.docType === "invoice") {
           await addDoc(collection(db, "invoices"), {
-            invoiceNumber: docNo,
+            ...basePayload,
+            invoiceNumber: docNumber,
             sourceType: "direct_pos",
-            sourceReceiptNumber: null,
-            buyerName: buyer.name,
-            buyerAddress: buyer.address,
-            buyerNip: buyer.nip || null,
-            hasNip: Boolean(buyer.nip),
-            operator: state.activeOperator,
-            storeSnapshot: state.store,
-            items: mappedItems,
-            discountName: totals.discName,
-            discountPercent: totals.discPercent,
-            discountAmount: Number(totals.discountVal.toFixed(2)),
-            netAmount: Number(totals.net.toFixed(2)),
-            vatAmount: Number(totals.vat.toFixed(2)),
-            totalAmount: Number(totals.total.toFixed(2)),
-            currencySymbol: state.store.activeCurrencySymbol || "zł",
-            paymentMethod: paymentMethodName,
-            createdAt: serverTimestamp(),
-            localTimestamp: new Date().toISOString()
+            linkedReceiptNumber: null,
+            hasNip: Boolean(buyerInfo.nip),
+            buyerNip: buyerInfo.nip || "",
+            buyerName: buyerInfo.name,
+            buyerAddress: buyerInfo.address
           });
-          showToast(`Opłacono (${paymentMethodName}) • Wystawiono Fakturę ${docNo}`, "check_circle");
+          showToast(`Wystawiono Fakturę VAT ${docNumber} (${pm.name})`, "description");
         } else {
           await addDoc(collection(db, "transactions"), {
-            receiptNumber: String(docNo),
-            hasBuyerNip: state.docType === "receipt_nip",
-            buyerNip: buyer.nip || null,
-            invoiced: false,
-            invoiceNumber: null,
-            operator: state.activeOperator,
-            storeSnapshot: state.store,
-            items: mappedItems,
-            discountName: totals.discName,
-            discountPercent: totals.discPercent,
-            discountAmount: Number(totals.discountVal.toFixed(2)),
-            netAmount: Number(totals.net.toFixed(2)),
-            vatAmount: Number(totals.vat.toFixed(2)),
-            totalAmount: Number(totals.total.toFixed(2)),
-            currencySymbol: state.store.activeCurrencySymbol || "zł",
-            paymentMethod: paymentMethodName,
-            createdAt: serverTimestamp(),
-            localTimestamp: new Date().toISOString()
+            ...basePayload,
+            receiptNumber: docNumber,
+            docSubType: state.docType,
+            buyerNip: buyerInfo.nip || "",
+            hasInvoiceIssued: false,
+            returnedQuantities: {}
           });
-          showToast(`Opłacono (${paymentMethodName}) • Paragon #${docNo} zapisany!`, "check_circle");
+          showToast(`Zatwierdzono paragon #${docNumber} (${pm.name})`, "check_circle");
         }
 
         floatingOverlay.classList.add("hidden");
         resetSaleScreen();
       } catch (err) {
         showToast("Błąd zapisu transakcji: " + err.message, "error");
-      } finally {
-        window._isSavingSale = false;
       }
     }
 
@@ -4970,118 +5409,120 @@ DATA: ${new Date().toLocaleString("pl-PL")}`;
     // ==========================================
     function renderReceiptsHistory() {
       const tbody = document.getElementById("historyTableBody");
-      let totalSum = 0;
+      const sym = state.store.activeCurrencySymbol || "zł";
+      const sum = state.transactions.reduce((acc, t) => acc + Number(t.totalAmount || 0), 0);
+      document.getElementById("historyTotalSum").textContent = `${sum.toFixed(2).replace(".", ",")} ${sym}`;
 
       if (state.transactions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Brak paragonów w bazie.</td></tr>`;
-        document.getElementById("historyTotalSum").textContent = formatMoney(0);
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Brak zapisanych paragonów.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = state.transactions.map(t => {
-        totalSum += Number(t.totalAmount || 0);
-        const dateStr = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
-        const typeBadge = t.hasBuyerNip 
-          ? `<span class="badge-pay">Paragon z NIP: ${t.buyerNip}</span>` 
-          : `<span style="color:var(--text-muted); font-size:12px;">Paragon zwykły</span>`;
-        const statusBadge = t.invoiced 
-          ? `<span class="badge-warn">Zafakturowano (${t.invoiceNumber})</span>` 
-          : `<span class="badge-pay">Rozliczony</span>`;
-
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${t.receiptNumber}</td>
-          <td>${typeBadge}</td>
-          <td>${dateStr}</td>
-          <td><strong>${t.paymentMethod || "—"}</strong></td>
-          <td style="font-weight:700; color:var(--pepco-indigo);">${Number(t.totalAmount || 0).toFixed(2).replace(".", ",")} ${t.currencySymbol || "zł"}</td>
-          <td>${statusBadge}</td>
-        </tr>`;
+        const d = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
+        const typeBadge = t.buyerNip ? `<span class="badge-warn">Paragon z NIP: ${t.buyerNip}</span>` : `<span class="badge-pay">Paragon zwykły</span>`;
+        const invStatus = t.hasInvoiceIssued ? `<span class="badge-ret">Wystawiono FV</span>` : `<span style="color:var(--success); font-weight:600; font-size:12px;">Aktywny</span>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${t.receiptNumber}</td>
+            <td>${typeBadge}</td>
+            <td>${d}</td>
+            <td>${t.paymentMethod}</td>
+            <td style="font-weight:700; color:var(--pepco-indigo);">${Number(t.totalAmount).toFixed(2).replace(".", ",")} ${t.currencySymbol || sym}</td>
+            <td>${invStatus}</td>
+          </tr>
+        `;
       }).join("");
-
-      document.getElementById("historyTotalSum").textContent = formatMoney(totalSum);
     }
 
     function renderInvoicesTable() {
       const tbody = document.getElementById("invoicesTableBody");
       if (state.invoices.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Brak wystawionych faktur VAT.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Brak wystawionych faktur VAT.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = state.invoices.map(inv => {
-        const dateStr = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
-        const srcLabel = inv.sourceType === "to_receipt" ? `Do paragonu #${inv.sourceReceiptNumber}` : "Bezpośrednio z kasy";
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
-          <td>${srcLabel}</td>
-          <td><strong>${inv.buyerName}</strong><br><span style="font-size:11px; color:var(--text-muted);">${inv.buyerAddress}</span></td>
-          <td>${inv.buyerNip ? `<span class="badge-pay">${inv.buyerNip}</span>` : `<span style="color:var(--text-muted);">Bez NIP</span>`}</td>
-          <td>${dateStr}</td>
-          <td style="font-weight:700;">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
-          <td><button class="btn-secondary-sm" onclick="previewSavedInvoice('${inv.id}')"><span class="m-icon sm">visibility</span> Podgląd</button></td>
-        </tr>`;
+        const d = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
+        const src = inv.sourceType === "to_receipt" ? `Do par. #${inv.linkedReceiptNumber}` : "Bezpośrednia POS";
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
+            <td><span class="badge-pay">${src}</span></td>
+            <td><strong>${inv.buyerName}</strong></td>
+            <td>${inv.buyerNip || "<em>Bez NIP</em>"}</td>
+            <td>${d}</td>
+            <td style="font-weight:700; color:var(--pepco-indigo);">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
+            <td><button class="btn-secondary-sm" onclick="openInvoicePreview('${inv.id}')"><span class="m-icon sm">visibility</span> Podgląd</button></td>
+          </tr>
+        `;
       }).join("");
     }
 
-    window.previewSavedInvoice = (invId) => {
+    window.openInvoicePreview = (invId) => {
       const inv = state.invoices.find(i => i.id === invId);
       if (!inv) return;
-      const sym = inv.currencySymbol || "zł";
       const s = inv.storeSnapshot || state.store;
-      const itemsText = (inv.items || []).map(i => `${i.name.slice(0,22).padEnd(22)} ${i.qty}${i.unit} x ${Number(i.price).toFixed(2)} = ${(i.qty*i.price).toFixed(2)}`).join("\n");
+      const itemsTxt = (inv.items || []).map(i => {
+        const lineFinal = i.lineTotalAfterItemDisc !== undefined ? i.lineTotalAfterItemDisc : (i.price * i.qty);
+        return `${i.name} | ${i.qty} ${i.unit || "szt."} x ${Number(i.price).toFixed(2)} = ${Number(lineFinal).toFixed(2)} ${inv.currencySymbol || "zł"}`;
+      }).join("\n");
 
-      document.getElementById("invoiceModalContent").textContent = `${s.name}
-${s.address}
-NIP: ${s.nip} ${s.krs ? `| KRS: ${s.krs}` : ""} ${s.bdo ? `| BDO: ${s.bdo}` : ""}
-------------------------------------------
+      document.getElementById("invoiceModalContent").textContent = `SPRZEDAWCA:
+${s.name || ""}
+${s.address || ""}
+NIP: ${s.nip || ""} | REGON: ${s.regon9 || ""}
+KRS: ${s.krs || ""} | BDO: ${s.bdo || ""}
+==========================================
 FAKTURA VAT NR: ${inv.invoiceNumber}
-${inv.sourceReceiptNumber ? `Wystawiona do paragonu: #${inv.sourceReceiptNumber}\n` : ""}------------------------------------------
+${inv.linkedReceiptNumber ? `DOTYCZY PARAGONU NR: #${inv.linkedReceiptNumber}\n` : ""}DATA WYSTAWIENIA: ${new Date(inv.localTimestamp).toLocaleString("pl-PL")}
+==========================================
 NABYWCA:
 ${inv.buyerName}
 ${inv.buyerAddress}
-${inv.buyerNip ? `NIP: ${inv.buyerNip}` : "Faktura bez NIP (osoba prywatna)"}
+${inv.buyerNip ? `NIP NABYWCY: ${inv.buyerNip}` : "Faktura bez NIP (osoba fizyczna)"}
+==========================================
+POZYCJE:
+${itemsTxt}
 ------------------------------------------
-${itemsText}
-------------------------------------------
-NETTO:  ${Number(inv.netAmount).toFixed(2)} ${sym}
-VAT:    ${Number(inv.vatAmount).toFixed(2)} ${sym}
-BRUTTO: ${Number(inv.totalAmount).toFixed(2)} ${sym}
-PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
+WARTOŚĆ NETTO:  ${Number(inv.netAmount).toFixed(2)} ${inv.currencySymbol || "zł"}
+PODATEK VAT:    ${Number(inv.vatAmount).toFixed(2)} ${inv.currencySymbol || "zł"}
+DO ZAPŁATY:     ${Number(inv.totalAmount).toFixed(2)} ${inv.currencySymbol || "zł"}`;
       document.getElementById("invoicePreviewModal").classList.remove("hidden");
     };
 
-    let foundReceiptForInvoice = null;
-
+    let selectedReceiptForInvoice = null;
     document.getElementById("btnFindReceiptInv").addEventListener("click", () => {
-      const num = document.getElementById("searchReceiptForInv").value.trim().replace("#", "");
-      const rec = state.transactions.find(t => String(t.receiptNumber) === num);
+      const num = document.getElementById("searchReceiptForInv").value.replace("#", "").trim();
+      const found = state.transactions.find(t => String(t.receiptNumber) === num);
       const box = document.getElementById("invToReceiptFormBox");
+      const errAlert = document.getElementById("f2pErrorAlert");
+      errAlert.classList.add("hidden");
 
-      if (!rec) {
-        showToast("Nie znaleziono paragonu o podanym numerze.", "search_off");
+      if (!found) {
         box.classList.add("hidden");
+        showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
         return;
       }
-      if (rec.invoiced) {
-        showToast(`Do tego paragonu wystawiono już fakturę ${rec.invoiceNumber}!`, "warning");
+      if (found.hasInvoiceIssued) {
         box.classList.add("hidden");
+        showToast("Do tego paragonu została już wystawiona faktura VAT!", "warning");
         return;
       }
 
-      foundReceiptForInvoice = rec;
+      selectedReceiptForInvoice = found;
       box.classList.remove("hidden");
-      document.getElementById("f2pErrorAlert").classList.add("hidden");
-
       document.getElementById("foundReceiptInfo").innerHTML = `
-        <strong>Znaleziono paragon #${rec.receiptNumber}</strong> • Kwota brutto: <strong>${Number(rec.totalAmount).toFixed(2)} ${rec.currencySymbol || "zł"}</strong><br>
-        Status NIP na paragonie: ${rec.hasBuyerNip ? `<span class="badge-pay">Paragon zawiera NIP: ${rec.buyerNip}</span>` : `<span class="badge-warn">Paragon BEZ NIP nabywcy</span>`}
+        Znaleziono paragon <strong>#${found.receiptNumber}</strong> z dnia ${new Date(found.localTimestamp).toLocaleString("pl-PL")} 
+        na kwotę brutto <strong>${Number(found.totalAmount).toFixed(2)} ${found.currencySymbol || "zł"}</strong>. 
+        Status NIP na paragonie: <strong>${found.buyerNip ? `Posiada NIP (${found.buyerNip})` : "Brak NIP na paragonie"}</strong>
       `;
 
       const modeSel = document.getElementById("f2pMode");
-      if (rec.hasBuyerNip) {
+      if (found.buyerNip) {
         modeSel.value = "with_nip";
         document.getElementById("f2pNipGroup").classList.remove("hidden");
-        document.getElementById("f2pNip").value = rec.buyerNip;
+        document.getElementById("f2pNip").value = found.buyerNip;
       } else {
         modeSel.value = "no_nip";
         document.getElementById("f2pNipGroup").classList.add("hidden");
@@ -5090,28 +5531,35 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
     });
 
     document.getElementById("f2pMode").addEventListener("change", (e) => {
-      const isWithNip = e.target.value === "with_nip";
-      document.getElementById("f2pNipGroup").classList.toggle("hidden", !isWithNip);
-      const errBox = document.getElementById("f2pErrorAlert");
-
-      if (isWithNip && foundReceiptForInvoice && !foundReceiptForInvoice.hasBuyerNip) {
-        errBox.textContent = "Pierwotny paragon nie zawierał NIP nabywcy. Wybierz opcję 'Faktura do paragonu BEZ NIP'.";
-        errBox.classList.remove("hidden");
-      } else {
-        errBox.classList.add("hidden");
-      }
+      document.getElementById("f2pNipGroup").classList.toggle("hidden", e.target.value === "no_nip");
     });
 
     document.getElementById("btnIssueInvoiceToReceipt").addEventListener("click", async () => {
-      if (!foundReceiptForInvoice) return;
+      if (!selectedReceiptForInvoice) return;
       const mode = document.getElementById("f2pMode").value;
       const nip = document.getElementById("f2pNip").value.trim();
       const name = document.getElementById("f2pBuyerName").value.trim();
       const address = document.getElementById("f2pBuyerAddress").value.trim();
+      const errAlert = document.getElementById("f2pErrorAlert");
 
-      if (mode === "with_nip" && !foundReceiptForInvoice.hasBuyerNip) return showToast("Brak NIP na pierwotnym paragonie!", "warning");
-      if (mode === "with_nip" && nip !== foundReceiptForInvoice.buyerNip) return showToast("NIP musi być identyczny z NIP na paragonie!", "warning");
-      if (!name || !address) return showToast("Wpisz dane oraz adres nabywcy!", "warning");
+      if (!name || !address) {
+        errAlert.textContent = "Uzupełnij nazwę i adres nabywcy!";
+        errAlert.classList.remove("hidden");
+        return;
+      }
+
+      if (mode === "with_nip") {
+        if (!selectedReceiptForInvoice.buyerNip) {
+          errAlert.textContent = "BŁĄD FISKALNY: Paragon nie zawierał NIP nabywcy! Nie można wystawić faktury z NIP (wybierz opcję 'Faktura bez NIP').";
+          errAlert.classList.remove("hidden");
+          return;
+        }
+        if (nip.replace(/\D/g, "") !== selectedReceiptForInvoice.buyerNip.replace(/\D/g, "")) {
+          errAlert.textContent = `NIP na fakturze musi być identyczny jak na paragonie (${selectedReceiptForInvoice.buyerNip})!`;
+          errAlert.classList.remove("hidden");
+          return;
+        }
+      }
 
       const now = new Date();
       const invNumber = `FV/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
@@ -5120,180 +5568,191 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
         await addDoc(collection(db, "invoices"), {
           invoiceNumber: invNumber,
           sourceType: "to_receipt",
-          sourceReceiptNumber: foundReceiptForInvoice.receiptNumber,
+          linkedReceiptNumber: selectedReceiptForInvoice.receiptNumber,
+          hasNip: mode === "with_nip",
+          buyerNip: mode === "with_nip" ? nip : "",
           buyerName: name,
           buyerAddress: address,
-          buyerNip: mode === "with_nip" ? nip : null,
-          hasNip: mode === "with_nip",
+          items: selectedReceiptForInvoice.items,
+          netAmount: selectedReceiptForInvoice.netAmount,
+          vatAmount: selectedReceiptForInvoice.vatAmount,
+          totalAmount: selectedReceiptForInvoice.totalAmount,
+          currencySymbol: selectedReceiptForInvoice.currencySymbol || "zł",
+          paymentMethod: selectedReceiptForInvoice.paymentMethod,
           operator: state.activeOperator,
-          storeSnapshot: foundReceiptForInvoice.storeSnapshot || state.store,
-          items: foundReceiptForInvoice.items,
-          netAmount: foundReceiptForInvoice.netAmount,
-          vatAmount: foundReceiptForInvoice.vatAmount,
-          totalAmount: foundReceiptForInvoice.totalAmount,
-          currencySymbol: foundReceiptForInvoice.currencySymbol || "zł",
-          paymentMethod: foundReceiptForInvoice.paymentMethod,
+          storeSnapshot: state.store,
           createdAt: serverTimestamp(),
-          localTimestamp: new Date().toISOString()
+          localTimestamp: now.toISOString()
         });
 
-        await updateDoc(doc(db, "transactions", foundReceiptForInvoice.id), {
-          invoiced: true,
-          invoiceNumber: invNumber
+        await updateDoc(doc(db, "transactions", selectedReceiptForInvoice.id), {
+          hasInvoiceIssued: true
         });
 
-        showToast(`Wystawiono fakturę ${invNumber} do paragonu #${foundReceiptForInvoice.receiptNumber}!`, "check_circle");
+        showToast(`Wystawiono Fakturę VAT ${invNumber} do paragonu #${selectedReceiptForInvoice.receiptNumber}`, "description");
         document.getElementById("invToReceiptFormBox").classList.add("hidden");
         document.getElementById("searchReceiptForInv").value = "";
-        foundReceiptForInvoice = null;
-      } catch (err) { showToast("Błąd wystawiania faktury: " + err.message, "error"); }
+        selectedReceiptForInvoice = null;
+      } catch (err) {
+        showToast("Błąd zapisu faktury: " + err.message, "error");
+      }
     });
 
-    let foundReceiptForReturn = null;
-
+    let selectedReceiptForReturn = null;
     document.getElementById("btnFindReceiptReturn").addEventListener("click", () => {
-      const num = document.getElementById("searchReceiptForReturn").value.trim().replace("#", "");
-      const rec = state.transactions.find(t => String(t.receiptNumber) === num);
+      const num = document.getElementById("searchReceiptForReturn").value.replace("#", "").trim();
+      const found = state.transactions.find(t => String(t.receiptNumber) === num);
       const box = document.getElementById("returnProcessBox");
 
-      if (!rec) {
-        showToast("Nie znaleziono paragonu o podanym numerze.", "search_off");
+      if (!found) {
         box.classList.add("hidden");
+        showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
         return;
       }
 
-      foundReceiptForReturn = rec;
+      selectedReceiptForReturn = found;
       box.classList.remove("hidden");
       document.getElementById("returnReceiptMeta").innerHTML = `
-        <strong>Paragon #${rec.receiptNumber}</strong> • Data zakupu: ${new Date(rec.localTimestamp).toLocaleString("pl-PL")}
+        Paragon <strong>#${found.receiptNumber}</strong> • Data zakupu: ${new Date(found.localTimestamp).toLocaleString("pl-PL")} • Płatność: ${found.paymentMethod}
       `;
 
-      const tbody = document.getElementById("returnItemsTableBody");
-      tbody.innerHTML = (rec.items || []).map((item, idx) => {
-        const alreadyRet = Number(item.returnedQty || 0);
-        const maxRet = Math.max(0, item.qty - alreadyRet);
-        const effectiveUnitPrice = Number(item.price) * (1 - (rec.discountPercent || 0) / 100);
+      const retMap = found.returnedQuantities || {};
+      const globalDiscFactor = 1 - (Number(found.discountPercent || 0) / 100);
 
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace;">${item.ean}</td>
-          <td><strong>${item.name}</strong></td>
-          <td>${effectiveUnitPrice.toFixed(2)} ${rec.currencySymbol || "zł"}</td>
-          <td>${item.qty} ${item.unit || "szt."}</td>
-          <td>${alreadyRet} ${item.unit || "szt."}</td>
-          <td>
-            <input type="number" class="form-control return-qty-input" data-idx="${idx}" data-unit-price="${effectiveUnitPrice}" min="0" max="${maxRet}" value="0" style="width:80px;" ${maxRet === 0 ? "disabled" : ""} />
-          </td>
-          <td class="return-line-val" data-idx="${idx}" style="font-weight:700;">0,00 ${rec.currencySymbol || "zł"}</td>
-        </tr>`;
+      document.getElementById("returnItemsTableBody").innerHTML = found.items.map((item, idx) => {
+        const alreadyReturned = Number(retMap[item.id] || 0);
+        const maxReturnable = Math.max(0, Number(item.qty) - alreadyReturned);
+        const lineAfterItemDisc = item.lineTotalAfterItemDisc !== undefined ? Number(item.lineTotalAfterItemDisc) : (Number(item.price) * Number(item.qty));
+        const unitFinalPaid = ((lineAfterItemDisc / Number(item.qty)) * globalDiscFactor).toFixed(2);
+
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace;">${item.ean || "—"}${item.plu ? ` / PLU:${item.plu}` : ""}</td>
+            <td><strong>${item.name}</strong></td>
+            <td>${unitFinalPaid} ${found.currencySymbol || "zł"}</td>
+            <td>${item.qty}</td>
+            <td>${alreadyReturned}</td>
+            <td>
+              <input type="number" class="form-control ret-qty-input" data-idx="${idx}" data-unit-price="${unitFinalPaid}" min="0" max="${maxReturnable}" value="0" style="width:80px;" ${maxReturnable === 0 ? "disabled" : ""} />
+            </td>
+            <td class="ret-line-sum" id="retLineSum_${idx}" style="font-weight:700;">0,00 ${found.currencySymbol || "zł"}</td>
+          </tr>
+        `;
       }).join("");
 
-      tbody.querySelectorAll(".return-qty-input").forEach(inp => inp.addEventListener("input", recalcReturnTotal));
-      recalcReturnTotal();
+      document.querySelectorAll(".ret-qty-input").forEach(inp => {
+        inp.addEventListener("input", recalculateReturnTotal);
+      });
+      recalculateReturnTotal();
     });
 
-    function recalcReturnTotal() {
-      if (!foundReceiptForReturn) return;
-      const sym = foundReceiptForReturn.currencySymbol || "zł";
+    function recalculateReturnTotal() {
       let totalRef = 0;
-
-      document.querySelectorAll(".return-qty-input").forEach(inp => {
+      const sym = selectedReceiptForReturn?.currencySymbol || "zł";
+      document.querySelectorAll(".ret-qty-input").forEach(inp => {
         const idx = inp.dataset.idx;
-        const max = Number(inp.max);
-        let q = Number(inp.value) || 0;
-        if (q > max) { q = max; inp.value = max; }
-        if (q < 0) { q = 0; inp.value = 0; }
-
-        const lineVal = q * Number(inp.dataset.unitPrice);
-        totalRef += lineVal;
-        const cell = document.querySelector(`.return-line-val[data-idx="${idx}"]`);
-        if (cell) cell.textContent = `${lineVal.toFixed(2).replace(".", ",")} ${sym}`;
+        const maxVal = Number(inp.max);
+        let q = Math.max(0, Math.min(maxVal, Number(inp.value) || 0));
+        inp.value = q;
+        const unitP = Number(inp.dataset.unitPrice);
+        const lineSum = q * unitP;
+        totalRef += lineSum;
+        document.getElementById(`retLineSum_${idx}`).textContent = `${lineSum.toFixed(2).replace(".", ",")} ${sym}`;
       });
-
       document.getElementById("totalRefundDisplay").textContent = `${totalRef.toFixed(2).replace(".", ",")} ${sym}`;
     }
 
     document.getElementById("btnConfirmReturn").addEventListener("click", async () => {
-      if (!foundReceiptForReturn) return;
+      if (!selectedReceiptForReturn) return;
       const returnedItems = [];
       let totalRefund = 0;
-      const updatedTransactionItems = JSON.parse(JSON.stringify(foundReceiptForReturn.items));
+      const updatedReturnedMap = { ...(selectedReceiptForReturn.returnedQuantities || {}) };
 
-      document.querySelectorAll(".return-qty-input").forEach(inp => {
-        const idx = Number(inp.dataset.idx);
+      document.querySelectorAll(".ret-qty-input").forEach(inp => {
         const q = Number(inp.value) || 0;
         if (q > 0) {
-          const itemObj = updatedTransactionItems[idx];
-          const unitPrice = Number(inp.dataset.unitPrice);
-          const lineTotal = q * unitPrice;
-          totalRefund += lineTotal;
-
-          updatedTransactionItems[idx].returnedQty = Number(itemObj.returnedQty || 0) + q;
+          const item = selectedReceiptForReturn.items[Number(inp.dataset.idx)];
+          const unitP = Number(inp.dataset.unitPrice);
+          const lineRefund = q * unitP;
+          totalRefund += lineRefund;
           returnedItems.push({
-            productId: itemObj.productId,
-            ean: itemObj.ean,
-            name: itemObj.name,
+            id: item.id,
+            ean: item.ean,
+            plu: item.plu || "",
+            name: item.name,
             qty: q,
-            unitPrice: Number(unitPrice.toFixed(2)),
-            refundValue: Number(lineTotal.toFixed(2))
+            unitPrice: unitP,
+            refundSum: Number(lineRefund.toFixed(2))
           });
+          updatedReturnedMap[item.id] = (Number(updatedReturnedMap[item.id] || 0)) + q;
         }
       });
 
-      if (returnedItems.length === 0) return showToast("Wpisz ilość zwracanego towaru!", "warning");
+      if (returnedItems.length === 0) {
+        showToast("Wybierz co najmniej 1 sztukę towaru do zwrotu!", "warning");
+        return;
+      }
 
       const returnNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(10000 + Math.random() * 90000)}`;
 
       try {
         for (const rItem of returnedItems) {
-          if (rItem.productId) {
-            await updateDoc(doc(db, "products", rItem.productId), { stock: increment(rItem.qty) });
-          }
+          await updateDoc(doc(db, "products", rItem.id), {
+            stock: increment(Number(rItem.qty))
+          });
         }
-
-        await updateDoc(doc(db, "transactions", foundReceiptForReturn.id), { items: updatedTransactionItems });
 
         await addDoc(collection(db, "returns"), {
           returnNumber,
-          receiptNumber: foundReceiptForReturn.receiptNumber,
-          operator: state.activeOperator,
-          reason: document.getElementById("returnReason").value,
-          refundMethod: document.getElementById("returnRefundMethod").value,
+          receiptNumber: selectedReceiptForReturn.receiptNumber,
           items: returnedItems,
           totalRefund: Number(totalRefund.toFixed(2)),
-          currencySymbol: foundReceiptForReturn.currencySymbol || "zł",
+          currencySymbol: selectedReceiptForReturn.currencySymbol || "zł",
+          reason: document.getElementById("returnReason").value,
+          refundMethod: document.getElementById("returnRefundMethod").value,
+          operator: state.activeOperator,
           createdAt: serverTimestamp(),
           localTimestamp: new Date().toISOString()
         });
 
-        showToast(`Zwrot ${returnNumber} zatwierdzony! Towar wrócił na stan.`, "assignment_return");
+        await updateDoc(doc(db, "transactions", selectedReceiptForReturn.id), {
+          returnedQuantities: updatedReturnedMap
+        });
+
+        showToast(`Zatwierdzono zwrot ${returnNumber}. Towar wrócił na stan magazynowy!`, "assignment_return");
         document.getElementById("returnProcessBox").classList.add("hidden");
         document.getElementById("searchReceiptForReturn").value = "";
-        foundReceiptForReturn = null;
-      } catch (err) { showToast("Błąd zapisu zwrotu: " + err.message, "error"); }
+        selectedReceiptForReturn = null;
+      } catch (err) {
+        showToast("Błąd podczas zwrotu: " + err.message, "error");
+      }
     });
 
     function renderReturnsHistory() {
       const tbody = document.getElementById("returnsHistoryTableBody");
       if (state.returns.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Brak zarejestrowanych zwrotów.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Brak zarejestrowanych zwrotów.</td></tr>`;
         return;
       }
+
       tbody.innerHTML = state.returns.map(r => {
-        const dateStr = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
+        const d = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
         const itemsSummary = (r.items || []).map(i => `${i.name} (${i.qty} szt.)`).join(", ");
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
-          <td>#${r.receiptNumber}</td>
-          <td>${dateStr}</td>
-          <td>${itemsSummary}</td>
-          <td><span class="badge-ret">${r.reason}</span></td>
-          <td style="font-weight:700; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
-        </tr>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
+            <td>#${r.receiptNumber}</td>
+            <td>${d}</td>
+            <td>${itemsSummary}</td>
+            <td>${r.reason}</td>
+            <td style="font-weight:700; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
+          </tr>
+        `;
       }).join("");
     }
 
     // ==========================================
-    // VIEW SWITCHING
+    // VIEW NAVIGATION
     // ==========================================
     const posView = document.getElementById("posView");
     const docsView = document.getElementById("docsView");
@@ -5311,24 +5770,28 @@ PŁATNOŚĆ: ${inv.paymentMethod || "—"}`;
       btnTabPos.classList.toggle("active", viewName === "pos");
       btnTabDocs.classList.toggle("active", viewName === "docs");
       btnTabAdmin.classList.toggle("active", viewName === "admin");
+
+      if (viewName !== "pos") {
+        closePepcoVirtualKeyboard();
+      }
     }
 
     btnTabPos.addEventListener("click", () => switchMainView("pos"));
     btnTabDocs.addEventListener("click", () => switchMainView("docs"));
     btnTabAdmin.addEventListener("click", () => switchMainView("admin"));
 
-    document.querySelectorAll("[data-doc-tab]").forEach(btn => {
+    document.querySelectorAll("#docsView .admin-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("[data-doc-tab]").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll("#docsView .admin-tab-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const target = btn.dataset.docTab;
         document.querySelectorAll(".doc-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
       });
     });
 
-    document.querySelectorAll("[data-admin-tab]").forEach(btn => {
+    document.querySelectorAll("#adminView .admin-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("[data-admin-tab]").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll("#adminView .admin-tab-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const target = btn.dataset.adminTab;
         document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
