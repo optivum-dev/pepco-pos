@@ -2439,6 +2439,16 @@
         </div>
       </div>
 
+      <div id="editReceiptDiscountNotice" class="hidden" style="margin-top:10px; padding:10px 12px; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; align-items:center; justify-content:space-between; gap:8px;">
+        <div style="font-size:12px; color:#991b1b; font-weight:600;">
+          <span class="m-icon sm" style="vertical-align:middle;">sell</span>
+          Aktywny rabat na cały paragon: <strong id="editReceiptDiscLabel">---</strong>
+        </div>
+        <button type="button" id="btnEditRemoveReceiptDiscount" class="btn-danger-sm" style="padding:6px 10px; font-size:11.5px; white-space:nowrap;">
+          <span class="m-icon sm">remove_circle</span> Usuń rabat z paragonu
+        </button>
+      </div>
+
       <div class="item-edit-preview-box">
         <div style="display:flex; justify-content:space-between; color:var(--text-muted);">
           <span>Wartość bazowa (cena × ilość):</span>
@@ -6089,6 +6099,17 @@ ${opLines}
         ? `Aktywny rabat paragonu: -${receiptPct}% (lub wpisz rabat poz.)`
         : "0";
 
+      const receiptNoticeEl = document.getElementById("editReceiptDiscountNotice");
+      const receiptLabelEl = document.getElementById("editReceiptDiscLabel");
+      if (receiptPct > 0) {
+        receiptLabelEl.textContent = `${discObj.name || "Rabat"} (-${receiptPct}%)`;
+        receiptNoticeEl.classList.remove("hidden");
+        receiptNoticeEl.style.display = "flex";
+      } else {
+        receiptNoticeEl.classList.add("hidden");
+        receiptNoticeEl.style.display = "none";
+      }
+
       syncItemDiscTypeUI();
       updateItemEditPreview();
       itemEditModal.classList.remove("hidden");
@@ -6167,6 +6188,21 @@ ${opLines}
 
     document.getElementById("btnCloseItemEditModal").addEventListener("click", closeItemEditModal);
     document.getElementById("btnCancelItemEdit").addEventListener("click", closeItemEditModal);
+
+    document.getElementById("btnEditRemoveReceiptDiscount").addEventListener("click", () => {
+      state.selectedDiscountId = "";
+      const receiptNoticeEl = document.getElementById("editReceiptDiscountNotice");
+      receiptNoticeEl.classList.add("hidden");
+      receiptNoticeEl.style.display = "none";
+      const item = state.cart.find(i => i.productId === editingCartProductId);
+      const discInput = document.getElementById("editItemDiscountInput");
+      if (item && discInput && Number(item.itemDiscountValue || 0) <= 0) {
+        discInput.placeholder = "0";
+      }
+      updateItemEditPreview();
+      renderCart();
+      showToast("Usunięto rabat z całego paragonu", "sell");
+    });
 
     document.getElementById("btnRemoveItemFromModal").addEventListener("click", () => {
       if (!editingCartProductId) return;
@@ -6296,20 +6332,7 @@ ${opLines}
 
         container.querySelectorAll(".cart-item").forEach(row => {
           row.addEventListener("click", () => {
-            const pid = row.dataset.id;
-            const idx = state.cart.findIndex(i => i.productId === pid);
-            const entry = idx >= 0 ? totals.perItem[idx] : null;
-            const item = idx >= 0 ? state.cart[idx] : null;
-            const hasDisc = Boolean(item && (
-              Number(item.itemDiscountValue || 0) > 0 ||
-              Boolean(state.selectedDiscountId) ||
-              (entry && (entry.itemDisc > 0 || entry.receiptDiscShare > 0 || entry.finalLineGross < entry.baseGross))
-            ));
-            if (hasDisc) {
-              openRemoveDiscountChoiceModal(pid, entry);
-            } else {
-              openItemEditModal(pid);
-            }
+            openItemEditModal(row.dataset.id);
           });
         });
       }
