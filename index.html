@@ -576,7 +576,7 @@
       color: var(--text-muted);
     }
 
-    /* GLOBAL FLOATING PEPCO POS VIRTUAL KEYBOARD (ZAMIAST SYSTEMOWEJ ANDROID) */
+    /* GLOBAL FLOATING PEPCO POS VIRTUAL KEYBOARD */
     .pepco-global-vk {
       position: fixed;
       left: 0;
@@ -834,6 +834,97 @@
       color: var(--pepco-indigo);
     }
 
+    /* WYBRANY KONTRAHENT NAD PARAGONEM (POD PRZYCISKAMI DOKUMENTU) */
+    .selected-contractor-banner {
+      margin-top: 8px;
+      background: linear-gradient(120deg, #eef2ff 0%, #fdf2f8 100%);
+      border: 1.5px solid #c7d2fe;
+      border-radius: 9px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      animation: fadeInOverlay 0.16s ease-out;
+    }
+
+    .selected-contractor-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .contractor-avatar-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--pepco-gradient);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(46, 21, 232, 0.25);
+    }
+
+    .contractor-name-nip {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contractor-nip-paren {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--pepco-indigo);
+    }
+
+    .contractor-sub-addr {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contractor-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-contractor-mini {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: 0.12s;
+    }
+
+    .btn-contractor-mini:hover {
+      border-color: var(--pepco-indigo);
+      color: var(--pepco-indigo);
+    }
+
+    .btn-contractor-mini.clear-c:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: #fef2f2;
+    }
+
     .buyer-fields {
       margin-top: 8px;
       display: flex;
@@ -1038,6 +1129,72 @@
       background: #9ca3af;
       box-shadow: none;
       cursor: not-allowed;
+    }
+
+    /* CONTRACTOR FLOATING MODAL STYLES */
+    .contractor-mode-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 11px;
+      margin-bottom: 14px;
+    }
+
+    .contractor-mode-btn {
+      padding: 9px 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+
+    .contractor-mode-btn.active {
+      background: #fff;
+      color: var(--pepco-indigo);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .contractor-db-list {
+      max-height: 270px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .contractor-db-card {
+      border: 1.5px solid var(--border-color);
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .contractor-db-card:hover {
+      border-color: var(--pepco-indigo);
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    .contractor-db-card.selected {
+      border-color: var(--pepco-magenta);
+      background: #fdf2f8;
     }
 
     /* QR SCANNER VIEWPORT */
@@ -1672,8 +1829,8 @@
 
     @media print {
       body * { visibility: hidden !important; }
-      #reportPrintArea, #reportPrintArea * { visibility: visible !important; }
-      #reportPrintArea {
+      #reportPrintArea, #reportPrintArea *, #docPreviewPrintArea, #docPreviewPrintArea * { visibility: visible !important; }
+      #reportPrintArea, #docPreviewPrintArea {
         position: fixed;
         left: 0;
         top: 0;
@@ -1887,22 +2044,50 @@
           </button>
           <button type="button" class="doc-type-btn" data-doc-type="invoice">
             <span class="m-icon sm">description</span>
-            <span>Zwykła Faktura</span>
+            <span>Faktura</span>
           </button>
+        </div>
+
+        <!-- WYBRANY KONTRAHENT WYŚWIETLANY NAD PARAGONEM (POD PRZYCISKAMI DOKUMENTU) -->
+        <div id="selectedContractorBanner" class="selected-contractor-banner hidden">
+          <div class="selected-contractor-info">
+            <span class="contractor-avatar-badge">
+              <span class="m-icon sm">account_circle</span>
+            </span>
+            <div style="min-width:0;">
+              <div class="contractor-name-nip" id="bannerContractorTitle">
+                Nazwa firmy <span class="contractor-nip-paren">(NIP)</span>
+              </div>
+              <div class="contractor-sub-addr" id="bannerContractorAddress"></div>
+            </div>
+          </div>
+          <div class="contractor-banner-actions">
+            <button type="button" id="btnChangeContractorFromBanner" class="btn-contractor-mini" title="Zmień lub edytuj kontrahenta">
+              <span class="m-icon sm">edit</span> Zmień
+            </button>
+            <button type="button" id="btnClearContractorFromBanner" class="btn-contractor-mini clear-c" title="Usuń przypisanego kontrahenta">
+              <span class="m-icon sm">close</span>
+            </button>
+          </div>
         </div>
 
         <div id="receiptNipBox" class="buyer-fields hidden">
           <input type="text" id="receiptBuyerNip" class="buyer-input" placeholder="Wpisz NIP nabywcy (10 cyfr)..." maxlength="13" />
           <div id="limit450Alert" class="limit-warning hidden">
             <span class="m-icon sm">warning</span>
-            <span>Kwota przekracza 450,00 PLN! Wybierz opcję <strong>Zwykła Faktura</strong>.</span>
+            <span>Kwota przekracza 450,00 PLN! Wybierz opcję <strong>Faktura</strong>.</span>
           </div>
         </div>
 
         <div id="invoiceBuyerBox" class="buyer-fields hidden">
-          <div style="display:flex; gap:12px; font-size:11.5px; font-weight:600;">
-            <label style="cursor:pointer;"><input type="radio" name="invBuyerMode" value="with_nip" checked /> Faktura z NIP</label>
-            <label style="cursor:pointer;"><input type="radio" name="invBuyerMode" value="no_nip" /> Faktura bez NIP</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div style="display:flex; gap:12px; font-size:11.5px; font-weight:600;">
+              <label style="cursor:pointer;"><input type="radio" name="invBuyerMode" value="with_nip" checked /> Faktura z NIP</label>
+              <label style="cursor:pointer;"><input type="radio" name="invBuyerMode" value="no_nip" /> Faktura bez NIP</label>
+            </div>
+            <button type="button" id="btnReopenContractorModal" class="btn-contractor-mini" style="background:#eef2ff; border-color:#c7d2fe; color:var(--pepco-indigo);">
+              <span class="m-icon sm">groups</span> Wybierz / wpisz kontrahenta
+            </button>
           </div>
           <input type="text" id="invBuyerNip" class="buyer-input" placeholder="NIP nabywcy (10 cyfr)..." maxlength="13" />
           <input type="text" id="invBuyerName" class="buyer-input" placeholder="Nazwa firmy lub Imię i Nazwisko *" />
@@ -1943,6 +2128,79 @@
       </div>
     </aside>
   </main>
+
+  <!-- MODAL: PŁYWAJĄCE OKNO WYBORU LUB RĘCZNEGO WPISANIA KONTRAHENTA DO FAKTURY -->
+  <div class="modal-backdrop hidden" id="contractorModal" style="z-index: 240;">
+    <div class="modal-box" style="max-width: 540px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="m-icon" style="color:var(--pepco-indigo);">account_circle</span>
+          <h3 style="font-size:18px; font-weight:800;">Dane kontrahenta do faktury</h3>
+        </div>
+        <button type="button" id="btnCloseContractorModal" style="background:#f3f4f6; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+      <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
+        Wybierz kontrahenta z zaprogramowanej bazy lub wpisz dane ręcznie i zatwierdź.
+      </p>
+
+      <div class="contractor-mode-switch">
+        <button type="button" class="contractor-mode-btn active" id="btnContractorModeDb">
+          <span class="m-icon sm">groups</span> Z bazy kontrahentów
+        </button>
+        <button type="button" class="contractor-mode-btn" id="btnContractorModeManual">
+          <span class="m-icon sm">edit_note</span> Wpisz ręcznie
+        </button>
+      </div>
+
+      <!-- TRYB 1: WYBÓR Z BAZY KONTRAHENTÓW -->
+      <div id="contractorDbSection">
+        <div style="position:relative;">
+          <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
+          <input type="text" id="contractorModalSearch" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj po nazwie firmy lub numerze NIP..." />
+        </div>
+
+        <div class="contractor-db-list" id="contractorModalDbList"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border-color);">
+          <button type="button" id="btnCancelContractorDb" class="btn-outline">Anuluj</button>
+          <button type="button" id="btnConfirmSelectedContractor" class="btn-primary">
+            <span class="m-icon sm">check</span> Zatwierdź kontrahenta
+          </button>
+        </div>
+      </div>
+
+      <!-- TRYB 2: RĘCZNE WPISANIE DANYCH KONTRAHENTA -->
+      <div id="contractorManualSection" class="hidden">
+        <div style="display:flex; flex-direction:column; gap:11px;">
+          <div class="form-group">
+            <label>Nazwa firmy / Imię i nazwisko *</label>
+            <input type="text" id="manualContractorName" class="form-control" placeholder="np. Alfa Sp. z o.o." />
+          </div>
+          <div class="form-group">
+            <label>Numer NIP (10 cyfr — opcjonalnie dla faktury bez NIP)</label>
+            <input type="text" id="manualContractorNip" class="form-control" style="font-family:'JetBrains Mono', monospace;" placeholder="np. 5213017228" maxlength="13" />
+          </div>
+          <div class="form-group">
+            <label>Adres (ulica, kod pocztowy, miasto) *</label>
+            <input type="text" id="manualContractorAddress" class="form-control" placeholder="np. ul. Przemysłowa 12, 35-105 Rzeszów" />
+          </div>
+          <label style="display:flex; align-items:center; gap:8px; padding:9px 12px; background:#f8fafc; border:1px solid var(--border-color); border-radius:9px; font-size:12.5px; font-weight:600; cursor:pointer;">
+            <input type="checkbox" id="saveManualContractorToDb" checked style="width:16px; height:16px;" />
+            <span>Zapisz tego kontrahenta również w bazie kontrahentów (Administracja)</span>
+          </label>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border-color);">
+          <button type="button" id="btnCancelContractorManual" class="btn-outline">Anuluj</button>
+          <button type="button" id="btnConfirmManualContractor" class="btn-primary">
+            <span class="m-icon sm">check</span> Zatwierdź dane kontrahenta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: PŁYWAJĄCE OKNO WYBORU RABATU NA CAŁY PARAGON -->
   <div class="modal-backdrop hidden" id="receiptDiscountModal">
@@ -1986,6 +2244,32 @@
           <span class="m-icon sm">print</span> Drukuj raport
         </button>
         <button type="button" id="btnOkReportModal" class="btn-primary">
+          <span class="m-icon sm">check</span> Zamknij podgląd
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PŁYWAJĄCE OKNO PODGLĄDU DOKUMENTU SPRZEDAŻY LUB ZWROTU -->
+  <div class="modal-backdrop hidden" id="docDetailPreviewModal" style="z-index: 255;">
+    <div class="modal-box" style="max-width:560px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div>
+          <span id="docDetailBadge" class="badge-pay" style="margin-bottom:4px;">DOKUMENT</span>
+          <h3 id="docDetailTitle" style="font-size:18px; font-weight:800;">Podgląd dokumentu</h3>
+        </div>
+        <button type="button" id="btnCloseDocDetailModal" style="background:#f3f4f6; border:none; width:34px; height:34px; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+          <span class="m-icon sm">close</span>
+        </button>
+      </div>
+
+      <div class="receipt-paper" id="docPreviewPrintArea" style="max-height:460px; font-size:11.5px;"></div>
+
+      <div style="display:flex; justify-content:space-between; gap:10px; margin-top:14px;">
+        <button type="button" onclick="window.print()" class="btn-outline">
+          <span class="m-icon sm">print</span> Drukuj dokument
+        </button>
+        <button type="button" id="btnOkDocDetailModal" class="btn-primary">
           <span class="m-icon sm">check</span> Zamknij podgląd
         </button>
       </div>
@@ -2165,6 +2449,7 @@
           <div>
             <div class="label">KWOTA DO ZAPŁATY</div>
             <div style="font-size:11px; opacity:0.85;" id="fpDocLabel">Paragon fiskalny</div>
+            <div style="font-size:11px; font-family:'JetBrains Mono', monospace; font-weight:700; opacity:0.95; margin-top:2px;" id="fpDocNumberBadge">Nr dok.: ---</div>
           </div>
           <div class="amount" id="fpTotalAmount">0,00 zł</div>
         </div>
@@ -2218,7 +2503,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
               <h2>Historia paragonów fiskalnych</h2>
-              <p class="desc">Wszystkie paragony detaliczne oraz paragony z NIP do 450 zł.</p>
+              <p class="desc">Wszystkie paragony detaliczne oraz paragony z NIP do 450 zł. Kliknij „Podgląd”, aby otworzyć dokument.</p>
             </div>
             <div style="text-align:right;">
               <span style="font-size:12px; color:var(--text-muted);">Utarg z paragonów:</span>
@@ -2234,6 +2519,7 @@
                 <th>Forma płatności</th>
                 <th>Kwota brutto</th>
                 <th>Status</th>
+                <th>Podgląd</th>
               </tr>
             </thead>
             <tbody id="historyTableBody"></tbody>
@@ -2361,7 +2647,7 @@
       <div class="doc-panel-section hidden" id="subReturnsHistory">
         <div class="admin-card">
           <h2>Rejestr wykonanych zwrotów</h2>
-          <p class="desc">Lista protokołów zwrotu zapisanych w Firebase.</p>
+          <p class="desc">Lista protokołów zwrotu zapisanych w Firebase. Kliknij „Podgląd”, aby otworzyć dokument zwrotu.</p>
           <table class="data-table">
             <thead>
               <tr>
@@ -2371,6 +2657,7 @@
                 <th>Zwrócone towary</th>
                 <th>Powód</th>
                 <th>Zwrócona kwota</th>
+                <th>Podgląd</th>
               </tr>
             </thead>
             <tbody id="returnsHistoryTableBody"></tbody>
@@ -2390,6 +2677,7 @@
 
       <div class="admin-sidebar-title">Konfiguracja Firmy</div>
       <button class="admin-tab-btn active" data-admin-tab="tabStore"><span class="m-icon sm">storefront</span> Dane sklepu i rejestry</button>
+      <button class="admin-tab-btn" data-admin-tab="tabContractors"><span class="m-icon sm">groups</span> Kontrahenci</button>
       <button class="admin-tab-btn" data-admin-tab="tabOperators"><span class="m-icon sm">badge</span> Operatorzy kasy</button>
       <button class="admin-tab-btn" data-admin-tab="tabPaymentMethods"><span class="m-icon sm">credit_card</span> Formy płatności</button>
 
@@ -2562,6 +2850,40 @@
             </div>
             <button type="submit" class="btn-primary"><span class="m-icon sm">save</span> Zapisz dane sklepu</button>
           </form>
+        </div>
+      </div>
+
+      <!-- KONTRAHENCI -->
+      <div class="admin-panel-section hidden" id="tabContractors">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2>Baza kontrahentów</h2>
+              <p class="desc">Zaprogramowani kontrahenci dostępni do szybkiego wyboru w pływającym oknie podczas wystawiania faktury.</p>
+            </div>
+            <button type="button" class="btn-primary" onclick="openAdminCrudModal('contractors', null)">
+              <span class="m-icon sm">person_add</span> Dodaj kontrahenta
+            </button>
+          </div>
+
+          <div class="filter-toolbar">
+            <div style="position:relative; flex:1; min-width:220px;">
+              <span class="m-icon sm" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);">search</span>
+              <input type="text" id="adminContractorSearchInput" class="form-control" style="width:100%; padding-left:34px;" placeholder="Szukaj kontrahenta po nazwie, NIP lub adresie..." />
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nazwa firmy / Kontrahenta</th>
+                <th>NIP</th>
+                <th>Adres</th>
+                <th style="width:170px;">Akcje</th>
+              </tr>
+            </thead>
+            <tbody id="adminContractorsTable"></tbody>
+          </table>
         </div>
       </div>
 
@@ -2796,7 +3118,7 @@
     </div>
   </div>
 
-  <!-- GLOBALNA KLAWIATURA EKRANOWA PEPCO POS (ZAMIAST SYSTEMOWEJ ANDROID) -->
+  <!-- GLOBALNA KLAWIATURA EKRANOWA PEPCO POS -->
   <div class="pepco-global-vk hidden" id="pepcoGlobalVkPanel">
     <div class="pepco-vk-inner">
       <div class="pepco-vk-header">
@@ -2863,6 +3185,7 @@
       units: [],
       discounts: [],
       currencies: [],
+      contractors: [],
       operators: [],
       paymentMethods: [],
       transactions: [],
@@ -2873,18 +3196,34 @@
       selectedCategory: "Wszystkie",
       searchQuery: "",
       selectedDiscountId: "",
+      selectedContractor: null,
       loggedOperator: null,
       activeOperator: "Niezalogowany",
       docType: "receipt",
+      pendingDocNumber: "",
       adminProdSearch: "",
       adminProdCat: "Wszystkie",
       adminStockSearch: "",
       adminStockCat: "Wszystkie",
+      adminContractorSearch: "",
       pzModalMode: "single",
       pzBatchQuantities: {}
     };
 
     const formatMoney = (val) => `${Number(val || 0).toFixed(2).replace(".", ",")} ${state.store.activeCurrencySymbol || "zł"}`;
+
+    function generateDocumentNumberForCurrentType() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      if (state.docType === "invoice") {
+        return `FV/${yyyy}/${mm}/${Math.floor(1000 + Math.random() * 9000)}`;
+      }
+      if (state.docType === "receipt_nip") {
+        return `PAR-NIP/${yyyy}/${mm}/${Math.floor(100000 + Math.random() * 900000)}`;
+      }
+      return `PAR/${yyyy}/${mm}/${Math.floor(100000 + Math.random() * 900000)}`;
+    }
 
     function getLocalYMD(dateObj = new Date()) {
       const y = dateObj.getFullYear();
@@ -2931,8 +3270,107 @@
     setInterval(updateClock, 1000);
 
     // ==========================================
-    // GLOBALNA KLAWIATURA EKRANOWA PEPCO POS (ZAMIAST SYSTEMOWEJ ANDROID)
-    // Działa we WSZYSTKICH polach wprowadzania tekstu i liczb w całej kasie!
+    // PODGLĄD DOKUMENTU SPRZEDAŻY LUB ZWROTU (DOKUMENTY I ZWROTY)
+    // ==========================================
+    const docDetailModal = document.getElementById("docDetailPreviewModal");
+    document.getElementById("btnCloseDocDetailModal").addEventListener("click", () => docDetailModal.classList.add("hidden"));
+    document.getElementById("btnOkDocDetailModal").addEventListener("click", () => docDetailModal.classList.add("hidden"));
+
+    function buildStoreHeaderText(sObj) {
+      const s = sObj || state.store;
+      return [
+        s.name || "PEPCO SKLEP",
+        s.address || "",
+        s.nip ? `NIP: ${s.nip}` : "",
+        s.regon9 ? `REGON: ${s.regon9}` : "",
+        s.krs ? `KRS: ${s.krs}` : "",
+        s.bdo ? `BDO: ${s.bdo}` : ""
+      ].filter(Boolean).join("\n");
+    }
+
+    window.openReceiptDetailModal = (txId) => {
+      closeGlobalPepcoVk();
+      const t = state.transactions.find(item => item.id === txId);
+      if (!t) return;
+
+      const sym = t.currencySymbol || state.store.activeCurrencySymbol || "zł";
+      const dt = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
+      const docTypeLabel = t.docType === "receipt_nip"
+        ? `PARAGON FISKALNY Z NIP (${t.buyerNip || "—"})`
+        : "PARAGON FISKALNY DETALICZNY";
+
+      const lines = (t.items || []).map((i, idx) => {
+        const base = Number(i.price) * Number(i.qty);
+        const iDisc = Number(i.itemDiscountAmount || 0);
+        const lineFinal = i.lineTotalAfterItemDisc !== undefined ? Number(i.lineTotalAfterItemDisc) : Math.max(0, base - iDisc);
+        let txt = `${idx + 1}. ${i.name}\n   ${i.qty} ${i.unit} x ${Number(i.price).toFixed(2)} = ${lineFinal.toFixed(2)} ${sym}`;
+        if (iDisc > 0) txt += `\n   [Rabat poz.: -${iDisc.toFixed(2)} ${sym}]`;
+        return txt;
+      }).join("\n");
+
+      const discLine = Number(t.discountAmount || 0) > 0
+        ? `\nRABAT ŁĄCZNIE:   -${Number(t.discountAmount).toFixed(2)} ${sym}`
+        : "";
+      const buyerNipLine = t.buyerNip ? `\nNIP NABYWCY:     ${t.buyerNip}` : "";
+
+      const text = `${buildStoreHeaderText(state.store)}
+========================================
+${docTypeLabel}
+NUMER DOKUMENTU: ${t.receiptNumber}
+DATA WYSTAWIENIA:${dt}
+KASJER:          ${t.operator || "—"}${buyerNipLine}
+----------------------------------------
+${lines}
+----------------------------------------
+NETTO:           ${Number(t.netAmount || 0).toFixed(2)} ${sym}
+VAT:             ${Number(t.vatAmount || 0).toFixed(2)} ${sym}${discLine}
+SUMA BRUTTO:     ${Number(t.totalAmount || 0).toFixed(2)} ${sym}
+FORMA PŁATNOŚCI: ${t.paymentMethod || "—"}
+========================================`;
+
+      document.getElementById("docDetailBadge").textContent = t.docType === "receipt_nip" ? "PARAGON Z NIP" : "PARAGON";
+      document.getElementById("docDetailTitle").textContent = `Dokument ${t.receiptNumber}`;
+      document.getElementById("docPreviewPrintArea").textContent = text;
+      docDetailModal.classList.remove("hidden");
+    };
+
+    window.openReturnDetailModal = (retId) => {
+      closeGlobalPepcoVk();
+      const r = state.returns.find(item => item.id === retId);
+      if (!r) return;
+
+      const sym = r.currencySymbol || state.store.activeCurrencySymbol || "zł";
+      const dt = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
+
+      const lines = (r.items || []).map((it, idx) => {
+        const lineRefund = Number(it.lineRefund ?? (Number(it.qty || 0) * Number(it.unitPrice || 0)));
+        return `${idx + 1}. ${it.name}\n   Zwrócono: ${it.qty} szt. x ${Number(it.unitPrice || 0).toFixed(2)} = -${lineRefund.toFixed(2)} ${sym}`;
+      }).join("\n");
+
+      const text = `${buildStoreHeaderText(state.store)}
+========================================
+PROTOKÓŁ ZWROTU TOWARU (KOREKTA)
+NUMER ZWROTU:    ${r.returnNumber}
+DOTYCZY DOK. NR: ${r.receiptNumber}
+DATA ZWROTU:     ${dt}
+KASJER:          ${r.operator || "—"}
+POWÓD ZWROTU:    ${r.reason || "—"}
+FORMA ZWROTU:    ${r.refundMethod || "—"}
+----------------------------------------
+ZWRÓCONE POZYCJE:
+${lines || "Brak pozycji"}
+----------------------------------------
+ZWRÓCONA KWOTA:  -${Number(r.totalRefund || 0).toFixed(2)} ${sym}
+========================================`;
+
+      document.getElementById("docDetailBadge").textContent = "DOKUMENT ZWROTU";
+      document.getElementById("docDetailTitle").textContent = `Zwrot ${r.returnNumber}`;
+      document.getElementById("docPreviewPrintArea").textContent = text;
+      docDetailModal.classList.remove("hidden");
+    };
+
+    // ==========================================
+    // GLOBALNA KLAWIATURA EKRANOWA PEPCO POS
     // ==========================================
     const pepcoGlobalVkPanel = document.getElementById("pepcoGlobalVkPanel");
     const pepcoGlobalVkRows = document.getElementById("pepcoGlobalVkRows");
@@ -2957,7 +3395,6 @@
       return supportedTypes.includes((el.type || "text").toLowerCase());
     }
 
-    // Natychmiastowe zablokowanie systemowej klawiatury Android na dowolnym polu tekstowym
     function suppressAndroidKeyboard(el) {
       if (!isTextOrNumericInput(el)) return;
       el.setAttribute("inputmode", "none");
@@ -2971,7 +3408,6 @@
       root.querySelectorAll("input, textarea").forEach(suppressAndroidKeyboard);
     }
 
-    // Obserwuj dynamicznie dodawane pola (np. modale CRUD, pola zwrotów itp.)
     const domObserver = new MutationObserver((mutations) => {
       mutations.forEach(m => {
         m.addedNodes.forEach(node => {
@@ -3054,7 +3490,6 @@
       }
 
       if (keyVal === "ENTER") {
-        // Jeśli jesteśmy w głównym polu wyszukiwania kasy i wpisano kod EAN/PLU, od razu wrzuć towar na paragon
         if (target.id === "searchInput") {
           const trimmed = String(target.value || "").trim();
           if (trimmed) {
@@ -3067,7 +3502,6 @@
             }
           }
         }
-        // Wyślij zdarzenie Enter (dla wyszukiwarek paragonów, formularzy itp.)
         target.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true }));
         closeGlobalPepcoVk();
         return;
@@ -3130,7 +3564,6 @@
       });
     }
 
-    // Przechwytuj kliknięcia i fokus na KAŻDYM polu wprowadzania tekstu w całej kasie POS
     document.addEventListener("pointerdown", (e) => {
       const target = e.target;
       if (target.closest("#pepcoGlobalVkPanel")) return;
@@ -3139,7 +3572,6 @@
         suppressAndroidKeyboard(target);
         openGlobalPepcoVk(target);
       } else if (activeVkTarget && !target.closest("button") && !target.closest("label")) {
-        // Kliknięcie poza polem i poza klawiaturą zamyka klawiaturę
         closeGlobalPepcoVk();
       }
     }, true);
@@ -3175,9 +3607,6 @@
       setNativeInputValueAndDispatch(searchInput, "");
     });
 
-    // ==========================================
-    // DOPASOWANIE PRODUKTU PO KODZIE EAN / PLU / QR
-    // ==========================================
     function findProductByCode(rawCode) {
       const clean = String(rawCode || "").trim().replace(/^(EAN|QR|SKU|PLU):/i, "").trim();
       if (!clean) return null;
@@ -3189,10 +3618,6 @@
       ) || null;
     }
 
-    // ==========================================
-    // GLOBALNA OBSŁUGA PODPIĘTEGO SKANERA KODÓW KRESKOWYCH (USB / BLUETOOTH HID)
-    // Oraz obsługa fizycznej klawiatury PC przy aktywnym polu PEPCO VK
-    // ==========================================
     let hwScannerBuffer = "";
     let hwScannerLastKeyTime = 0;
 
@@ -3202,14 +3627,15 @@
       if (!itemEditModal.classList.contains("hidden")) return true;
       if (!qrModal.classList.contains("hidden")) return true;
       if (!receiptDiscountModal.classList.contains("hidden")) return true;
+      if (!contractorModal.classList.contains("hidden")) return true;
       if (!adminCrudModal.classList.contains("hidden")) return true;
       if (!reportPreviewModal.classList.contains("hidden")) return true;
+      if (!docDetailModal.classList.contains("hidden")) return true;
       if (!document.getElementById("invoicePreviewModal").classList.contains("hidden")) return true;
       return false;
     }
 
     document.addEventListener("keydown", (e) => {
-      // 1. Obsługa klawiatury na ekranie PIN
       if (!lockOverlay.classList.contains("hidden") && !stepPinEntry.classList.contains("hidden")) {
         if (/^[0-9]$/.test(e.key)) {
           if (enteredPinBuffer.length < 8) {
@@ -3226,8 +3652,6 @@
         return;
       }
 
-      // 2. Jeśli aktywne jest dowolne pole z przypiętą klawiaturą PEPCO VK (pola są readonly przeciw klawiaturze Android),
-      // przekieruj znaki z fizycznej klawiatury USB/Bluetooth bezpośrednio do tego pola
       if (activeVkTarget && activeVkTarget.id !== "searchInput") {
         if (e.key === "Backspace") {
           e.preventDefault();
@@ -3250,7 +3674,6 @@
         }
       }
 
-      // 3. Jeśli aktywny jest widok Kasy Sprzedaży i nie jest otwarte okno modalne — obsługa skanera kodów
       if (posView.classList.contains("hidden") || isAnyBlockingModalOpen()) {
         return;
       }
@@ -3619,6 +4042,14 @@
       }
     });
 
+    onSnapshot(collection(db, "contractors"), (snap) => {
+      state.contractors = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAdminContractors();
+      if (!contractorModal.classList.contains("hidden")) {
+        renderContractorModalDbList();
+      }
+    });
+
     onSnapshot(collection(db, "categories"), (snap) => {
       state.categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderCategories();
@@ -3687,6 +4118,225 @@
     onSnapshot(query(collection(db, "reports"), orderBy("createdAt", "desc"), limit(150)), (snap) => {
       state.reports = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderSavedReportsTables();
+    });
+
+    // ==========================================
+    // MODUŁ KONTRAHENTÓW (WYBÓR Z BAZY / RĘCZNE WPISANIE / BANER NAD PARAGONEM)
+    // ==========================================
+    const contractorModal = document.getElementById("contractorModal");
+    let contractorModalActiveTab = "db";
+    let tempPickedContractorId = null;
+
+    function openContractorModal(initialTab = "db") {
+      closeGlobalPepcoVk();
+      contractorModalActiveTab = initialTab;
+      tempPickedContractorId = state.selectedContractor?.id || null;
+
+      document.getElementById("btnContractorModeDb").classList.toggle("active", initialTab === "db");
+      document.getElementById("btnContractorModeManual").classList.toggle("active", initialTab === "manual");
+      document.getElementById("contractorDbSection").classList.toggle("hidden", initialTab !== "db");
+      document.getElementById("contractorManualSection").classList.toggle("hidden", initialTab !== "manual");
+
+      document.getElementById("contractorModalSearch").value = "";
+      document.getElementById("manualContractorName").value = state.selectedContractor?.name || "";
+      document.getElementById("manualContractorNip").value = state.selectedContractor?.nip || "";
+      document.getElementById("manualContractorAddress").value = state.selectedContractor?.address || "";
+      document.getElementById("saveManualContractorToDb").checked = true;
+
+      renderContractorModalDbList();
+      contractorModal.classList.remove("hidden");
+    }
+
+    function closeContractorModal() {
+      closeGlobalPepcoVk();
+      contractorModal.classList.add("hidden");
+    }
+
+    document.getElementById("btnContractorModeDb").addEventListener("click", () => {
+      closeGlobalPepcoVk();
+      contractorModalActiveTab = "db";
+      document.getElementById("btnContractorModeDb").classList.add("active");
+      document.getElementById("btnContractorModeManual").classList.remove("active");
+      document.getElementById("contractorDbSection").classList.remove("hidden");
+      document.getElementById("contractorManualSection").classList.add("hidden");
+      renderContractorModalDbList();
+    });
+
+    document.getElementById("btnContractorModeManual").addEventListener("click", () => {
+      closeGlobalPepcoVk();
+      contractorModalActiveTab = "manual";
+      document.getElementById("btnContractorModeManual").classList.add("active");
+      document.getElementById("btnContractorModeDb").classList.remove("active");
+      document.getElementById("contractorManualSection").classList.remove("hidden");
+      document.getElementById("contractorDbSection").classList.add("hidden");
+    });
+
+    document.getElementById("contractorModalSearch").addEventListener("input", renderContractorModalDbList);
+
+    function renderContractorModalDbList() {
+      const container = document.getElementById("contractorModalDbList");
+      const q = (document.getElementById("contractorModalSearch")?.value || "").toLowerCase().trim();
+
+      const list = state.contractors.filter(c => {
+        if (!q) return true;
+        return (c.name && c.name.toLowerCase().includes(q)) ||
+          (c.nip && String(c.nip).toLowerCase().includes(q)) ||
+          (c.address && c.address.toLowerCase().includes(q));
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div style="padding:18px; text-align:center; color:var(--text-muted); font-size:12.5px; background:#f8fafc; border-radius:10px; border:1px dashed var(--border-color);">
+            Brak zapisanych kontrahentów w bazie (lub brak dopasowania).<br>
+            Przełącz na <strong>Wpisz ręcznie</strong> lub dodaj kontrahentów w <strong>Administracja → Kontrahenci</strong>.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(c => {
+        const isPicked = tempPickedContractorId === c.id;
+        return `
+          <div class="contractor-db-card ${isPicked ? 'selected' : ''}" data-cid="${c.id}">
+            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+              <div style="width:36px; height:36px; border-radius:10px; background:${isPicked ? '#fce7f3' : '#eef2ff'}; color:${isPicked ? 'var(--pepco-magenta)' : 'var(--pepco-indigo)'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span class="m-icon sm">account_circle</span>
+              </div>
+              <div style="min-width:0;">
+                <div style="font-size:13.5px; font-weight:700; color:var(--text-main);">${c.name}</div>
+                <div style="font-size:11.5px; font-family:'JetBrains Mono', monospace; color:var(--pepco-indigo); font-weight:700;">NIP: ${c.nip || "brak"}</div>
+                <div style="font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.address || ""}</div>
+              </div>
+            </div>
+            ${isPicked ? '<span class="badge-success">Wybrany</span>' : '<span class="m-icon sm" style="color:var(--text-muted);">chevron_right</span>'}
+          </div>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".contractor-db-card").forEach(card => {
+        card.addEventListener("click", () => {
+          tempPickedContractorId = card.dataset.cid;
+          renderContractorModalDbList();
+        });
+      });
+    }
+
+    function applySelectedContractorToInvoice(contractorObj) {
+      state.selectedContractor = {
+        id: contractorObj.id || null,
+        name: contractorObj.name.trim(),
+        nip: (contractorObj.nip || "").trim(),
+        address: (contractorObj.address || "").trim()
+      };
+
+      const nameInp = document.getElementById("invBuyerName");
+      const nipInp = document.getElementById("invBuyerNip");
+      const addrInp = document.getElementById("invBuyerAddress");
+
+      nameInp.value = state.selectedContractor.name;
+      addrInp.value = state.selectedContractor.address;
+
+      if (state.selectedContractor.nip) {
+        document.querySelector("input[name='invBuyerMode'][value='with_nip']").checked = true;
+        nipInp.classList.remove("hidden");
+        nipInp.value = state.selectedContractor.nip;
+      } else {
+        document.querySelector("input[name='invBuyerMode'][value='no_nip']").checked = true;
+        nipInp.classList.add("hidden");
+        nipInp.value = "";
+      }
+
+      renderSelectedContractorBanner();
+      closeContractorModal();
+      renderCart();
+      showToast(`Wybrano kontrahenta: ${state.selectedContractor.name}`, "account_circle");
+    }
+
+    function renderSelectedContractorBanner() {
+      const banner = document.getElementById("selectedContractorBanner");
+      const c = state.selectedContractor;
+      if (!c || !c.name) {
+        banner.classList.add("hidden");
+        return;
+      }
+      const nipDisplay = c.nip ? c.nip : "brak NIP";
+      document.getElementById("bannerContractorTitle").innerHTML =
+        `${c.name} <span class="contractor-nip-paren">(${nipDisplay})</span>`;
+      document.getElementById("bannerContractorAddress").textContent = c.address || "";
+      banner.classList.remove("hidden");
+    }
+
+    document.getElementById("btnConfirmSelectedContractor").addEventListener("click", () => {
+      if (!tempPickedContractorId) {
+        return showToast("Kliknij kontrahenta z listy, aby go wybrać!", "warning");
+      }
+      const found = state.contractors.find(c => c.id === tempPickedContractorId);
+      if (!found) {
+        return showToast("Nie znaleziono wybranego kontrahenta!", "warning");
+      }
+      applySelectedContractorToInvoice(found);
+    });
+
+    document.getElementById("btnConfirmManualContractor").addEventListener("click", async () => {
+      const name = document.getElementById("manualContractorName").value.trim();
+      const nip = document.getElementById("manualContractorNip").value.trim();
+      const address = document.getElementById("manualContractorAddress").value.trim();
+      const saveToDb = document.getElementById("saveManualContractorToDb").checked;
+
+      if (!name || !address) {
+        return showToast("Wpisz nazwę kontrahenta oraz adres!", "warning");
+      }
+
+      const cleanDigits = nip.replace(/[^0-9]/g, "");
+      if (nip && cleanDigits.length !== 10) {
+        return showToast("Numer NIP powinien składać się z 10 cyfr (lub pozostać pusty dla faktury bez NIP).", "warning");
+      }
+
+      let savedId = null;
+      if (saveToDb) {
+        try {
+          const existingSameNip = cleanDigits
+            ? state.contractors.find(c => (c.nip || "").replace(/[^0-9]/g, "") === cleanDigits)
+            : null;
+          if (existingSameNip) {
+            savedId = existingSameNip.id;
+          } else {
+            const docRef = await addDoc(collection(db, "contractors"), {
+              name,
+              nip,
+              address,
+              createdAt: serverTimestamp()
+            });
+            savedId = docRef.id;
+          }
+        } catch (err) {
+          showToast("Uwaga: nie udało się zapisać do bazy: " + err.message, "warning");
+        }
+      }
+
+      applySelectedContractorToInvoice({ id: savedId, name, nip, address });
+    });
+
+    document.getElementById("btnCloseContractorModal").addEventListener("click", closeContractorModal);
+    document.getElementById("btnCancelContractorDb").addEventListener("click", closeContractorModal);
+    document.getElementById("btnCancelContractorManual").addEventListener("click", closeContractorModal);
+
+    document.getElementById("btnReopenContractorModal").addEventListener("click", () => {
+      openContractorModal(state.contractors.length > 0 ? "db" : "manual");
+    });
+
+    document.getElementById("btnChangeContractorFromBanner").addEventListener("click", () => {
+      openContractorModal("manual");
+    });
+
+    document.getElementById("btnClearContractorFromBanner").addEventListener("click", () => {
+      state.selectedContractor = null;
+      document.getElementById("invBuyerName").value = "";
+      document.getElementById("invBuyerNip").value = "";
+      document.getElementById("invBuyerAddress").value = "";
+      renderSelectedContractorBanner();
+      renderCart();
+      showToast("Usunięto przypisanego kontrahenta", "info");
     });
 
     // ==========================================
@@ -3832,14 +4482,7 @@
     function formatReportText(rep) {
       const sym = rep.currencySymbol || "zł";
       const s = rep.storeSnapshot || state.store;
-      const header = [
-        s.name || "PEPCO SKLEP",
-        s.address || "",
-        s.nip ? `NIP: ${s.nip}` : "",
-        s.regon9 ? `REGON: ${s.regon9}` : "",
-        s.krs ? `KRS: ${s.krs}` : "",
-        s.bdo ? `BDO: ${s.bdo}` : ""
-      ].filter(Boolean).join("\n");
+      const header = buildStoreHeaderText(s);
 
       const payLines = Object.entries(rep.paymentBreakdown || {}).length
         ? Object.entries(rep.paymentBreakdown).map(([pm, val]) => `  ${pm.padEnd(24)} ${Number(val).toFixed(2)} ${sym}`).join("\n")
@@ -4088,7 +4731,7 @@ ${opLines}
     }
 
     // ==========================================
-    // PŁYWAJĄCE OKNO DODAWANIA I EDYCJI W ADMINISTRACJI + PZ (POJEDYNCZO / SERYJNIE)
+    // PŁYWAJĄCE OKNO DODAWANIA I EDYCJI W ADMINISTRACJI + PZ
     // ==========================================
     const adminCrudModal = document.getElementById("adminCrudModal");
     const adminCrudModalBox = document.getElementById("adminCrudModalBox");
@@ -4251,7 +4894,25 @@ ${opLines}
 
       adminCrudModalBox.style.maxWidth = entity === "stock_delivery" ? "640px" : "520px";
 
-      if (entity === "operators") {
+      if (entity === "contractors") {
+        const item = isEdit ? state.contractors.find(c => c.id === editId) : null;
+        subEl.textContent = "Baza kontrahentów";
+        titleEl.textContent = isEdit ? "Edytuj kontrahenta" : "Dodaj kontrahenta";
+        adminCrudFieldsContainer.innerHTML = `
+          <div class="form-group">
+            <label>Nazwa firmy / Imię i nazwisko *</label>
+            <input type="text" id="crudContractorName" class="form-control" value="${item ? item.name : ""}" placeholder="np. Nova Sp. z o.o." required />
+          </div>
+          <div class="form-group">
+            <label>Numer NIP (10 cyfr)</label>
+            <input type="text" id="crudContractorNip" class="form-control" style="font-family:'JetBrains Mono', monospace;" value="${item ? (item.nip || "") : ""}" placeholder="np. 7822131157" maxlength="13" />
+          </div>
+          <div class="form-group">
+            <label>Adres (ulica, kod pocztowy, miasto) *</label>
+            <input type="text" id="crudContractorAddress" class="form-control" value="${item ? (item.address || "") : ""}" placeholder="np. ul. Ogrodowa 15, 00-876 Warszawa" required />
+          </div>
+        `;
+      } else if (entity === "operators") {
         const item = isEdit ? state.operators.find(o => o.id === editId) : null;
         subEl.textContent = "Operatorzy kasy";
         titleEl.textContent = isEdit ? "Edytuj operatora kasy" : "Dodaj operatora kasy";
@@ -4468,7 +5129,20 @@ ${opLines}
     document.getElementById("adminCrudForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
-        if (currentCrudEntity === "operators") {
+        if (currentCrudEntity === "contractors") {
+          const payload = {
+            name: document.getElementById("crudContractorName").value.trim(),
+            nip: document.getElementById("crudContractorNip").value.trim(),
+            address: document.getElementById("crudContractorAddress").value.trim()
+          };
+          if (currentCrudEditId) {
+            await updateDoc(doc(db, "contractors", currentCrudEditId), payload);
+            showToast("Zaktualizowano dane kontrahenta", "check_circle");
+          } else {
+            await addDoc(collection(db, "contractors"), { ...payload, createdAt: serverTimestamp() });
+            showToast("Dodano kontrahenta do bazy", "check_circle");
+          }
+        } else if (currentCrudEntity === "operators") {
           const payload = {
             name: document.getElementById("crudOpName").value.trim(),
             code: document.getElementById("crudOpCode").value.trim(),
@@ -4677,25 +5351,61 @@ ${opLines}
     };
 
     // ==========================================
-    // RENDER ADMIN TABLES + FILTRY W TOWARACH I PZ
+    // RENDER ADMIN TABLES + FILTRY
     // ==========================================
+    document.getElementById("adminContractorSearchInput").addEventListener("input", (e) => {
+      state.adminContractorSearch = e.target.value;
+      renderAdminContractors();
+    });
+
+    function renderAdminContractors() {
+      const q = state.adminContractorSearch.toLowerCase().trim();
+      const filtered = state.contractors.filter(c => {
+        if (!q) return true;
+        return (c.name && c.name.toLowerCase().includes(q)) ||
+          (c.nip && String(c.nip).toLowerCase().includes(q)) ||
+          (c.address && c.address.toLowerCase().includes(q));
+      });
+
+      const tb = document.getElementById("adminContractorsTable");
+      if (filtered.length === 0) {
+        tb.innerHTML = `<tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Brak kontrahentów w bazie. Kliknij „Dodaj kontrahenta”.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = filtered.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--pepco-indigo);">${c.nip || "—"}</td>
+          <td>${c.address || "—"}</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('contractors', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('contractors', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
     function populateAdminCategoryFilters() {
-      const opts = `<option value="Wszystkie">Wszystkie kategorie</option>` +
+      const prodSel = document.getElementById("adminProdCatFilter");
+      const stockSel = document.getElementById("adminStockCatFilter");
+      const optionsHtml = `<option value="Wszystkie">Wszystkie kategorie</option>` +
         state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
 
-      const prodFilter = document.getElementById("adminProdCatFilter");
-      const stockFilter = document.getElementById("adminStockCatFilter");
-      prodFilter.innerHTML = opts;
-      stockFilter.innerHTML = opts;
-      prodFilter.value = state.adminProdCat;
-      stockFilter.value = state.adminStockCat;
+      if (prodSel) {
+        prodSel.innerHTML = optionsHtml;
+        prodSel.value = state.adminProdCat;
+      }
+      if (stockSel) {
+        stockSel.innerHTML = optionsHtml;
+        stockSel.value = state.adminStockCat;
+      }
     }
 
     document.getElementById("adminProdSearchInput").addEventListener("input", (e) => {
       state.adminProdSearch = e.target.value;
       renderAdminProducts();
     });
-
     document.getElementById("adminProdCatFilter").addEventListener("change", (e) => {
       state.adminProdCat = e.target.value;
       renderAdminProducts();
@@ -4705,184 +5415,227 @@ ${opLines}
       state.adminStockSearch = e.target.value;
       renderAdminStock();
     });
-
     document.getElementById("adminStockCatFilter").addEventListener("change", (e) => {
       state.adminStockCat = e.target.value;
       renderAdminStock();
     });
 
-    function renderAdminPaymentMethods() {
-      document.getElementById("adminPaymentMethodsTable").innerHTML = state.paymentMethods.length
-        ? state.paymentMethods.map(pm => {
-          const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
-          return `
-          <tr>
-            <td><span class="m-icon" style="color:var(--pepco-indigo);">${iconName}</span></td>
-            <td><strong>${pm.name}</strong></td>
-            <td>${pm.isCash ? '<span class="badge-warn">Gotówkowa (z resztą)</span>' : '<span class="badge-pay">Bezgotówkowa</span>'}</td>
-            <td style="display:flex; gap:6px;">
-              <button class="btn-secondary-sm" onclick="openAdminCrudModal('payment_methods', '${pm.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('payment_methods', '${pm.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-            </td>
-          </tr>`;
-        }).join("")
-        : `<tr><td colspan="4" style="color:var(--text-muted);">Brak zdefiniowanych form płatności w bazie.</td></tr>`;
-    }
-
-    function renderAdminCategories() {
-      document.getElementById("adminCategoriesTable").innerHTML = state.categories.length
-        ? state.categories.map(c => `<tr>
-          <td><strong>${c.name}</strong></td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-secondary-sm" onclick="openAdminCrudModal('categories', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('categories', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="2" style="color:var(--text-muted);">Brak kategorii.</td></tr>`;
-    }
-
-    function renderAdminTaxes() {
-      document.getElementById("adminTaxesTable").innerHTML = state.taxes.length
-        ? state.taxes.map(t => `<tr>
-          <td><strong>${t.name}</strong></td>
-          <td>${t.rate}%</td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-secondary-sm" onclick="openAdminCrudModal('taxes', '${t.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('taxes', '${t.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="3" style="color:var(--text-muted);">Brak stawek VAT.</td></tr>`;
-    }
-
-    function renderAdminUnits() {
-      document.getElementById("adminUnitsTable").innerHTML = state.units.length
-        ? state.units.map(u => `<tr>
-          <td><strong>${u.symbol}</strong></td>
-          <td>${u.fullName}</td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-secondary-sm" onclick="openAdminCrudModal('units', '${u.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('units', '${u.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="3" style="color:var(--text-muted);">Brak jednostek miary.</td></tr>`;
-    }
-
-    function renderAdminDiscounts() {
-      document.getElementById("adminDiscountsTable").innerHTML = state.discounts.length
-        ? state.discounts.map(d => `<tr>
-          <td><strong>${d.name}</strong></td>
-          <td>-${d.percent}%</td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-secondary-sm" onclick="openAdminCrudModal('discounts', '${d.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('discounts', '${d.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="3" style="color:var(--text-muted);">Brak rabatów.</td></tr>`;
-    }
-
-    function renderAdminCurrencies() {
-      document.getElementById("adminCurrenciesTable").innerHTML = state.currencies.length
-        ? state.currencies.map(c => {
-          const isDefault = state.store.activeCurrencyCode === c.code || c.isDefault === true;
-          return `<tr>
-            <td><strong>${c.code}</strong></td>
-            <td>${c.symbol}</td>
-            <td>${c.name}</td>
-            <td>${isDefault ? '<span class="badge-success">✓ Domyślna waluta</span>' : '<span style="color:var(--text-muted); font-size:12px;">Dodatkowa</span>'}</td>
-            <td style="display:flex; gap:6px; flex-wrap:wrap;">
-              ${!isDefault ? `<button class="btn-secondary-sm" onclick="setActiveCurrency('${c.id}', '${c.code}', '${c.symbol}')">Ustaw domyślną</button>` : ''}
-              <button class="btn-secondary-sm" onclick="openAdminCrudModal('currencies', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('currencies', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-            </td></tr>`;
-        }).join("")
-        : `<tr><td colspan="5" style="color:var(--text-muted);">Brak walut (domyślnie PLN).</td></tr>`;
-    }
-
     function renderAdminOperators() {
-      document.getElementById("adminOperatorsTable").innerHTML = state.operators.length
-        ? state.operators.map(o => `<tr>
+      const tb = document.getElementById("adminOperatorsTable");
+      if (state.operators.length === 0) {
+        tb.innerHTML = `<tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Brak operatorów. Kliknij „Dodaj operatora”, aby utworzyć konto kasjera.</td></tr>`;
+        return;
+      }
+      tb.innerHTML = state.operators.map(o => `
+        <tr>
           <td style="font-family:'JetBrains Mono', monospace;">${o.code}</td>
           <td><strong>${o.name}</strong></td>
           <td><span class="badge-pay">${o.role}</span></td>
           <td style="display:flex; gap:6px;">
             <button class="btn-secondary-sm" onclick="openAdminCrudModal('operators', '${o.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
             <button class="btn-danger-sm" onclick="deleteFirestoreDoc('operators', '${o.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`).join("")
-        : `<tr><td colspan="4" style="color:var(--text-muted);">Brak operatorów kasy.</td></tr>`;
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAdminPaymentMethods() {
+      const tb = document.getElementById("adminPaymentMethodsTable");
+      if (state.paymentMethods.length === 0) {
+        tb.innerHTML = `<tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Brak zdefiniowanych form płatności. Kliknij „Dodaj formę płatności”.</td></tr>`;
+        return;
+      }
+      tb.innerHTML = state.paymentMethods.map(p => {
+        const iconName = resolveAndroidIcon(p.icon, p.isCash);
+        return `
+          <tr>
+            <td>
+              <span style="width:34px; height:34px; border-radius:9px; background:#eef2ff; color:var(--pepco-indigo); display:inline-flex; align-items:center; justify-content:center;">
+                <span class="m-icon">${iconName}</span>
+              </span>
+            </td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.isCash ? '<span class="badge-warn">Gotówkowa (reszta)</span>' : '<span class="badge-pay">Bezgotówkowa</span>'}</td>
+            <td style="display:flex; gap:6px;">
+              <button class="btn-secondary-sm" onclick="openAdminCrudModal('payment_methods', '${p.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('payment_methods', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
     }
 
     function renderAdminProducts() {
       const q = state.adminProdSearch.toLowerCase().trim();
+      const cat = state.adminProdCat;
+
       const filtered = state.products.filter(p => {
-        const matchCat = state.adminProdCat === "Wszystkie" || p.category === state.adminProdCat;
+        const matchCat = cat === "Wszystkie" || p.category === cat;
         const matchQ = !q ||
-          p.name.toLowerCase().includes(q) ||
+          (p.name && p.name.toLowerCase().includes(q)) ||
           (p.ean && String(p.ean).toLowerCase().includes(q)) ||
           (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
-      document.getElementById("adminProductsTable").innerHTML = filtered.length
-        ? filtered.map(p => {
-          const discPct = Number(p.discountPercent || 0);
-          const discBadge = discPct > 0
-            ? `<span class="badge-ret" style="background:#fdf2f8; color:var(--pepco-magenta); border:1px solid #fbcfe8;">-${discPct}%</span>`
-            : `<span style="color:var(--text-muted); font-size:12px;">0%</span>`;
-          const pluCell = p.plu
-            ? `<span class="badge-pay" style="font-family:'JetBrains Mono', monospace;">${p.plu}</span>`
-            : `<span style="color:var(--text-muted);">—</span>`;
-          return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace;">${p.ean || "—"}</td>
-          <td>${pluCell}</td>
-          <td><strong>${p.name}</strong></td>
-          <td>${p.category}</td>
-          <td>${p.taxName || (p.taxRate + '%')}</td>
-          <td><strong>${p.stock ?? 0} ${p.unit || 'szt.'}</strong></td>
-          <td>${discBadge}</td>
-          <td style="font-weight:700; color:var(--pepco-indigo);">${formatMoney(p.price)}</td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-secondary-sm" onclick="openAdminCrudModal('products', '${p.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
-            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
-          </td></tr>`;
-        }).join("")
-        : `<tr><td colspan="9" style="color:var(--text-muted);">Brak towarów spełniających kryteria wyszukiwania.</td></tr>`;
+      const tb = document.getElementById("adminProductsTable");
+      if (filtered.length === 0) {
+        tb.innerHTML = `<tr><td colspan="9" style="color:var(--text-muted); text-align:center;">Brak towarów spełniających kryteria.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = filtered.map(p => {
+        const discPct = Number(p.discountPercent || 0);
+        const discBadge = discPct > 0
+          ? `<span class="badge-ret">-${discPct}%</span>`
+          : `<span style="color:var(--text-muted); font-size:12px;">0%</span>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace;">${p.ean || "—"}</td>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--pepco-indigo);">${p.plu || "—"}</td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.category}</td>
+            <td>${p.taxRate}%</td>
+            <td><strong>${p.stock ?? 0}</strong> ${p.unit || "szt."}</td>
+            <td>${discBadge}</td>
+            <td><strong>${formatMoney(p.price)}</strong></td>
+            <td style="display:flex; gap:6px;">
+              <button class="btn-secondary-sm" onclick="openAdminCrudModal('products', '${p.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('products', '${p.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
     }
 
     function renderAdminStock() {
       const q = state.adminStockSearch.toLowerCase().trim();
+      const cat = state.adminStockCat;
+
       const filtered = state.products.filter(p => {
-        const matchCat = state.adminStockCat === "Wszystkie" || p.category === state.adminStockCat;
+        const matchCat = cat === "Wszystkie" || p.category === cat;
         const matchQ = !q ||
-          p.name.toLowerCase().includes(q) ||
+          (p.name && p.name.toLowerCase().includes(q)) ||
           (p.ean && String(p.ean).toLowerCase().includes(q)) ||
           (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
-      document.getElementById("adminStockTable").innerHTML = filtered.length
-        ? filtered.map(p => {
-          const st = Number(p.stock ?? 0);
-          const badge = st === 0 
-            ? `<span class="badge-ret">Brak na stanie</span>` 
-            : (st <= 5 ? `<span class="badge-warn">Niski stan</span>` : `<span class="badge-pay">Dostępny</span>`);
-          return `<tr>
-            <td style="font-family:'JetBrains Mono', monospace;">${p.ean || "—"} ${p.plu ? `<span class="badge-pay" style="margin-left:4px;">PLU: ${p.plu}</span>` : ""}</td>
+      const tb = document.getElementById("adminStockTable");
+      if (filtered.length === 0) {
+        tb.innerHTML = `<tr><td colspan="6" style="color:var(--text-muted); text-align:center;">Brak towarów na magazynie spełniających kryteria.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = filtered.map(p => {
+        const st = Number(p.stock ?? 0);
+        const statusBadge = st <= 0
+          ? `<span class="badge-ret">Brak na stanie</span>`
+          : st <= 5
+            ? `<span class="badge-warn">Niski stan</span>`
+            : `<span class="badge-success">Dostępny</span>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace;">
+              <div>${p.ean || "—"}</div>
+              ${p.plu ? `<div style="font-size:11px; color:var(--pepco-indigo); font-weight:700;">PLU: ${p.plu}</div>` : ""}
+            </td>
             <td><strong>${p.name}</strong></td>
             <td>${p.category}</td>
-            <td style="font-weight:800; font-size:14px;">${st} ${p.unit || 'szt.'}</td>
-            <td>${badge}</td>
-            <td><button class="btn-secondary-sm" onclick="setManualStock('${p.id}', ${st})"><span class="m-icon sm">edit</span> Koryguj stan</button></td>
-          </tr>`;
-        }).join("")
-        : `<tr><td colspan="6" style="color:var(--text-muted);">Brak towarów w magazynie spełniających kryteria.</td></tr>`;
+            <td style="font-size:15px; font-weight:800;">${st} ${p.unit || "szt."}</td>
+            <td>${statusBadge}</td>
+            <td><button class="btn-outline" style="padding:5px 10px; font-size:12px;" onclick="setManualStock('${p.id}', ${st})"><span class="m-icon sm">edit</span> Koryguj stan</button></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderAdminCategories() {
+      const tb = document.getElementById("adminCategoriesTable");
+      tb.innerHTML = state.categories.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('categories', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('categories', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td>
+        </tr>
+      `).join("") || `<tr><td colspan="2" style="color:var(--text-muted);">Brak kategorii</td></tr>`;
+    }
+
+    function renderAdminDiscounts() {
+      const tb = document.getElementById("adminDiscountsTable");
+      tb.innerHTML = state.discounts.map(d => `
+        <tr>
+          <td><strong>${d.name}</strong></td>
+          <td><span class="badge-pay">-${d.percent}%</span></td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('discounts', '${d.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('discounts', '${d.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td>
+        </tr>
+      `).join("") || `<tr><td colspan="3" style="color:var(--text-muted);">Brak rabatów</td></tr>`;
+    }
+
+    function renderAdminTaxes() {
+      const tb = document.getElementById("adminTaxesTable");
+      tb.innerHTML = state.taxes.map(t => `
+        <tr>
+          <td><strong>${t.name}</strong></td>
+          <td>${t.rate}%</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('taxes', '${t.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('taxes', '${t.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td>
+        </tr>
+      `).join("") || `<tr><td colspan="3" style="color:var(--text-muted);">Brak stawek VAT</td></tr>`;
+    }
+
+    function renderAdminUnits() {
+      const tb = document.getElementById("adminUnitsTable");
+      tb.innerHTML = state.units.map(u => `
+        <tr>
+          <td><strong>${u.symbol}</strong></td>
+          <td>${u.fullName}</td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-secondary-sm" onclick="openAdminCrudModal('units', '${u.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+            <button class="btn-danger-sm" onclick="deleteFirestoreDoc('units', '${u.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+          </td>
+        </tr>
+      `).join("") || `<tr><td colspan="3" style="color:var(--text-muted);">Brak jednostek miary</td></tr>`;
+    }
+
+    function renderAdminCurrencies() {
+      const tb = document.getElementById("adminCurrenciesTable");
+      tb.innerHTML = state.currencies.map(c => {
+        const isDef = (state.store.activeCurrencyCode === c.code) || Boolean(c.isDefault);
+        return `
+          <tr>
+            <td><strong>${c.code}</strong></td>
+            <td style="font-size:15px; font-weight:700;">${c.symbol}</td>
+            <td>${c.name}</td>
+            <td>${isDef ? '<span class="badge-success"><span class="m-icon sm">check_circle</span> Domyślna</span>' : '<span style="color:var(--text-muted); font-size:12px;">—</span>'}</td>
+            <td style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${!isDef ? `<button class="btn-secondary-sm" onclick="setActiveCurrency('${c.id}', '${c.code}', '${c.symbol}')"><span class="m-icon sm">check</span> Ustaw domyślną</button>` : ''}
+              <button class="btn-secondary-sm" onclick="openAdminCrudModal('currencies', '${c.id}')"><span class="m-icon sm">edit</span> Edytuj</button>
+              <button class="btn-danger-sm" onclick="deleteFirestoreDoc('currencies', '${c.id}')"><span class="m-icon sm">delete</span> Usuń</button>
+            </td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="5" style="color:var(--text-muted);">Brak walut</td></tr>`;
     }
 
     // ==========================================
-    // POS REGISTER, CART & ITEM EDIT MODAL
+    // POS CATALOG, CART & ITEM EDIT MODAL
     // ==========================================
     function renderCategories() {
       const bar = document.getElementById("categoryBar");
-      const cats = ["Wszystkie", ...state.categories.map(c => c.name)];
-      bar.innerHTML = cats.map(cat => `
-        <button class="cat-chip ${state.selectedCategory === cat ? "active" : ""}" data-cat="${cat}">${cat}</button>
-      `).join("");
-
+      const chips = [`<button class="cat-chip ${state.selectedCategory === "Wszystkie" ? "active" : ""}" data-cat="Wszystkie">Wszystkie</button>`];
+      state.categories.forEach(c => {
+        const active = state.selectedCategory === c.name ? "active" : "";
+        chips.push(`<button class="cat-chip ${active}" data-cat="${c.name}">${c.name}</button>`);
+      });
+      bar.innerHTML = chips.join("");
       bar.querySelectorAll(".cat-chip").forEach(btn => {
         btn.addEventListener("click", () => {
           state.selectedCategory = btn.dataset.cat;
@@ -4894,232 +5647,240 @@ ${opLines}
 
     function renderProducts() {
       const grid = document.getElementById("productsGrid");
+      const q = state.searchQuery.toLowerCase().trim();
+
       const filtered = state.products.filter(p => {
         const matchCat = state.selectedCategory === "Wszystkie" || p.category === state.selectedCategory;
-        const q = state.searchQuery.toLowerCase().trim();
         const matchQ = !q ||
-          p.name.toLowerCase().includes(q) ||
+          (p.name && p.name.toLowerCase().includes(q)) ||
           (p.ean && String(p.ean).toLowerCase().includes(q)) ||
           (p.plu && String(p.plu).toLowerCase().includes(q));
         return matchCat && matchQ;
       });
 
-      if (state.products.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:50px 20px; color:var(--text-muted);">
-          Brak towarów w bazie. Przejdź do zakładki <strong>Administracja -> Towary</strong>, aby dodać asortyment.
-        </div>`;
-        return;
-      }
-
       if (filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Nie znaleziono towaru dla frazy „${state.searchQuery}”.</div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">Brak produktów pasujących do kryteriów.</div>`;
         return;
       }
 
       grid.innerHTML = filtered.map(p => {
         const st = Number(p.stock ?? 0);
-        const stockClass = st === 0 ? "stock-zero" : (st <= 5 ? "stock-low" : "stock-ok");
+        const stClass = st <= 0 ? "stock-zero" : st <= 5 ? "stock-low" : "stock-ok";
+        const stText = st <= 0 ? "Brak" : `${st} ${p.unit || "szt."}`;
         const prodDisc = Number(p.discountPercent || 0);
+        const effectivePrice = Number(p.price) * (1 - prodDisc / 100);
         return `
-          <div class="product-card ${st === 0 ? 'out-of-stock' : ''}" data-id="${p.id}">
+          <div class="product-card ${st <= 0 ? "out-of-stock" : ""}" onclick="addToCart('${p.id}')">
             <div>
               <div class="prod-top">
                 <div class="prod-codes-stack">
-                  <span class="prod-ean">EAN: ${p.ean || "—"}</span>
-                  ${p.plu ? `<span class="prod-plu">PLU: ${p.plu}</span>` : ""}
+                  <span class="prod-ean">${p.ean || "BRAK EAN"}</span>
+                  ${p.plu ? `<span class="prod-plu">PLU ${p.plu}</span>` : ""}
                 </div>
-                <span class="prod-stock-badge ${stockClass}">Stan: ${st} ${p.unit || "szt."}</span>
+                <span class="prod-stock-badge ${stClass}">${stText}</span>
               </div>
               <div class="prod-name">${p.name}</div>
-              <div class="prod-cat">${p.category} • VAT ${p.taxRate ?? 23}% ${prodDisc > 0 ? `<span style="color:var(--pepco-magenta); font-weight:700;">• -${prodDisc}%</span>` : ''}</div>
+              <div class="prod-cat">${p.category || "Ogólna"} • VAT ${p.taxRate ?? 23}%${prodDisc > 0 ? ` • <strong style="color:var(--pepco-magenta);">-${prodDisc}%</strong>` : ""}</div>
             </div>
-            <div class="prod-price">${formatMoney(p.price)} <span class="prod-unit">/ ${p.unit || "szt."}</span></div>
+            <div class="prod-price">
+              ${formatMoney(effectivePrice)} <span class="prod-unit">/ ${p.unit || "szt."}</span>
+              ${prodDisc > 0 ? `<div style="font-size:11px; color:var(--text-muted); text-decoration:line-through; font-weight:500;">${formatMoney(p.price)}</div>` : ""}
+            </div>
           </div>
         `;
       }).join("");
-
-      grid.querySelectorAll(".product-card").forEach(card => {
-        card.addEventListener("click", () => addToCart(card.dataset.id));
-      });
     }
 
-    function addToCart(prodId) {
+    window.addToCart = (prodId) => {
       const prod = state.products.find(p => p.id === prodId);
       if (!prod) return;
-      const availableStock = Number(prod.stock ?? 0);
-      const existing = state.cart.find(i => i.id === prodId);
-      const currentInCart = existing ? existing.qty : 0;
-
-      if (currentInCart + 1 > availableStock) {
-        showToast(`Brak wystarczającego stanu magazynowego dla "${prod.name}" (dostępne: ${availableStock})`, "warning");
-        return;
+      const st = Number(prod.stock ?? 0);
+      if (st <= 0) {
+        return showToast(`Brak towaru "${prod.name}" na stanie magazynowym!`, "warning");
       }
 
+      const existing = state.cart.find(item => item.productId === prod.id);
       if (existing) {
+        if (existing.qty + 1 > st) {
+          return showToast(`Dostępny stan dla "${prod.name}" to tylko ${st} ${prod.unit || "szt."}!`, "warning");
+        }
         existing.qty += 1;
       } else {
-        const defaultProdDisc = Number(prod.discountPercent || 0);
+        const defaultProdDiscPct = Math.min(100, Math.max(0, Number(prod.discountPercent || 0)));
         state.cart.push({
-          ...prod,
+          productId: prod.id,
+          ean: prod.ean || "",
+          plu: prod.plu || "",
+          name: prod.name,
+          price: Number(prod.price),
+          taxRate: Number(prod.taxRate ?? 23),
+          unit: prod.unit || "szt.",
           qty: 1,
           itemDiscountType: "percent",
-          itemDiscountValue: defaultProdDisc
+          itemDiscountValue: defaultProdDiscPct
         });
       }
-      renderCart();
-    }
-
-    function updateQty(prodId, delta) {
-      const idx = state.cart.findIndex(i => i.id === prodId);
-      if (idx === -1) return;
-
-      if (delta > 0) {
-        const prod = state.products.find(p => p.id === prodId);
-        const availableStock = prod ? Number(prod.stock ?? 0) : 9999;
-        if (state.cart[idx].qty + delta > availableStock) {
-          showToast(`Maksymalny dostępny stan magazynowy: ${availableStock}`, "warning");
-          return;
-        }
+      if (!state.pendingDocNumber) {
+        state.pendingDocNumber = generateDocumentNumberForCurrentType();
       }
-
-      state.cart[idx].qty += delta;
-      if (state.cart[idx].qty <= 0) state.cart.splice(idx, 1);
       renderCart();
+    };
+
+    window.updateCartQty = (idx, delta) => {
+      const item = state.cart[idx];
+      if (!item) return;
+      const prod = state.products.find(p => p.id === item.productId);
+      const maxStock = prod ? Number(prod.stock ?? 999999) : 999999;
+
+      const newQty = item.qty + delta;
+      if (newQty <= 0) {
+        state.cart.splice(idx, 1);
+      } else if (newQty > maxStock) {
+        return showToast(`Maksymalny dostępny stan to ${maxStock} ${item.unit}!`, "warning");
+      } else {
+        item.qty = newQty;
+      }
+      if (state.cart.length === 0) state.pendingDocNumber = "";
+      renderCart();
+    };
+
+    function computeItemDiscountAmount(item) {
+      const base = Number(item.price) * Number(item.qty);
+      const val = Number(item.itemDiscountValue || 0);
+      if (val <= 0 || base <= 0) return 0;
+      if (item.itemDiscountType === "amount") {
+        return Math.min(base, val);
+      }
+      return Math.min(base, base * (Math.min(100, val) / 100));
     }
 
     const itemEditModal = document.getElementById("itemEditModal");
-    let editingCartItemId = null;
-    let editingDiscType = "percent";
+    let editingCartIndex = null;
+    let modalDiscType = "percent";
 
-    function openItemEditModal(prodId) {
-      closeGlobalPepcoVk();
-      const item = state.cart.find(i => i.id === prodId);
+    window.openItemEditModal = (idx) => {
+      const item = state.cart[idx];
       if (!item) return;
-
-      editingCartItemId = prodId;
-      editingDiscType = item.itemDiscountType || "percent";
+      closeGlobalPepcoVk();
+      editingCartIndex = idx;
+      modalDiscType = item.itemDiscountType === "amount" ? "amount" : "percent";
 
       document.getElementById("editModalProdName").textContent = item.name;
-      document.getElementById("editModalProdMeta").textContent = `EAN: ${item.ean || "—"} ${item.plu ? "• PLU: " + item.plu : ""} • VAT ${item.taxRate ?? 23}%`;
+      document.getElementById("editModalProdMeta").textContent =
+        `EAN: ${item.ean || "—"} ${item.plu ? `| PLU: ${item.plu}` : ""}| VAT: ${item.taxRate}%`;
       document.getElementById("editModalUnitLabel").textContent = item.unit || "szt.";
+
       document.getElementById("editItemPriceInput").value = Number(item.price).toFixed(2);
       document.getElementById("editItemQtyInput").value = item.qty;
-      document.getElementById("editItemDiscountInput").value = item.itemDiscountValue > 0 ? item.itemDiscountValue : "";
+      document.getElementById("editItemDiscountInput").value = item.itemDiscountValue ? Number(item.itemDiscountValue) : 0;
 
-      setEditModalDiscountTypeUI(editingDiscType);
-      updateItemEditPreview();
+      syncItemDiscSwitchUI();
+      recalcItemEditPreview();
       itemEditModal.classList.remove("hidden");
-    }
+    };
 
-    function setEditModalDiscountTypeUI(type) {
-      editingDiscType = type;
+    function syncItemDiscSwitchUI() {
       document.querySelectorAll("#itemDiscTypeSwitch .disc-type-option").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.discType === type);
+        btn.classList.toggle("active", btn.dataset.discType === modalDiscType);
       });
-      const sym = state.store.activeCurrencySymbol || "zł";
-      document.getElementById("editItemDiscSuffix").textContent = type === "percent" ? "%" : sym;
-      document.getElementById("quickItemPercentBtns").classList.toggle("hidden", type !== "percent");
+      document.getElementById("editItemDiscSuffix").textContent =
+        modalDiscType === "percent" ? "%" : (state.store.activeCurrencySymbol || "zł");
+      document.getElementById("quickItemPercentBtns").classList.toggle("hidden", modalDiscType !== "percent");
     }
 
-    function calcItemLineFinancials(price, qty, discType, discVal) {
-      const baseTotal = Math.max(0, price * qty);
-      let itemDiscAmount = 0;
-      if (discVal > 0) {
-        if (discType === "percent") {
-          const clampedPct = Math.min(100, Math.max(0, discVal));
-          itemDiscAmount = baseTotal * (clampedPct / 100);
-        } else {
-          itemDiscAmount = Math.min(baseTotal, Math.max(0, discVal));
-        }
-      }
-      const lineTotalAfterItemDisc = Math.max(0, baseTotal - itemDiscAmount);
-      return { baseTotal, itemDiscAmount, lineTotalAfterItemDisc };
-    }
-
-    function updateItemEditPreview() {
-      const price = Math.max(0, parseFloat(document.getElementById("editItemPriceInput").value) || 0);
+    function recalcItemEditPreview() {
+      const price = Math.max(0, Number(document.getElementById("editItemPriceInput").value) || 0);
       const qty = Math.max(1, parseInt(document.getElementById("editItemQtyInput").value) || 1);
-      const discVal = Math.max(0, parseFloat(document.getElementById("editItemDiscountInput").value) || 0);
+      const discVal = Math.max(0, Number(document.getElementById("editItemDiscountInput").value) || 0);
 
-      const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(price, qty, editingDiscType, discVal);
-      document.getElementById("editPreviewBase").textContent = formatMoney(baseTotal);
-      document.getElementById("editPreviewDiscount").textContent = "-" + formatMoney(itemDiscAmount);
-      document.getElementById("editPreviewFinal").textContent = formatMoney(lineTotalAfterItemDisc);
+      const base = price * qty;
+      const discAmt = modalDiscType === "amount"
+        ? Math.min(base, discVal)
+        : Math.min(base, base * (Math.min(100, discVal) / 100));
+      const finalAmt = Math.max(0, base - discAmt);
+
+      document.getElementById("editPreviewBase").textContent = formatMoney(base);
+      document.getElementById("editPreviewDiscount").textContent = `-${formatMoney(discAmt)}`;
+      document.getElementById("editPreviewFinal").textContent = formatMoney(finalAmt);
     }
 
     document.querySelectorAll("#itemDiscTypeSwitch .disc-type-option").forEach(btn => {
       btn.addEventListener("click", () => {
-        setEditModalDiscountTypeUI(btn.dataset.discType);
-        updateItemEditPreview();
+        modalDiscType = btn.dataset.discType;
+        syncItemDiscSwitchUI();
+        recalcItemEditPreview();
       });
     });
 
     document.querySelectorAll("#quickItemPercentBtns button").forEach(btn => {
       btn.addEventListener("click", () => {
-        setNativeInputValueAndDispatch(document.getElementById("editItemDiscountInput"), btn.dataset.qdisc);
+        modalDiscType = "percent";
+        syncItemDiscSwitchUI();
+        document.getElementById("editItemDiscountInput").value = btn.dataset.qdisc;
+        recalcItemEditPreview();
       });
     });
 
     document.getElementById("btnEditQtyMinus").addEventListener("click", () => {
       const inp = document.getElementById("editItemQtyInput");
-      setNativeInputValueAndDispatch(inp, String(Math.max(1, (parseInt(inp.value) || 1) - 1)));
+      inp.value = Math.max(1, (parseInt(inp.value) || 1) - 1);
+      recalcItemEditPreview();
     });
 
     document.getElementById("btnEditQtyPlus").addEventListener("click", () => {
       const inp = document.getElementById("editItemQtyInput");
-      const prod = state.products.find(p => p.id === editingCartItemId);
-      const maxStock = prod ? Number(prod.stock ?? 9999) : 9999;
-      const nextVal = (parseInt(inp.value) || 1) + 1;
-      if (nextVal > maxStock) {
-        showToast(`Maksymalny dostępny stan magazynowy: ${maxStock}`, "warning");
-        return;
-      }
-      setNativeInputValueAndDispatch(inp, String(nextVal));
+      inp.value = (parseInt(inp.value) || 1) + 1;
+      recalcItemEditPreview();
     });
 
-    document.getElementById("editItemPriceInput").addEventListener("input", updateItemEditPreview);
-    document.getElementById("editItemQtyInput").addEventListener("input", updateItemEditPreview);
-    document.getElementById("editItemDiscountInput").addEventListener("input", updateItemEditPreview);
+    ["editItemPriceInput", "editItemQtyInput", "editItemDiscountInput"].forEach(id => {
+      document.getElementById(id).addEventListener("input", recalcItemEditPreview);
+    });
 
-    document.getElementById("btnSaveItemEdit").addEventListener("click", () => {
+    function closeItemEditModal() {
       closeGlobalPepcoVk();
-      const idx = state.cart.findIndex(i => i.id === editingCartItemId);
-      if (idx === -1) return;
-
-      const newPrice = Math.max(0, parseFloat(document.getElementById("editItemPriceInput").value) || 0);
-      const newQty = Math.max(1, parseInt(document.getElementById("editItemQtyInput").value) || 1);
-      const rawDiscVal = Math.max(0, parseFloat(document.getElementById("editItemDiscountInput").value) || 0);
-
-      const prod = state.products.find(p => p.id === editingCartItemId);
-      const maxStock = prod ? Number(prod.stock ?? 9999) : 9999;
-      if (newQty > maxStock) {
-        showToast(`Dostępny stan magazynowy to maksymalnie ${maxStock} szt.`, "warning");
-        return;
-      }
-
-      state.cart[idx].price = newPrice;
-      state.cart[idx].qty = newQty;
-      state.cart[idx].itemDiscountType = editingDiscType;
-      state.cart[idx].itemDiscountValue = editingDiscType === "percent" ? Math.min(100, rawDiscVal) : rawDiscVal;
-
       itemEditModal.classList.add("hidden");
-      editingCartItemId = null;
-      renderCart();
-      showToast("Zaktualizowano pozycję na paragonie", "check_circle");
-    });
+      editingCartIndex = null;
+    }
+
+    document.getElementById("btnCloseItemEditModal").addEventListener("click", closeItemEditModal);
+    document.getElementById("btnCancelItemEdit").addEventListener("click", closeItemEditModal);
 
     document.getElementById("btnRemoveItemFromModal").addEventListener("click", () => {
-      closeGlobalPepcoVk();
-      if (!editingCartItemId) return;
-      state.cart = state.cart.filter(i => i.id !== editingCartItemId);
-      itemEditModal.classList.add("hidden");
-      editingCartItemId = null;
-      renderCart();
-      showToast("Usunięto pozycję z paragonu", "delete");
+      if (editingCartIndex !== null) {
+        state.cart.splice(editingCartIndex, 1);
+        if (state.cart.length === 0) state.pendingDocNumber = "";
+        renderCart();
+        showToast("Usunięto pozycję z paragonu", "delete");
+      }
+      closeItemEditModal();
     });
 
-    document.getElementById("btnCloseItemEditModal").addEventListener("click", () => { closeGlobalPepcoVk(); itemEditModal.classList.add("hidden"); });
-    document.getElementById("btnCancelItemEdit").addEventListener("click", () => { closeGlobalPepcoVk(); itemEditModal.classList.add("hidden"); });
+    document.getElementById("btnSaveItemEdit").addEventListener("click", () => {
+      if (editingCartIndex === null) return;
+      const item = state.cart[editingCartIndex];
+      if (!item) return;
+
+      const prod = state.products.find(p => p.id === item.productId);
+      const maxStock = prod ? Number(prod.stock ?? 999999) : 999999;
+
+      const newPrice = Math.max(0, Number(document.getElementById("editItemPriceInput").value) || 0);
+      const newQty = Math.max(1, parseInt(document.getElementById("editItemQtyInput").value) || 1);
+      const newDiscVal = Math.max(0, Number(document.getElementById("editItemDiscountInput").value) || 0);
+
+      if (newQty > maxStock) {
+        return showToast(`Maksymalny dostępny stan magazynowy to ${maxStock} ${item.unit}!`, "warning");
+      }
+
+      item.price = newPrice;
+      item.qty = newQty;
+      item.itemDiscountType = modalDiscType;
+      item.itemDiscountValue = modalDiscType === "percent" ? Math.min(100, newDiscVal) : newDiscVal;
+
+      renderCart();
+      showToast(`Zaktualizowano pozycję: ${item.name}`, "check_circle");
+      closeItemEditModal();
+    });
 
     document.querySelectorAll(".doc-type-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -5127,189 +5888,268 @@ ${opLines}
         document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.docType = btn.dataset.docType;
+        if (state.cart.length > 0) {
+          state.pendingDocNumber = generateDocumentNumberForCurrentType();
+        }
 
         document.getElementById("receiptNipBox").classList.toggle("hidden", state.docType !== "receipt_nip");
         document.getElementById("invoiceBuyerBox").classList.toggle("hidden", state.docType !== "invoice");
+
+        if (state.docType === "invoice") {
+          openContractorModal(state.contractors.length > 0 ? "db" : "manual");
+        }
+
         renderCart();
       });
     });
 
     document.querySelectorAll("input[name='invBuyerMode']").forEach(radio => {
       radio.addEventListener("change", (e) => {
-        closeGlobalPepcoVk();
-        document.getElementById("invBuyerNip").classList.toggle("hidden", e.target.value === "no_nip");
+        const nipInp = document.getElementById("invBuyerNip");
+        if (e.target.value === "no_nip") {
+          nipInp.classList.add("hidden");
+          nipInp.value = "";
+        } else {
+          nipInp.classList.remove("hidden");
+        }
+        renderCart();
       });
     });
 
-    function getCartTotals() {
-      const discObj = state.discounts.find(d => d.id === state.selectedDiscountId);
-      const globalDiscPercent = discObj ? Number(discObj.percent) : 0;
-
-      let baseSubtotal = 0;
+    function calculateCartTotals() {
+      let grossAfterItemDisc = 0;
       let totalItemDiscounts = 0;
-      let subtotalAfterItemDiscounts = 0;
-      let totalNetAfterAllDiscounts = 0;
-      let totalVatAfterAllDiscounts = 0;
 
       state.cart.forEach(item => {
-        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          item.price,
-          item.qty,
-          item.itemDiscountType || "percent",
-          item.itemDiscountValue || 0
-        );
-
-        baseSubtotal += baseTotal;
-        totalItemDiscounts += itemDiscAmount;
-        subtotalAfterItemDiscounts += lineTotalAfterItemDisc;
-
-        const lineFinalAfterGlobalDisc = lineTotalAfterItemDisc * (1 - globalDiscPercent / 100);
-        const rate = Number(item.taxRate ?? 23);
-        const lineNet = lineFinalAfterGlobalDisc / (1 + rate / 100);
-
-        totalNetAfterAllDiscounts += lineNet;
-        totalVatAfterAllDiscounts += (lineFinalAfterGlobalDisc - lineNet);
+        const base = Number(item.price) * Number(item.qty);
+        const iDisc = computeItemDiscountAmount(item);
+        totalItemDiscounts += iDisc;
+        grossAfterItemDisc += Math.max(0, base - iDisc);
       });
 
-      const globalDiscountVal = subtotalAfterItemDiscounts * (globalDiscPercent / 100);
-      const totalDiscountVal = totalItemDiscounts + globalDiscountVal;
-      const total = Math.max(0, subtotalAfterItemDiscounts - globalDiscountVal);
+      const discObj = state.discounts.find(d => d.id === state.selectedDiscountId);
+      const discPercent = discObj ? Number(discObj.percent) : 0;
+      const receiptDiscountAmount = grossAfterItemDisc * (discPercent / 100);
+      const totalDiscountAmount = totalItemDiscounts + receiptDiscountAmount;
+      const totalGross = Math.max(0, grossAfterItemDisc - receiptDiscountAmount);
+
+      let totalNet = 0;
+      let totalVat = 0;
+      const globalFactor = grossAfterItemDisc > 0 ? (totalGross / grossAfterItemDisc) : 1;
+
+      state.cart.forEach(item => {
+        const base = Number(item.price) * Number(item.qty);
+        const iDisc = computeItemDiscountAmount(item);
+        const itemFinalGross = Math.max(0, base - iDisc) * globalFactor;
+        const rate = Number(item.taxRate ?? 23);
+        const itemNet = itemFinalGross / (1 + rate / 100);
+        const itemVat = itemFinalGross - itemNet;
+        totalNet += itemNet;
+        totalVat += itemVat;
+      });
 
       return {
-        baseSubtotal,
+        grossAfterItemDisc,
         totalItemDiscounts,
-        globalDiscountVal,
-        discountVal: totalDiscountVal,
-        discPercent: globalDiscPercent,
-        discName: discObj ? discObj.name : "",
-        total,
-        net: totalNetAfterAllDiscounts,
-        vat: totalVatAfterAllDiscounts
+        receiptDiscountAmount,
+        totalDiscountAmount,
+        totalGross,
+        totalNet,
+        totalVat,
+        discPercent
       };
     }
 
     function renderCart() {
-      const { discountVal, total, net, vat, discPercent, discName } = getCartTotals();
-      const sym = state.store.activeCurrencySymbol || "zł";
-
-      document.getElementById("cartCountBadge").textContent = `(${state.cart.length} poz.)`;
-      document.getElementById("netAmount").textContent = formatMoney(net);
-      document.getElementById("vatAmount").textContent = formatMoney(vat);
-      document.getElementById("discountAmount").textContent = "-" + formatMoney(discountVal);
-      document.getElementById("totalAmount").textContent = formatMoney(total);
-
-      const btnDiscTrigger = document.getElementById("btnOpenReceiptDiscount");
-      if (discPercent > 0) {
-        btnDiscTrigger.innerHTML = `<span class="m-icon sm">sell</span> Rabat: ${discName} (-${discPercent}%)`;
-        btnDiscTrigger.style.background = "#fdf2f8";
-        btnDiscTrigger.style.borderColor = "#fbcfe8";
-        btnDiscTrigger.style.color = "var(--pepco-magenta)";
-      } else {
-        btnDiscTrigger.innerHTML = `<span class="m-icon sm">sell</span> Rabat`;
-        btnDiscTrigger.style.background = "#eef2ff";
-        btnDiscTrigger.style.borderColor = "#c7d2fe";
-        btnDiscTrigger.style.color = "var(--pepco-indigo)";
-      }
-
-      const isOver450 = state.docType === "receipt_nip" && total > 450;
-      document.getElementById("limit450Alert").classList.toggle("hidden", !isOver450);
-      document.getElementById("btnPodsuma").disabled = state.cart.length === 0 || isOver450;
-
       const container = document.getElementById("cartItemsContainer");
+      const countBadge = document.getElementById("cartCountBadge");
+      const btnPodsuma = document.getElementById("btnPodsuma");
+
+      const totalQty = state.cart.reduce((s, i) => s + i.qty, 0);
+      countBadge.textContent = `(${totalQty} szt.)`;
+
       if (state.cart.length === 0) {
         container.innerHTML = `
           <div class="empty-cart">
             <span class="m-icon xl" style="color:#cbd5e1;">shopping_basket</span>
             <strong>Paragon jest pusty</strong>
             <p style="font-size: 12px;">Wybierz towar z katalogu lub zeskanuj kod EAN / PLU</p>
-          </div>`;
+          </div>
+        `;
+        btnPodsuma.disabled = true;
+        document.getElementById("netAmount").textContent = formatMoney(0);
+        document.getElementById("vatAmount").textContent = formatMoney(0);
+        document.getElementById("discountAmount").textContent = `-${formatMoney(0)}`;
+        document.getElementById("totalAmount").textContent = formatMoney(0);
+        document.getElementById("limit450Alert").classList.add("hidden");
         return;
       }
 
-      container.innerHTML = state.cart.map(item => {
-        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          item.price,
-          item.qty,
-          item.itemDiscountType || "percent",
-          item.itemDiscountValue || 0
-        );
+      container.innerHTML = state.cart.map((item, idx) => {
+        const base = Number(item.price) * Number(item.qty);
+        const iDisc = computeItemDiscountAmount(item);
+        const lineFinal = Math.max(0, base - iDisc);
+        const hasItemDisc = iDisc > 0.004;
 
-        const discLabel = itemDiscAmount > 0
-          ? (item.itemDiscountType === "amount"
-              ? `Rabat kwotowy: -${Number(item.itemDiscountValue).toFixed(2).replace(".", ",")} ${sym}`
-              : `Rabat: -${item.itemDiscountValue}% (-${itemDiscAmount.toFixed(2).replace(".", ",")} ${sym})`)
-          : "";
+        let discLabel = "";
+        if (hasItemDisc) {
+          discLabel = item.itemDiscountType === "amount"
+            ? `Rabat poz.: -${formatMoney(iDisc)}`
+            : `Rabat poz. -${item.itemDiscountValue}% (-${formatMoney(iDisc)})`;
+        }
 
         return `
-          <div class="cart-item" data-id="${item.id}" title="Kliknij, aby edytować cenę, ilość lub naliczyć rabat">
+          <div class="cart-item" onclick="openItemEditModal(${idx})" title="Kliknij, aby edytować cenę, ilość lub rabat pozycji">
             <div class="item-info">
-              <h4>${item.name} <span class="m-icon sm" style="color:var(--pepco-blue);">edit</span></h4>
-              <p>${formatMoney(item.price)} / ${item.unit || "szt."} • VAT ${item.taxRate ?? 23}%</p>
-              ${discLabel ? `<span class="item-disc-pill">${discLabel}</span>` : ""}
+              <h4>
+                <span>${item.name}</span>
+                <span class="m-icon sm" style="color:var(--pepco-blue);">edit</span>
+              </h4>
+              <p>${formatMoney(item.price)} / ${item.unit} • VAT ${item.taxRate}%${item.plu ? ` • PLU ${item.plu}` : ""}</p>
+              ${hasItemDisc ? `<span class="item-disc-pill">${discLabel}</span>` : ""}
             </div>
-            <div class="qty-controls">
-              <button class="qty-btn" data-act="dec" data-id="${item.id}">−</button>
+            <div class="qty-controls" onclick="event.stopPropagation()">
+              <button class="qty-btn" onclick="updateCartQty(${idx}, -1)">−</button>
               <span class="qty-val">${item.qty}</span>
-              <button class="qty-btn" data-act="inc" data-id="${item.id}">+</button>
+              <button class="qty-btn" onclick="updateCartQty(${idx}, 1)">+</button>
             </div>
             <div class="item-total">
-              ${itemDiscAmount > 0 ? `<div style="font-size:10px; text-decoration:line-through; color:var(--text-muted); font-weight:500;">${formatMoney(baseTotal)}</div>` : ""}
-              <div>${formatMoney(lineTotalAfterItemDisc)}</div>
+              ${formatMoney(lineFinal)}
+              ${hasItemDisc ? `<div style="font-size:10.5px; color:var(--text-muted); text-decoration:line-through; font-weight:500;">${formatMoney(base)}</div>` : ""}
             </div>
           </div>
         `;
       }).join("");
 
-      container.querySelectorAll(".cart-item").forEach(row => {
-        row.addEventListener("click", (e) => {
-          if (e.target.closest(".qty-controls")) return;
-          openItemEditModal(row.dataset.id);
-        });
-      });
+      const totals = calculateCartTotals();
+      document.getElementById("netAmount").textContent = formatMoney(totals.totalNet);
+      document.getElementById("vatAmount").textContent = formatMoney(totals.totalVat);
+      document.getElementById("discountAmount").textContent = `-${formatMoney(totals.totalDiscountAmount)}`;
+      document.getElementById("totalAmount").textContent = formatMoney(totals.totalGross);
 
-      container.querySelectorAll(".qty-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          updateQty(btn.dataset.id, btn.dataset.act === "inc" ? 1 : -1);
-        });
-      });
+      const over450 = state.docType === "receipt_nip" && totals.totalGross > 450;
+      document.getElementById("limit450Alert").classList.toggle("hidden", !over450);
+
+      btnPodsuma.disabled = over450;
     }
 
     document.getElementById("btnClearCart").addEventListener("click", () => {
-      resetSaleScreen();
-    });
-
-    function resetSaleScreen() {
-      closeGlobalPepcoVk();
       state.cart = [];
       state.selectedDiscountId = "";
-      state.docType = "receipt";
-      state.searchQuery = "";
-      document.getElementById("receiptBuyerNip").value = "";
-      document.getElementById("invBuyerNip").value = "";
-      document.getElementById("invBuyerName").value = "";
-      document.getElementById("invBuyerAddress").value = "";
-      document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.toggle("active", b.dataset.docType === "receipt"));
-      document.getElementById("receiptNipBox").classList.add("hidden");
-      document.getElementById("invoiceBuyerBox").classList.add("hidden");
-      searchInput.value = "";
-      btnClearSearchInput.classList.add("hidden");
-      renderProducts();
+      state.pendingDocNumber = "";
       renderCart();
-      switchMainView("pos");
-    }
+    });
 
     // ==========================================
-    // FLOATING PAYMENT SCREEN (PODSUMA)
+    // PŁYWAJĄCY EKRAN PŁATNOŚCI (PO KLIKNIĘCIU "PODSUMA")
     // ==========================================
     const floatingOverlay = document.getElementById("floatingPaymentOverlay");
-    const fpCashCalcBox = document.getElementById("fpCashCalcBox");
-    const fpCashReceived = document.getElementById("fpCashReceived");
+    let selectedPaymentMethodObj = null;
 
-    function buildReceiptText(docNumber, payMethodName, cashGiven = 0) {
-      const { discountVal, discPercent, total, net, vat } = getCartTotals();
+    function renderFloatingPaymentTiles() {
+      const grid = document.getElementById("paymentTilesGrid");
+      if (state.paymentMethods.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; color:var(--text-muted); font-size:13px;">Brak form płatności. Dodaj je w zakładce Administracja -> Formy płatności.</div>`;
+        return;
+      }
+
+      grid.innerHTML = state.paymentMethods.map(pm => {
+        const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
+        return `
+          <button type="button" class="payment-tile" data-pm-id="${pm.id}">
+            <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
+            <div>
+              <div class="tile-name">${pm.name}</div>
+              <div class="tile-sub">${pm.isCash ? "Gotówka / Reszta" : "Szybka płatność"}</div>
+            </div>
+          </button>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".payment-tile").forEach(tile => {
+        tile.addEventListener("click", () => {
+          const pm = state.paymentMethods.find(p => p.id === tile.dataset.pmId);
+          if (!pm) return;
+          selectedPaymentMethodObj = pm;
+
+          grid.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
+          tile.classList.add("selected");
+
+          const cashBox = document.getElementById("fpCashCalcBox");
+          if (pm.isCash) {
+            cashBox.classList.remove("hidden");
+            const totals = calculateCartTotals();
+            const cashInput = document.getElementById("fpCashReceived");
+            if (!cashInput.value || Number(cashInput.value) < totals.totalGross) {
+              cashInput.value = totals.totalGross.toFixed(2);
+            }
+            updateFloatingCashChange();
+            finalizeSaleTransaction(pm);
+          } else {
+            cashBox.classList.add("hidden");
+            finalizeSaleTransaction(pm);
+          }
+        });
+      });
+    }
+
+    function updateFloatingCashChange() {
+      const totals = calculateCartTotals();
+      const received = Number(document.getElementById("fpCashReceived").value) || 0;
+      const change = Math.max(0, received - totals.totalGross);
+      document.getElementById("fpCashChange").textContent = formatMoney(change);
+      updateFloatingReceiptPreview(selectedPaymentMethodObj?.name || "Gotówka");
+    }
+
+    document.getElementById("fpCashReceived").addEventListener("input", updateFloatingCashChange);
+    document.querySelectorAll("#fpCashCalcBox .quick-cash button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cur = Number(document.getElementById("fpCashReceived").value) || 0;
+        document.getElementById("fpCashReceived").value = (cur + Number(btn.dataset.cash)).toFixed(2);
+        updateFloatingCashChange();
+      });
+    });
+
+    function validateBeforePodsuma() {
+      if (state.cart.length === 0) return false;
+      const totals = calculateCartTotals();
+
+      if (state.docType === "receipt_nip") {
+        if (totals.totalGross > 450) {
+          showToast("Paragon z NIP nie może przekraczać 450,00 PLN! Wybierz Fakturę.", "warning");
+          return false;
+        }
+        const nip = document.getElementById("receiptBuyerNip").value.trim();
+        if (!nip) {
+          showToast("Wpisz numer NIP nabywcy dla paragonu z NIP!", "warning");
+          return false;
+        }
+      }
+
+      if (state.docType === "invoice") {
+        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
+        const nip = document.getElementById("invBuyerNip").value.trim();
+        const name = document.getElementById("invBuyerName").value.trim();
+        const addr = document.getElementById("invBuyerAddress").value.trim();
+        if (!name || !addr) {
+          showToast("Wpisz nazwę/imię i nazwisko oraz adres nabywcy do faktury!", "warning");
+          return false;
+        }
+        if (mode === "with_nip" && !nip) {
+          showToast("Wpisz numer NIP nabywcy lub wybierz 'Faktura bez NIP'!", "warning");
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function updateFloatingReceiptPreview(paymentLabel = "Wybierz formę płatności") {
+      const totals = calculateCartTotals();
       const s = state.store;
       const sym = s.activeCurrencySymbol || "zł";
+      const docNum = state.pendingDocNumber || generateDocumentNumberForCurrentType();
+
       const header = [
         s.name || "PEPCO SKLEP",
         s.address || "",
@@ -5319,126 +6159,68 @@ ${opLines}
         s.bdo ? `BDO: ${s.bdo}` : ""
       ].filter(Boolean).join("\n");
 
-      let buyerBlock = "";
-      if (state.docType === "receipt_nip") {
-        buyerBlock = `\nNIP NABYWCY: ${document.getElementById("receiptBuyerNip").value.trim()}\n(Faktura uproszczona art. 106e ust. 5 pkt 3)`;
-      } else if (state.docType === "invoice") {
-        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
-        const nip = mode === "with_nip" ? document.getElementById("invBuyerNip").value.trim() : "BRAK (osoba fizyczna)";
-        buyerBlock = `\nNABYWCA: ${document.getElementById("invBuyerName").value.trim()}\nADRES: ${document.getElementById("invBuyerAddress").value.trim()}\nNIP: ${nip}`;
-      }
-
-      const lines = state.cart.map(i => {
-        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          i.price, i.qty, i.itemDiscountType || "percent", i.itemDiscountValue || 0
-        );
-        let row = `${i.name}\n  ${i.qty} ${i.unit || "szt."} x ${Number(i.price).toFixed(2)} = ${baseTotal.toFixed(2)} ${sym}`;
-        if (itemDiscAmount > 0) {
-          const tag = i.itemDiscountType === "amount" ? `-${Number(i.itemDiscountValue).toFixed(2)} ${sym}` : `-${i.itemDiscountValue}%`;
-          row += `\n  Rabat na poz. (${tag}): -${itemDiscAmount.toFixed(2)} ${sym} -> ${lineTotalAfterItemDisc.toFixed(2)} ${sym}`;
-        }
+      const lines = state.cart.map((i, idx) => {
+        const base = i.price * i.qty;
+        const iDisc = computeItemDiscountAmount(i);
+        const lineFinal = Math.max(0, base - iDisc);
+        let row = `${idx + 1}. ${i.name}\n   ${i.qty} ${i.unit} x ${i.price.toFixed(2)} = ${lineFinal.toFixed(2)} ${sym}`;
+        if (iDisc > 0) row += `\n   [Rabat poz.: -${iDisc.toFixed(2)} ${sym}]`;
         return row;
       }).join("\n");
 
-      const docLabel = state.docType === "invoice" ? "FAKTURA VAT" : (state.docType === "receipt_nip" ? "PARAGON FISKALNY Z NIP" : "PARAGON FISKALNY");
-      const cashBlock = cashGiven > 0 ? `\nWPŁATA GOTÓWKA: ${cashGiven.toFixed(2)} ${sym}\nRESZTA:         ${Math.max(0, cashGiven - total).toFixed(2)} ${sym}` : "";
+      let buyerInfo = "";
+      if (state.docType === "receipt_nip") {
+        buyerInfo = `\nNIP NABYWCY: ${document.getElementById("receiptBuyerNip").value.trim()}`;
+      } else if (state.docType === "invoice") {
+        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
+        buyerInfo = `\nNABYWCA: ${document.getElementById("invBuyerName").value.trim()}\nADRES: ${document.getElementById("invBuyerAddress").value.trim()}` +
+          (mode === "with_nip" ? `\nNIP NABYWCY: ${document.getElementById("invBuyerNip").value.trim()}` : "\nFAKTURA BEZ NIP");
+      }
 
-      return `${header}
-------------------------------------------
-${docLabel}
-Nr: ${docNumber}
-Kasjer: ${state.activeOperator}
-Data: ${new Date().toLocaleString("pl-PL")}${buyerBlock}
-------------------------------------------
+      const docTitleMap = {
+        receipt: "PARAGON FISKALNY",
+        receipt_nip: "PARAGON FISKALNY Z NIP",
+        invoice: "FAKTURA VAT"
+      };
+
+      document.getElementById("fpDocNumberBadge").textContent = `Nr dok.: ${docNum}`;
+
+      document.getElementById("fpReceiptPreview").textContent = `${header}
+----------------------------------------
+${docTitleMap[state.docType]}
+NR DOKUMENTU: ${docNum}
+KASJER: ${state.activeOperator}${buyerInfo}
+----------------------------------------
 ${lines}
-------------------------------------------
-Wartość Netto:      ${net.toFixed(2)} ${sym}
-Podatek VAT:        ${vat.toFixed(2)} ${sym}${discPercent > 0 ? `\nRabat na paragon (-${discPercent}%):` : ""}${discountVal > 0 ? `\nŁączny rabat:      -${discountVal.toFixed(2)} ${sym}` : ""}
-SUMA BRUTTO:        ${total.toFixed(2)} ${sym}
-PŁATNOŚĆ:           ${payMethodName}${cashBlock}
-------------------------------------------
-      Dziękujemy za zakupy w Pepco!`;
-    }
-
-    function renderFloatingPaymentTiles() {
-      const grid = document.getElementById("paymentTilesGrid");
-      const methods = state.paymentMethods.length > 0
-        ? state.paymentMethods
-        : [
-            { id: "default_card", name: "Karta płatnicza", icon: "credit_card", isCash: false },
-            { id: "default_cash", name: "Gotówka", icon: "payments", isCash: true },
-            { id: "default_blik", name: "BLIK", icon: "qr_code_2", isCash: false }
-          ];
-
-      grid.innerHTML = methods.map(pm => {
-        const iconName = resolveAndroidIcon(pm.icon, pm.isCash);
-        return `
-        <button type="button" class="payment-tile" data-pm-name="${pm.name}" data-is-cash="${pm.isCash ? 'true' : 'false'}">
-          <div class="tile-icon"><span class="m-icon lg">${iconName}</span></div>
-          <div>
-            <div class="tile-name">${pm.name}</div>
-            <div class="tile-sub">${pm.isCash ? 'Gotówka (kalkulator reszty)' : 'Zatwierdź i rozlicz'}</div>
-          </div>
-        </button>
-      `;
-      }).join("");
-
-      grid.querySelectorAll(".payment-tile").forEach(tile => {
-        tile.addEventListener("click", async () => {
-          const pmName = tile.dataset.pmName;
-          const isCash = tile.dataset.isCash === "true";
-
-          if (isCash && fpCashCalcBox.classList.contains("hidden")) {
-            fpCashCalcBox.classList.remove("hidden");
-            grid.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
-            tile.classList.add("selected");
-            fpCashReceived.value = "";
-            document.getElementById("fpCashChange").textContent = formatMoney(0);
-            document.getElementById("fpReceiptPreview").textContent = buildReceiptText("PODGLĄD", pmName, 0);
-            showToast("Wpisz kwotę gotówki od klienta i kliknij ponownie kafelek Gotówka, aby zatwierdzić", "payments");
-            return;
-          }
-
-          await finalizeTransactionWithPayment(pmName, isCash);
-        });
-      });
+----------------------------------------
+NETTO:        ${totals.totalNet.toFixed(2)} ${sym}
+VAT:          ${totals.totalVat.toFixed(2)} ${sym}
+RABAT ŁĄCZNIE:-${totals.totalDiscountAmount.toFixed(2)} ${sym}
+DO ZAPŁATY:   ${totals.totalGross.toFixed(2)} ${sym}
+PŁATNOŚĆ:     ${paymentLabel}
+----------------------------------------
+Dziękujemy za zakupy w PEPCO!`;
     }
 
     document.getElementById("btnPodsuma").addEventListener("click", () => {
+      if (!validateBeforePodsuma()) return;
       closeGlobalPepcoVk();
-      const { total } = getCartTotals();
-
-      if (state.docType === "receipt_nip") {
-        const nip = document.getElementById("receiptBuyerNip").value.replace(/[^0-9]/g, "");
-        if (nip.length !== 10) return showToast("Podaj poprawny 10-cyfrowy NIP nabywcy!", "warning");
-        if (total > 450) return showToast("Paragon z NIP nie może przekraczać 450,00 zł!", "warning");
+      if (!state.pendingDocNumber) {
+        state.pendingDocNumber = generateDocumentNumberForCurrentType();
       }
-
-      if (state.docType === "invoice") {
-        const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
-        const name = document.getElementById("invBuyerName").value.trim();
-        const addr = document.getElementById("invBuyerAddress").value.trim();
-        if (!name || !addr) return showToast("Uzupełnij nazwę i adres nabywcy na fakturze!", "warning");
-        if (mode === "with_nip") {
-          const nip = document.getElementById("invBuyerNip").value.replace(/[^0-9]/g, "");
-          if (nip.length !== 10) return showToast("Podaj poprawny 10-cyfrowy NIP firmy!", "warning");
-        }
-      }
-
-      fpCashCalcBox.classList.add("hidden");
-      fpCashReceived.value = "";
-      document.querySelectorAll(".payment-tile").forEach(t => t.classList.remove("selected"));
-
+      selectedPaymentMethodObj = null;
+      const totals = calculateCartTotals();
       const docLabelMap = {
-        receipt: "Paragon fiskalny detaliczny",
-        receipt_nip: "Paragon fiskalny z NIP (do 450 zł)",
-        invoice: "Zwykła Faktura VAT"
+        receipt: "Paragon fiskalny",
+        receipt_nip: "Paragon z NIP (do 450 PLN)",
+        invoice: "Faktura VAT"
       };
-      document.getElementById("fpDocLabel").textContent = docLabelMap[state.docType] || "Paragon fiskalny";
-      document.getElementById("fpTotalAmount").textContent = formatMoney(total);
-      document.getElementById("fpReceiptPreview").textContent = buildReceiptText("OCZEKUJE NA PŁATNOŚĆ", "---", 0);
-
-      renderFloatingPaymentTiles();
+      document.getElementById("fpDocLabel").textContent = docLabelMap[state.docType];
+      document.getElementById("fpTotalAmount").textContent = formatMoney(totals.totalGross);
+      document.getElementById("fpCashCalcBox").classList.add("hidden");
+      document.getElementById("fpCashReceived").value = totals.totalGross.toFixed(2);
+      document.querySelectorAll("#paymentTilesGrid .payment-tile").forEach(t => t.classList.remove("selected"));
+      updateFloatingReceiptPreview();
       floatingOverlay.classList.remove("hidden");
     });
 
@@ -5447,110 +6229,98 @@ PŁATNOŚĆ:           ${payMethodName}${cashBlock}
       floatingOverlay.classList.add("hidden");
     });
 
-    fpCashReceived.addEventListener("input", () => {
-      const { total } = getCartTotals();
-      const rec = parseFloat(fpCashReceived.value) || 0;
-      const change = Math.max(0, rec - total);
-      document.getElementById("fpCashChange").textContent = formatMoney(change);
-      document.getElementById("fpReceiptPreview").textContent = buildReceiptText("PODGLĄD", "Gotówka", rec);
-    });
+    async function finalizeSaleTransaction(pm) {
+      const totals = calculateCartTotals();
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const docNum = state.pendingDocNumber || generateDocumentNumberForCurrentType();
 
-    document.querySelectorAll(".quick-cash button").forEach(b => {
-      b.addEventListener("click", () => {
-        setNativeInputValueAndDispatch(fpCashReceived, b.dataset.cash);
-      });
-    });
-
-    async function finalizeTransactionWithPayment(paymentMethodName, isCash) {
-      closeGlobalPepcoVk();
-      const { total, net, vat, discountVal, discPercent } = getCartTotals();
-      const cashGiven = isCash ? (parseFloat(fpCashReceived.value) || total) : 0;
-
-      if (isCash && fpCashReceived.value !== "" && cashGiven < total) {
-        return showToast("Otrzymana kwota gotówki jest mniejsza niż kwota do zapłaty!", "warning");
-      }
-
-      const prefix = state.docType === "invoice" ? "FV" : "PAR";
-      const docNumber = `${prefix}/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
-
-      const soldItemsSnapshot = state.cart.map(item => {
-        const { baseTotal, itemDiscAmount, lineTotalAfterItemDisc } = calcItemLineFinancials(
-          item.price, item.qty, item.itemDiscountType || "percent", item.itemDiscountValue || 0
-        );
-        const effectiveUnitPrice = item.qty > 0 ? Number((lineTotalAfterItemDisc / item.qty).toFixed(2)) : Number(item.price);
+      const itemsWithDisc = state.cart.map(item => {
+        const base = Number(item.price) * Number(item.qty);
+        const iDisc = computeItemDiscountAmount(item);
         return {
-          id: item.id,
-          ean: item.ean || "",
-          plu: item.plu || "",
-          name: item.name,
-          price: Number(item.price),
-          effectiveUnitPrice,
-          qty: Number(item.qty),
-          unit: item.unit || "szt.",
-          taxRate: Number(item.taxRate ?? 23),
-          itemDiscountType: item.itemDiscountType || "percent",
-          itemDiscountValue: Number(item.itemDiscountValue || 0),
-          itemDiscountAmount: Number(itemDiscAmount.toFixed(2)),
-          baseTotal: Number(baseTotal.toFixed(2)),
-          lineTotalAfterItemDisc: Number(lineTotalAfterItemDisc.toFixed(2))
+          ...item,
+          itemDiscountAmount: Number(iDisc.toFixed(2)),
+          lineTotalAfterItemDisc: Number(Math.max(0, base - iDisc).toFixed(2))
         };
       });
 
-      const basePayload = {
-        docNumber,
+      const txPayload = {
+        receiptNumber: docNum,
         docType: state.docType,
-        storeSnapshot: state.store,
         operator: state.activeOperator,
+        paymentMethod: pm.name,
+        items: itemsWithDisc,
+        netAmount: Number(totals.totalNet.toFixed(2)),
+        vatAmount: Number(totals.totalVat.toFixed(2)),
+        itemDiscountsAmount: Number(totals.totalItemDiscounts.toFixed(2)),
+        receiptDiscountAmount: Number(totals.receiptDiscountAmount.toFixed(2)),
+        discountAmount: Number(totals.totalDiscountAmount.toFixed(2)),
+        discountPercent: totals.discPercent,
+        totalAmount: Number(totals.totalGross.toFixed(2)),
         currencySymbol: state.store.activeCurrencySymbol || "zł",
-        items: soldItemsSnapshot,
-        netAmount: Number(net.toFixed(2)),
-        vatAmount: Number(vat.toFixed(2)),
-        discountPercent: discPercent,
-        discountAmount: Number(discountVal.toFixed(2)),
-        totalAmount: Number(total.toFixed(2)),
-        paymentMethod: paymentMethodName,
-        cashReceived: cashGiven,
-        cashChange: isCash ? Math.max(0, Number((cashGiven - total).toFixed(2))) : 0,
+        buyerNip: state.docType === "receipt_nip"
+          ? document.getElementById("receiptBuyerNip").value.trim()
+          : (state.docType === "invoice" && document.querySelector("input[name='invBuyerMode']:checked").value === "with_nip"
+              ? document.getElementById("invBuyerNip").value.trim()
+              : ""),
+        status: "Zrealizowany",
         createdAt: serverTimestamp(),
-        localTimestamp: new Date().toISOString()
+        localTimestamp: now.toISOString()
       };
 
       try {
+        for (const item of state.cart) {
+          if (item.productId) {
+            await updateDoc(doc(db, "products", item.productId), {
+              stock: increment(-Number(item.qty))
+            });
+          }
+        }
+
         if (state.docType === "invoice") {
           const mode = document.querySelector("input[name='invBuyerMode']:checked").value;
-          const buyerNip = mode === "with_nip" ? document.getElementById("invBuyerNip").value.trim() : "";
+          const invNumber = docNum.startsWith("FV/") ? docNum : `FV/${yyyy}/${mm}/${Math.floor(1000 + Math.random() * 9000)}`;
           await addDoc(collection(db, "invoices"), {
-            ...basePayload,
-            invoiceNumber: docNumber,
+            invoiceNumber: invNumber,
             sourceType: "direct_pos",
-            sourceReceiptNumber: null,
+            sourceDocNumber: docNum,
+            receiptNumber: null,
             hasNip: mode === "with_nip",
-            buyerNip,
+            buyerNip: mode === "with_nip" ? document.getElementById("invBuyerNip").value.trim() : "",
             buyerName: document.getElementById("invBuyerName").value.trim(),
-            buyerAddress: document.getElementById("invBuyerAddress").value.trim()
+            buyerAddress: document.getElementById("invBuyerAddress").value.trim(),
+            items: itemsWithDisc,
+            netAmount: Number(totals.totalNet.toFixed(2)),
+            vatAmount: Number(totals.totalVat.toFixed(2)),
+            discountAmount: Number(totals.totalDiscountAmount.toFixed(2)),
+            totalAmount: Number(totals.totalGross.toFixed(2)),
+            paymentMethod: pm.name,
+            operator: state.activeOperator,
+            currencySymbol: state.store.activeCurrencySymbol || "zł",
+            createdAt: serverTimestamp(),
+            localTimestamp: now.toISOString()
           });
         } else {
-          const buyerNip = state.docType === "receipt_nip" ? document.getElementById("receiptBuyerNip").value.trim() : "";
-          await addDoc(collection(db, "transactions"), {
-            ...basePayload,
-            receiptNumber: docNumber,
-            buyerNip,
-            hasInvoiceIssued: false,
-            returnedQuantities: {}
-          });
+          await addDoc(collection(db, "transactions"), txPayload);
         }
 
-        for (const item of state.cart) {
-          await updateDoc(doc(db, "products", item.id), {
-            stock: increment(-Number(item.qty))
-          });
-        }
+        state.cart = [];
+        state.selectedDiscountId = "";
+        state.selectedContractor = null;
+        state.pendingDocNumber = "";
+        document.getElementById("receiptBuyerNip").value = "";
+        document.getElementById("invBuyerNip").value = "";
+        document.getElementById("invBuyerName").value = "";
+        document.getElementById("invBuyerAddress").value = "";
+        renderSelectedContractorBanner();
+        renderCart();
 
         floatingOverlay.classList.add("hidden");
-        showToast(`Sprzedaż zakończona (${paymentMethodName}) — ${docNumber}`, "verified");
-        resetSaleScreen();
+        showToast(`Rozliczono (${pm.name}): ${formatMoney(totals.totalGross)}`, "check_circle");
       } catch (err) {
-        showToast("Błąd zapisu dokumentu: " + err.message, "error");
+        showToast("Błąd podczas zapisu transakcji: " + err.message, "error");
       }
     }
 
@@ -5558,348 +6328,374 @@ PŁATNOŚĆ:           ${payMethodName}${cashBlock}
     // DOCUMENTS, INVOICE TO RECEIPT & RETURNS
     // ==========================================
     function renderReceiptsHistory() {
+      const tb = document.getElementById("historyTableBody");
       let sum = 0;
-      const tbody = document.getElementById("historyTableBody");
       if (state.transactions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">Brak paragonów w bazie danych.</td></tr>`;
-        document.getElementById("historyTotalSum").textContent = formatMoney(0);
-        return;
+        tb.innerHTML = `<tr><td colspan="7" style="color:var(--text-muted); text-align:center;">Brak wystawionych paragonów</td></tr>`;
+      } else {
+        tb.innerHTML = state.transactions.map(t => {
+          sum += Number(t.totalAmount || 0);
+          const dt = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
+          const nipBadge = t.docType === "receipt_nip"
+            ? `<span class="badge-pay">NIP: ${t.buyerNip}</span>`
+            : `<span style="color:var(--text-muted); font-size:12px;">Paragon detaliczny</span>`;
+          return `
+            <tr>
+              <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${t.receiptNumber}</td>
+              <td>${nipBadge}</td>
+              <td>${dt}</td>
+              <td>${t.paymentMethod}</td>
+              <td><strong>${Number(t.totalAmount).toFixed(2).replace(".", ",")} ${t.currencySymbol || "zł"}</strong></td>
+              <td><span class="badge-success">${t.status || "Zrealizowany"}</span></td>
+              <td>
+                <button type="button" class="btn-secondary-sm" onclick="openReceiptDetailModal('${t.id}')">
+                  <span class="m-icon sm">visibility</span> Podgląd
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
       }
-
-      tbody.innerHTML = state.transactions.map(t => {
-        sum += Number(t.totalAmount || 0);
-        const dateStr = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString("pl-PL") : new Date(t.localTimestamp).toLocaleString("pl-PL");
-        const typeLabel = t.buyerNip ? `<span class="badge-warn">Paragon z NIP: ${t.buyerNip}</span>` : `<span class="badge-pay">Paragon detaliczny</span>`;
-        const statusBadges = [];
-        if (t.hasInvoiceIssued) statusBadges.push(`<span class="badge-pay">Wystawiono FV</span>`);
-        if (t.returnedQuantities && Object.keys(t.returnedQuantities).length > 0) statusBadges.push(`<span class="badge-ret">Częściowy/pełny zwrot</span>`);
-        if (statusBadges.length === 0) statusBadges.push(`<span style="color:var(--success); font-weight:600;">Zakończony</span>`);
-
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${t.receiptNumber}</td>
-          <td>${typeLabel}</td>
-          <td>${dateStr}</td>
-          <td>${t.paymentMethod}</td>
-          <td style="font-weight:800;">${Number(t.totalAmount).toFixed(2).replace(".", ",")} ${t.currencySymbol || "zł"}</td>
-          <td>${statusBadges.join(" ")}</td>
-        </tr>`;
-      }).join("");
-
       document.getElementById("historyTotalSum").textContent = formatMoney(sum);
     }
 
     function renderInvoicesTable() {
-      const tbody = document.getElementById("invoicesTableBody");
+      const tb = document.getElementById("invoicesTableBody");
       if (state.invoices.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">Brak wystawionych faktur VAT.</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7" style="color:var(--text-muted); text-align:center;">Brak wystawionych faktur</td></tr>`;
         return;
       }
-      tbody.innerHTML = state.invoices.map(inv => {
-        const dateStr = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
-        const src = inv.sourceType === "to_receipt" ? `Do paragonu: ${inv.sourceReceiptNumber}` : "Zwykła z kasy";
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
-          <td>${src}</td>
-          <td><strong>${inv.buyerName}</strong></td>
-          <td>${inv.buyerNip || "<em>Bez NIP</em>"}</td>
-          <td>${dateStr}</td>
-          <td style="font-weight:800;">${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</td>
-          <td><button class="btn-secondary-sm" onclick="openInvoiceModal('${inv.id}')">Podgląd</button></td>
-        </tr>`;
+      tb.innerHTML = state.invoices.map(inv => {
+        const dt = inv.createdAt?.toDate ? inv.createdAt.toDate().toLocaleString("pl-PL") : new Date(inv.localTimestamp).toLocaleString("pl-PL");
+        const srcLabel = inv.sourceType === "to_receipt"
+          ? `<span class="badge-warn">Do paragonu: ${inv.receiptNumber}</span>`
+          : `<span class="badge-pay">Bezpośrednia POS</span>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${inv.invoiceNumber}</td>
+            <td>${srcLabel}</td>
+            <td><strong>${inv.buyerName}</strong></td>
+            <td style="font-family:'JetBrains Mono', monospace;">${inv.hasNip ? inv.buyerNip : "<em>Bez NIP</em>"}</td>
+            <td>${dt}</td>
+            <td><strong>${Number(inv.totalAmount).toFixed(2).replace(".", ",")} ${inv.currencySymbol || "zł"}</strong></td>
+            <td><button class="btn-secondary-sm" onclick="previewInvoice('${inv.id}')"><span class="m-icon sm">visibility</span> Podgląd</button></td>
+          </tr>
+        `;
       }).join("");
     }
 
-    window.openInvoiceModal = (invId) => {
+    window.previewInvoice = (invId) => {
       closeGlobalPepcoVk();
       const inv = state.invoices.find(i => i.id === invId);
       if (!inv) return;
-      const s = inv.storeSnapshot || state.store;
-      const sym = inv.currencySymbol || "zł";
-      const itemsTxt = (inv.items || []).map(i => {
-        const finalLine = i.lineTotalAfterItemDisc !== undefined ? Number(i.lineTotalAfterItemDisc) : Number(i.price) * Number(i.qty);
-        return `- ${i.name} | ${i.qty} ${i.unit || "szt."} | Netto: ${(finalLine / (1 + (i.taxRate||23)/100)).toFixed(2)} | VAT ${i.taxRate||23}% | Brutto: ${finalLine.toFixed(2)} ${sym}`;
-      }).join("\n");
+      const s = state.store;
+      const sym = inv.currencySymbol || s.activeCurrencySymbol || "zł";
+      const itemsTxt = (inv.items || []).map((it, idx) =>
+        `${idx + 1}. ${it.name} | ${it.qty} ${it.unit} x ${Number(it.price).toFixed(2)} | VAT ${it.taxRate}% | Brutto: ${Number(it.lineTotalAfterItemDisc ?? it.price * it.qty).toFixed(2)} ${sym}`
+      ).join("\n");
 
-      document.getElementById("invoiceModalContent").textContent = `FAKTURA VAT NR: ${inv.invoiceNumber}
-Data wystawienia: ${new Date(inv.localTimestamp).toLocaleString("pl-PL")}
-${inv.sourceReceiptNumber ? `Do paragonu fiskalnego nr: ${inv.sourceReceiptNumber}` : "Faktura bezpośrednia"}
-==================================================
-SPRZEDAWCA:
-${s.name || ""}
-${s.address || ""}
-NIP: ${s.nip || ""} | REGON: ${s.regon9 || ""} | KRS: ${s.krs || ""}
+      const sourceDocLine = inv.sourceType === "to_receipt" && inv.receiptNumber
+        ? `\nDOKUMENT SPRZEDAŻY (PARAGON): ${inv.receiptNumber}`
+        : (inv.sourceDocNumber ? `\nNUMER DOKUMENTU SPRZEDAŻY: ${inv.sourceDocNumber}` : "");
 
-NABYWCA:
-${inv.buyerName}
-${inv.buyerAddress}
-NIP: ${inv.buyerNip || "BRAK (Faktura dla osoby fizycznej nieprowadzącej działalności)"}
-==================================================
-POZYCJE FAKTURY:
+      document.getElementById("invoiceModalContent").textContent = `${buildStoreHeaderText(s)}
+========================================
+FAKTURA VAT NR: ${inv.invoiceNumber}${sourceDocLine}
+TRYB: ${inv.sourceType === "to_receipt" ? "FAKTURA DO PARAGONU" : "SPRZEDAŻ BEZPOŚREDNIA"}
+DATA WYSTAWIENIA: ${new Date(inv.localTimestamp).toLocaleString("pl-PL")}
+----------------------------------------
+NABYWCA: ${inv.buyerName}
+ADRES:   ${inv.buyerAddress}
+NIP:     ${inv.hasNip ? inv.buyerNip : "BRAK (osoba fizyczna / bez NIP)"}
+----------------------------------------
 ${itemsTxt}
-==================================================
-RAZEM NETTO:  ${Number(inv.netAmount).toFixed(2)} ${sym}
-KWOTA VAT:    ${Number(inv.vatAmount).toFixed(2)} ${sym}
-DO ZAPŁATY:   ${Number(inv.totalAmount).toFixed(2)} ${sym}
-Forma płatności: ${inv.paymentMethod}`;
+----------------------------------------
+NETTO:   ${Number(inv.netAmount).toFixed(2)} ${sym}
+VAT:     ${Number(inv.vatAmount).toFixed(2)} ${sym}
+RABAT:  -${Number(inv.discountAmount || 0).toFixed(2)} ${sym}
+RAZEM BRUTTO: ${Number(inv.totalAmount).toFixed(2)} ${sym}
+========================================`;
       document.getElementById("invoicePreviewModal").classList.remove("hidden");
     };
 
-    // ==========================================
-    // FAKTURA DO PARAGONU
-    // ==========================================
+    // --- INVOICE TO RECEIPT ---
     let foundReceiptForInv = null;
+
+    document.getElementById("f2pMode").addEventListener("change", (e) => {
+      document.getElementById("f2pNipGroup").classList.toggle("hidden", e.target.value === "no_nip");
+    });
 
     document.getElementById("btnFindReceiptInv").addEventListener("click", () => {
       closeGlobalPepcoVk();
-      const nr = document.getElementById("searchReceiptForInv").value.trim();
-      const rec = state.transactions.find(t => t.receiptNumber.toLowerCase() === nr.toLowerCase());
+      const num = document.getElementById("searchReceiptForInv").value.trim();
+      const tx = state.transactions.find(t => t.receiptNumber.toLowerCase() === num.toLowerCase());
       const box = document.getElementById("invToReceiptFormBox");
-      if (!rec) {
+      const errAlert = document.getElementById("f2pErrorAlert");
+      errAlert.classList.add("hidden");
+
+      if (!tx) {
         box.classList.add("hidden");
         return showToast("Nie znaleziono paragonu o podanym numerze!", "search_off");
       }
-      foundReceiptForInv = rec;
+
+      foundReceiptForInv = tx;
       box.classList.remove("hidden");
       document.getElementById("foundReceiptInfo").innerHTML = `
-        <strong>Znaleziony paragon:</strong> ${rec.receiptNumber} | Kwota brutto: <strong>${Number(rec.totalAmount).toFixed(2)} ${rec.currencySymbol || "zł"}</strong> | 
-        NIP na paragonie: <strong>${rec.buyerNip || "BRAK (paragon bez NIP)"}</strong>
+        Znaleziono paragon <strong>${tx.receiptNumber}</strong> z dnia ${new Date(tx.localTimestamp).toLocaleString("pl-PL")} na kwotę <strong>${Number(tx.totalAmount).toFixed(2)} ${tx.currencySymbol || "zł"}</strong>.
+        ${tx.buyerNip ? `<br><span class="badge-pay">Paragon posiada NIP: ${tx.buyerNip}</span>` : `<br><span style="color:var(--text-muted);">Paragon bez NIP (można wystawić fakturę bez NIP dla osoby prywatnej).</span>`}
       `;
 
       const modeSel = document.getElementById("f2pMode");
-      if (rec.buyerNip) {
+      if (tx.buyerNip) {
         modeSel.value = "with_nip";
         document.getElementById("f2pNipGroup").classList.remove("hidden");
-        document.getElementById("f2pNip").value = rec.buyerNip;
+        document.getElementById("f2pNip").value = tx.buyerNip;
       } else {
         modeSel.value = "no_nip";
         document.getElementById("f2pNipGroup").classList.add("hidden");
         document.getElementById("f2pNip").value = "";
       }
-      document.getElementById("f2pErrorAlert").classList.add("hidden");
-    });
-
-    document.getElementById("f2pMode").addEventListener("change", (e) => {
-      closeGlobalPepcoVk();
-      const isWithNip = e.target.value === "with_nip";
-      document.getElementById("f2pNipGroup").classList.toggle("hidden", !isWithNip);
     });
 
     document.getElementById("btnIssueInvoiceToReceipt").addEventListener("click", async () => {
-      closeGlobalPepcoVk();
       if (!foundReceiptForInv) return;
+      closeGlobalPepcoVk();
       const mode = document.getElementById("f2pMode").value;
-      const nip = document.getElementById("f2pNip").value.replace(/[^0-9]/g, "");
-      const name = document.getElementById("f2pBuyerName").value.trim();
-      const addr = document.getElementById("f2pBuyerAddress").value.trim();
-      const errBox = document.getElementById("f2pErrorAlert");
+      const nipInput = document.getElementById("f2pNip").value.trim().replace(/[^0-9]/g, "");
+      const buyerName = document.getElementById("f2pBuyerName").value.trim();
+      const buyerAddress = document.getElementById("f2pBuyerAddress").value.trim();
+      const errAlert = document.getElementById("f2pErrorAlert");
 
-      if (!name || !addr) {
-        errBox.textContent = "Uzupełnij nazwę i adres nabywcy!";
-        errBox.classList.remove("hidden");
+      if (!buyerName || !buyerAddress) {
+        errAlert.innerHTML = `<span class="m-icon sm">warning</span><span>Uzupełnij nazwę/imię i nazwisko oraz adres nabywcy!</span>`;
+        errAlert.classList.remove("hidden");
         return;
       }
 
       if (mode === "with_nip") {
-        if (!foundReceiptForInv.buyerNip) {
-          errBox.textContent = "BŁĄD PRAWNY (art. 106b ust. 5 ustawy o VAT): Do paragonu bez NIP nie można wystawić faktury z NIP dla firmy! Wybierz tryb 'Bez NIP'.";
-          errBox.classList.remove("hidden");
+        const receiptNipClean = (foundReceiptForInv.buyerNip || "").replace(/[^0-9]/g, "");
+        if (!receiptNipClean) {
+          errAlert.innerHTML = `<span class="m-icon sm">warning</span><span>Ten paragon nie zawiera NIP! Wybierz tryb <strong>Faktura do paragonu BEZ NIP</strong>.</span>`;
+          errAlert.classList.remove("hidden");
           return;
         }
-        if (nip.length !== 10 || nip !== foundReceiptForInv.buyerNip.replace(/[^0-9]/g, "")) {
-          errBox.textContent = `NIP na fakturze musi być identyczny z NIP na paragonie (${foundReceiptForInv.buyerNip})!`;
-          errBox.classList.remove("hidden");
+        if (nipInput !== receiptNipClean) {
+          errAlert.innerHTML = `<span class="m-icon sm">warning</span><span>NIP nabywcy (${nipInput}) musi być zgodny z NIP na paragonie (${receiptNipClean})!</span>`;
+          errAlert.classList.remove("hidden");
           return;
         }
       }
 
-      errBox.classList.add("hidden");
-      const invNr = `FV-PAR/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
+      errAlert.classList.add("hidden");
+      const now = new Date();
+      const invNumber = `FVP/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
 
       try {
         await addDoc(collection(db, "invoices"), {
-          invoiceNumber: invNr,
+          invoiceNumber: invNumber,
           sourceType: "to_receipt",
-          sourceReceiptNumber: foundReceiptForInv.receiptNumber,
-          storeSnapshot: foundReceiptForInv.storeSnapshot || state.store,
-          operator: state.activeOperator,
-          currencySymbol: foundReceiptForInv.currencySymbol || "zł",
+          sourceDocNumber: foundReceiptForInv.receiptNumber,
+          receiptNumber: foundReceiptForInv.receiptNumber,
           hasNip: mode === "with_nip",
-          buyerNip: mode === "with_nip" ? nip : "",
-          buyerName: name,
-          buyerAddress: addr,
-          items: foundReceiptForInv.items,
+          buyerNip: mode === "with_nip" ? nipInput : "",
+          buyerName,
+          buyerAddress,
+          items: foundReceiptForInv.items || [],
           netAmount: foundReceiptForInv.netAmount,
           vatAmount: foundReceiptForInv.vatAmount,
+          discountAmount: foundReceiptForInv.discountAmount || 0,
           totalAmount: foundReceiptForInv.totalAmount,
           paymentMethod: foundReceiptForInv.paymentMethod,
+          operator: state.activeOperator,
+          currencySymbol: foundReceiptForInv.currencySymbol || state.store.activeCurrencySymbol || "zł",
           createdAt: serverTimestamp(),
-          localTimestamp: new Date().toISOString()
+          localTimestamp: now.toISOString()
         });
 
-        await updateDoc(doc(db, "transactions", foundReceiptForInv.id), {
-          hasInvoiceIssued: true
-        });
-
-        showToast(`Wystawiono fakturę ${invNr} do paragonu ${foundReceiptForInv.receiptNumber}`, "description");
+        showToast(`Wystawiono fakturę ${invNumber} do paragonu ${foundReceiptForInv.receiptNumber}`, "check_circle");
         document.getElementById("invToReceiptFormBox").classList.add("hidden");
         document.getElementById("searchReceiptForInv").value = "";
+        document.getElementById("f2pBuyerName").value = "";
+        document.getElementById("f2pBuyerAddress").value = "";
+        foundReceiptForInv = null;
       } catch (err) {
-        showToast("Błąd: " + err.message, "error");
+        showToast("Błąd wystawiania faktury: " + err.message, "error");
       }
     });
 
-    // ==========================================
-    // ZWROT TOWARU
-    // ==========================================
-    let foundReceiptForReturn = null;
+    // --- RETURNS ---
+    let activeReturnTx = null;
 
     document.getElementById("btnFindReceiptReturn").addEventListener("click", () => {
       closeGlobalPepcoVk();
-      const nr = document.getElementById("searchReceiptForReturn").value.trim();
-      const rec = state.transactions.find(t => t.receiptNumber.toLowerCase() === nr.toLowerCase());
+      const num = document.getElementById("searchReceiptForReturn").value.trim();
+      const tx = state.transactions.find(t => t.receiptNumber.toLowerCase() === num.toLowerCase());
       const box = document.getElementById("returnProcessBox");
 
-      if (!rec) {
+      if (!tx) {
         box.classList.add("hidden");
-        return showToast("Nie znaleziono paragonu do zwrotu!", "search_off");
+        return showToast("Nie znaleziono paragonu o takim numerze!", "search_off");
       }
 
-      foundReceiptForReturn = rec;
+      activeReturnTx = tx;
       box.classList.remove("hidden");
       document.getElementById("returnReceiptMeta").innerHTML = `
-        <strong>Paragon:</strong> ${rec.receiptNumber} | <strong>Data zakupu:</strong> ${new Date(rec.localTimestamp).toLocaleString("pl-PL")} | <strong>Kwota paragonu:</strong> ${Number(rec.totalAmount).toFixed(2)} ${rec.currencySymbol || "zł"}
+        Paragon: <strong>${tx.receiptNumber}</strong> • Data: ${new Date(tx.localTimestamp).toLocaleString("pl-PL")} • Kasjer: ${tx.operator}
       `;
 
-      const retMap = rec.returnedQuantities || {};
-      const globalDisc = Number(rec.discountPercent || 0);
+      const previouslyReturnedMap = {};
+      state.returns
+        .filter(r => r.receiptNumber === tx.receiptNumber)
+        .forEach(r => {
+          (r.items || []).forEach(rit => {
+            previouslyReturnedMap[rit.productId] = (previouslyReturnedMap[rit.productId] || 0) + Number(rit.qty || 0);
+          });
+        });
 
-      document.getElementById("returnItemsTableBody").innerHTML = (rec.items || []).map((item, idx) => {
-        const alreadyRet = Number(retMap[item.id] || 0);
-        const maxRet = Math.max(0, Number(item.qty) - alreadyRet);
-        const baseEffective = item.effectiveUnitPrice !== undefined ? Number(item.effectiveUnitPrice) : Number(item.price);
-        const unitAfterDisc = Number((baseEffective * (1 - globalDisc / 100)).toFixed(2));
+      const globalDiscFactor = (tx.discountPercent && Number(tx.discountPercent) > 0)
+        ? (1 - Number(tx.discountPercent) / 100)
+        : 1;
 
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace;">${item.ean || "—"}${item.plu ? ` / PLU: ${item.plu}` : ""}</td>
-          <td><strong>${item.name}</strong></td>
-          <td>${unitAfterDisc.toFixed(2)} ${rec.currencySymbol || "zł"}</td>
-          <td>${item.qty} ${item.unit || "szt."}</td>
-          <td>${alreadyRet} ${item.unit || "szt."}</td>
-          <td>
-            <input type="number" min="0" max="${maxRet}" value="0" data-idx="${idx}" data-unit-price="${unitAfterDisc}" class="form-control ret-qty-input" style="width:80px;" ${maxRet === 0 ? "disabled" : ""} />
-          </td>
-          <td class="ret-line-val" style="font-weight:700;">0,00 ${rec.currencySymbol || "zł"}</td>
-        </tr>`;
+      const tbody = document.getElementById("returnItemsTableBody");
+      tbody.innerHTML = (tx.items || []).map((item, idx) => {
+        const alreadyRet = previouslyReturnedMap[item.productId] || 0;
+        const maxReturnable = Math.max(0, Number(item.qty) - alreadyRet);
+        const lineFinalAfterItemDisc = item.lineTotalAfterItemDisc !== undefined
+          ? Number(item.lineTotalAfterItemDisc)
+          : (Number(item.price) * Number(item.qty)) - Number(item.itemDiscountAmount || 0);
+        const effectiveUnitPrice = Number(item.qty) > 0
+          ? (lineFinalAfterItemDisc * globalDiscFactor) / Number(item.qty)
+          : Number(item.price);
+
+        return `
+          <tr data-idx="${idx}" data-unit-price="${effectiveUnitPrice.toFixed(4)}" data-max="${maxReturnable}">
+            <td style="font-family:'JetBrains Mono', monospace;">${item.ean || "—"}</td>
+            <td><strong>${item.name}</strong></td>
+            <td>${formatMoney(effectiveUnitPrice)}</td>
+            <td>${item.qty} ${item.unit}</td>
+            <td>${alreadyRet} ${item.unit}</td>
+            <td>
+              <input type="number" min="0" max="${maxReturnable}" value="0" class="form-control ret-qty-input" style="width:80px;" ${maxReturnable === 0 ? "disabled" : ""} />
+            </td>
+            <td class="ret-line-total" style="font-weight:700;">${formatMoney(0)}</td>
+          </tr>
+        `;
       }).join("");
 
-      document.querySelectorAll(".ret-qty-input").forEach(inp => {
+      tbody.querySelectorAll(".ret-qty-input").forEach(inp => {
         inp.addEventListener("input", recalcReturnTotal);
       });
       recalcReturnTotal();
     });
 
     function recalcReturnTotal() {
-      let sum = 0;
-      const sym = foundReceiptForReturn?.currencySymbol || "zł";
-      document.querySelectorAll(".ret-qty-input").forEach(inp => {
-        const max = Number(inp.max);
-        let q = Number(inp.value) || 0;
+      let total = 0;
+      document.querySelectorAll("#returnItemsTableBody tr").forEach(tr => {
+        const unitPrice = Number(tr.dataset.unitPrice || 0);
+        const maxRet = Number(tr.dataset.max || 0);
+        const inp = tr.querySelector(".ret-qty-input");
+        let q = parseInt(inp.value) || 0;
         if (q < 0) q = 0;
-        if (q > max) { q = max; inp.value = max; }
-        const lineSum = q * Number(inp.dataset.unitPrice);
-        sum += lineSum;
-        inp.closest("tr").querySelector(".ret-line-val").textContent = `${lineSum.toFixed(2).replace(".", ",")} ${sym}`;
+        if (q > maxRet) {
+          q = maxRet;
+          inp.value = q;
+        }
+        const lineVal = q * unitPrice;
+        total += lineVal;
+        tr.querySelector(".ret-line-total").textContent = formatMoney(lineVal);
       });
-      document.getElementById("totalRefundDisplay").textContent = `${sum.toFixed(2).replace(".", ",")} ${sym}`;
+      document.getElementById("totalRefundDisplay").textContent = formatMoney(total);
+      return total;
     }
 
     document.getElementById("btnConfirmReturn").addEventListener("click", async () => {
+      if (!activeReturnTx) return;
       closeGlobalPepcoVk();
-      if (!foundReceiptForReturn) return;
-      const inputs = document.querySelectorAll(".ret-qty-input");
-      const returnedItems = [];
-      let totalRefund = 0;
-      const updatedReturnedMap = { ...(foundReceiptForReturn.returnedQuantities || {}) };
+      const totalRefund = recalcReturnTotal();
+      if (totalRefund <= 0) {
+        return showToast("Wybierz ilość przynajmniej jednego zwracanego towaru!", "warning");
+      }
 
-      inputs.forEach(inp => {
-        const q = Number(inp.value) || 0;
-        if (q > 0) {
-          const item = foundReceiptForReturn.items[Number(inp.dataset.idx)];
-          const unitPrice = Number(inp.dataset.unitPrice);
-          const lineRefund = Number((q * unitPrice).toFixed(2));
-          totalRefund += lineRefund;
+      const returnedItems = [];
+      document.querySelectorAll("#returnItemsTableBody tr").forEach(tr => {
+        const idx = Number(tr.dataset.idx);
+        const unitPrice = Number(tr.dataset.unitPrice || 0);
+        const q = parseInt(tr.querySelector(".ret-qty-input").value) || 0;
+        if (q > 0 && activeReturnTx.items[idx]) {
+          const orig = activeReturnTx.items[idx];
           returnedItems.push({
-            id: item.id,
-            ean: item.ean || "",
-            plu: item.plu || "",
-            name: item.name,
+            productId: orig.productId,
+            name: orig.name,
             qty: q,
-            unitPrice,
-            lineRefund
+            unitPrice: Number(unitPrice.toFixed(2)),
+            lineRefund: Number((q * unitPrice).toFixed(2))
           });
-          updatedReturnedMap[item.id] = (Number(updatedReturnedMap[item.id] || 0)) + q;
         }
       });
 
-      if (returnedItems.length === 0) return showToast("Wpisz ilość zwracanego towaru (minimum 1 szt.)!", "warning");
-
-      const retNumber = `ZWR/${new Date().getFullYear()}/${Math.floor(100000 + Math.random() * 900000)}`;
+      const now = new Date();
+      const retNumber = `ZW/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${Math.floor(1000 + Math.random() * 9000)}`;
 
       try {
-        await addDoc(collection(db, "returns"), {
-          returnNumber: retNumber,
-          receiptNumber: foundReceiptForReturn.receiptNumber,
-          receiptId: foundReceiptForReturn.id,
-          operator: state.activeOperator,
-          reason: document.getElementById("returnReason").value,
-          refundMethod: document.getElementById("returnRefundMethod").value,
-          currencySymbol: foundReceiptForReturn.currencySymbol || "zł",
-          items: returnedItems,
-          totalRefund: Number(totalRefund.toFixed(2)),
-          createdAt: serverTimestamp(),
-          localTimestamp: new Date().toISOString()
-        });
-
-        await updateDoc(doc(db, "transactions", foundReceiptForReturn.id), {
-          returnedQuantities: updatedReturnedMap
-        });
-
-        for (const rItem of returnedItems) {
-          await updateDoc(doc(db, "products", rItem.id), {
-            stock: increment(Number(rItem.qty))
-          });
+        for (const rit of returnedItems) {
+          if (rit.productId) {
+            await updateDoc(doc(db, "products", rit.productId), {
+              stock: increment(Number(rit.qty))
+            });
+          }
         }
 
-        showToast(`Zatwierdzono zwrot ${retNumber} i przywrócono stany magazynowe!`, "assignment_return");
+        await addDoc(collection(db, "returns"), {
+          returnNumber: retNumber,
+          receiptNumber: activeReturnTx.receiptNumber,
+          items: returnedItems,
+          reason: document.getElementById("returnReason").value,
+          refundMethod: document.getElementById("returnRefundMethod").value,
+          totalRefund: Number(totalRefund.toFixed(2)),
+          operator: state.activeOperator,
+          currencySymbol: state.store.activeCurrencySymbol || "zł",
+          createdAt: serverTimestamp(),
+          localTimestamp: now.toISOString()
+        });
+
+        showToast(`Zatwierdzono zwrot ${retNumber} (${formatMoney(totalRefund)}). Stany przywrócone!`, "assignment_return");
         document.getElementById("returnProcessBox").classList.add("hidden");
         document.getElementById("searchReceiptForReturn").value = "";
+        activeReturnTx = null;
       } catch (err) {
-        showToast("Błąd zwrotu: " + err.message, "error");
+        showToast("Błąd podczas zapisu zwrotu: " + err.message, "error");
       }
     });
 
     function renderReturnsHistory() {
-      const tbody = document.getElementById("returnsHistoryTableBody");
+      const tb = document.getElementById("returnsHistoryTableBody");
       if (state.returns.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">Brak zarejestrowanych zwrotów towarów.</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7" style="color:var(--text-muted); text-align:center;">Brak zarejestrowanych zwrotów</td></tr>`;
         return;
       }
-      tbody.innerHTML = state.returns.map(r => {
-        const dateStr = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
+      tb.innerHTML = state.returns.map(r => {
+        const dt = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString("pl-PL") : new Date(r.localTimestamp).toLocaleString("pl-PL");
         const itemsSummary = (r.items || []).map(i => `${i.name} (${i.qty} szt.)`).join(", ");
-        return `<tr>
-          <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
-          <td style="font-family:'JetBrains Mono', monospace;">${r.receiptNumber}</td>
-          <td>${dateStr}</td>
-          <td>${itemsSummary}</td>
-          <td>${r.reason}</td>
-          <td style="font-weight:800; color:var(--danger);">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</td>
-        </tr>`;
+        return `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${r.returnNumber}</td>
+            <td style="font-family:'JetBrains Mono', monospace;">${r.receiptNumber}</td>
+            <td>${dt}</td>
+            <td>${itemsSummary}</td>
+            <td>${r.reason}</td>
+            <td><span class="badge-ret">-${Number(r.totalRefund).toFixed(2).replace(".", ",")} ${r.currencySymbol || "zł"}</span></td>
+            <td>
+              <button type="button" class="btn-secondary-sm" onclick="openReturnDetailModal('${r.id}')">
+                <span class="m-icon sm">visibility</span> Podgląd
+              </button>
+            </td>
+          </tr>
+        `;
       }).join("");
     }
 
     // ==========================================
-    // VIEW SWITCHING & NAVIGATION
+    // NAVIGATION BETWEEN TOP VIEWS & SUB-TABS
     // ==========================================
     const posView = document.getElementById("posView");
     const docsView = document.getElementById("docsView");
@@ -5907,13 +6703,24 @@ Forma płatności: ${inv.paymentMethod}`;
 
     function switchMainView(viewName) {
       closeGlobalPepcoVk();
-      posView.classList.toggle("hidden", viewName !== "pos");
-      docsView.classList.toggle("hidden", viewName !== "docs");
-      adminView.classList.toggle("hidden", viewName !== "admin");
+      posView.classList.add("hidden");
+      docsView.classList.add("hidden");
+      adminView.classList.add("hidden");
 
-      document.getElementById("btnTabPos").classList.toggle("active", viewName === "pos");
-      document.getElementById("btnTabDocs").classList.toggle("active", viewName === "docs");
-      document.getElementById("btnTabAdmin").classList.toggle("active", viewName === "admin");
+      document.getElementById("btnTabPos").classList.remove("active");
+      document.getElementById("btnTabDocs").classList.remove("active");
+      document.getElementById("btnTabAdmin").classList.remove("active");
+
+      if (viewName === "pos") {
+        posView.classList.remove("hidden");
+        document.getElementById("btnTabPos").classList.add("active");
+      } else if (viewName === "docs") {
+        docsView.classList.remove("hidden");
+        document.getElementById("btnTabDocs").classList.add("active");
+      } else if (viewName === "admin") {
+        adminView.classList.remove("hidden");
+        document.getElementById("btnTabAdmin").classList.add("active");
+      }
     }
 
     document.getElementById("btnTabPos").addEventListener("click", () => switchMainView("pos"));
@@ -5925,8 +6732,8 @@ Forma płatności: ${inv.paymentMethod}`;
         closeGlobalPepcoVk();
         document.querySelectorAll("[data-doc-tab]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        const target = btn.dataset.docTab;
-        document.querySelectorAll(".doc-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
+        document.querySelectorAll(".doc-panel-section").forEach(sec => sec.classList.add("hidden"));
+        document.getElementById(btn.dataset.docTab).classList.remove("hidden");
       });
     });
 
@@ -5935,10 +6742,18 @@ Forma płatności: ${inv.paymentMethod}`;
         closeGlobalPepcoVk();
         document.querySelectorAll("[data-admin-tab]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        const target = btn.dataset.adminTab;
-        document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.toggle("hidden", sec.id !== target));
+        document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.add("hidden"));
+        document.getElementById(btn.dataset.adminTab).classList.remove("hidden");
       });
     });
+
+    // Initial renders
+    renderCategories();
+    renderProducts();
+    renderCart();
+    renderFloatingPaymentTiles();
+    renderOperatorsSelect();
+    showLockStep("locked");
   </script>
 </body>
 </html>
